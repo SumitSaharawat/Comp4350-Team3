@@ -1,11 +1,12 @@
 import * as express from 'express';
 import { AddressInfo } from "net";
 import * as path from 'path';
+import * as debugLib from 'debug'
 
 import routes from './routes/index';
 import users from './routes/user';
 
-const debug = require('debug')('my express app');
+const debug = debugLib('server');
 const app = express();
 
 // view engine setup

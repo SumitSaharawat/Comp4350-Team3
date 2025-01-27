@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tsc --build",
     "clean": "tsc --build --clean",
-    "start": "node ./build/app"
+    "start": "node app"
   },
   "description": "Server",
   "author": {

@@ -16,13 +16,13 @@
 * Our [architectural diagram](https://github.com/Dean6622/Comp4350-Team3/blob/main/Documentation/block_diagram_v1.png)
 
 ## Contributors
-| Name | Username   | Role          |
-|-----|------------|---------------|
+| Name | Username   | Role                 |
+|-----|------------|----------------------|
 | Haozhi Wang | Echo-zzz   | Back-end Developer (Leader) |
-| Xiang Shi | Dean6622   | Full Stack Developer |
-| Eric Chu  | ciire      | Front-end Developer |
-| Han Sun | hans-um    | Full Stack Developer |
-| Sumit Saharawat | SumitSaharawat | Full Stack Developer |
+| Xiang Shi | Dean6622   | Front-end Developer  |
+| Eric Chu  | ciire      | Back-end Developer   |
+| Han Sun | hans-um    | Front-end Developer  |
+| Sumit Saharawat | SumitSaharawat | Back-end Developer   |
 ------
 
 ## Prerequisites

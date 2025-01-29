@@ -14,10 +14,6 @@ jobs:
   build-and-test:
     name: Build & lint Frontend
     runs-on: ubuntu-latest
-
-    env:
-      working-directory: ./frontend
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -29,15 +25,13 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm install
-
-      - name: Build Next.js
-        run: npm run build
+        run: cd frontend && npm install
 
       - name: Run ESLint
-        run: npm run lint
+        run: cd frontend && npm run lint
 
-
+      - name: Build Next.js
+        run: cd frontend && npm run build
 
 
   webhook-request:

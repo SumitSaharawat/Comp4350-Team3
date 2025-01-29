@@ -32,7 +32,7 @@ jobs:
         run: npm install
 
       - name: Run ESLint
-        run: npm run lint
+        run: npm lint
 
       - name: Build Next.js
         run: npm run build

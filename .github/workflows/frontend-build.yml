@@ -68,9 +68,6 @@ jobs:
               "title": "'"$STATUS"'",
               "description": "'"$DESCRIPTION"'",
               "color": '"$COLOR"',
-              "thumbnail": {
-                "url": "https://avatars.githubusercontent.com/u/160980408?v=4"
-              },
               "author": {
                 "name": "${{ github.actor }}",
                 "url": "https://github.com/${{ github.actor }}",

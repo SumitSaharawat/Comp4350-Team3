@@ -10,7 +10,43 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  {
+    ignores: [
+      "node_modules/",
+      ".next/",
+      "public/",
+      "*.config.js" // Ignore Webpack, ESLint, and Babel config files
+    ]
+  },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+  {
+    files: ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
+    rules: {
+      "semi": ["error", "always"],
+      "quotes": ["warn", "single", {"avoidEscape": true}],
+      "no-var": "error",
+      "@typescript-eslint/no-empty-function": "warn",
+      "@typescript-eslint/no-unused-vars": "error",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/ban-ts-comment": "warn",
+      "prefer-const": "error",
+      "@/block-scoped-var": "error",
+      "eqeqeq": "error",
+      "eol-last": "error",
+      "prefer-arrow-callback": "error",
+      "no-restricted-properties": [
+        "error",
+        {
+          "object": "describe",
+          "property": "only"
+        },
+        {
+          "object": "it",
+          "property": "only"
+        }
+      ],
+    },
+    }
 ];
 
 export default eslintConfig;

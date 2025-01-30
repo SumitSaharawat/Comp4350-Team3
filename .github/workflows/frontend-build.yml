@@ -1,0 +1,79 @@
+name: Frontend build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    name: Build & lint Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: "npm"
+
+      - name: Install dependencies
+        run: cd frontend && npm install
+
+      - name: Run ESLint
+        run: cd frontend && npm run lint
+
+      - name: Build Next.js
+        run: cd frontend && npm run build
+
+
+  webhook-request:
+    name: Send Discord Notification
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Determine Build Status
+        id: check_status
+        run: echo "BUILD_STATUS=${{ needs.build-and-test.result }}" >> $GITHUB_ENV
+
+      - name: Send a request to Discord webhook
+        run: |
+          if [[ "${{ needs.build-and-test.result }}" == "success" ]]; then
+            COLOR=65280 
+            STATUS="✅ **Frontend Build Passed!**"
+            DESCRIPTION="Frontend checks passed for branch **${{ github.ref }}**."
+          else
+            COLOR=16711680
+            STATUS="❌ **Frontend Build Failed!**"
+            DESCRIPTION="Frontend checks **failed** on branch **${{ github.ref }}**. Please check the logs."
+          fi
+          
+          # Following notification styling are referened by 
+          # "https://medium.com/@yusufbiyik/useful-github-actions-discord-webhooks-6e356751d954"
+          RESPONSE=$(curl -H "Content-Type: application/json" -X POST -d '{
+          "username": "GitHub Actions",
+          "content": "@everyone",
+          "embeds": [
+            {
+              "type": "rich",
+              "title": "'"$STATUS"'",
+              "description": "'"$DESCRIPTION"'",
+              "color": '"$COLOR"',
+              "author": {
+                "name": "${{ github.actor }}",
+                "url": "https://github.com/${{ github.actor }}",
+                "icon_url": "https://avatars.githubusercontent.com/u/${{ github.actor_id }}?v=4"
+              },
+              "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }
+          ]
+          }' ${{ secrets.WEBHOOK_URL }})
+
+          echo "Webhook server response: $RESPONSE"

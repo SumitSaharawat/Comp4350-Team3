@@ -2,10 +2,13 @@
   "name": "server",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "tsc --build",
     "clean": "tsc --build --clean",
-    "start": "node ./build/app"
+    "start": "node ./build/app",
+    "dev": "node --env-file=.env ./build/app",
+    "debug": "set DEBUG=express:* && node --env-file=.env ./build/app"
   },
   "description": "Server",
   "author": {

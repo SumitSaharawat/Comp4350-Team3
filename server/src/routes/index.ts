@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
 /*
  * GET home page.
  */
-import express = require('express');
+import express from 'express';
 const router = express.Router();
 
 router.get('/', (req: express.Request, res: express.Response) => {
-    res.render('index', { title: 'Express' });
+    res.json({ test: "This is a test" });
 });
 
 export default router;

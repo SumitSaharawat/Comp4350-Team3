@@ -1,22 +1,18 @@
-import * as express from 'express';
+import express from 'express';
 import { AddressInfo } from "net";
-import * as path from 'path';
-import * as debugLib from 'debug'
+// import * as path from 'path';
+import debug from 'debug'
 
-import routes from './routes/index';
-import users from './routes/user';
+import routes from './routes/index.js';
+import profile from './routes/profile.js';
 
-const debug = debugLib('server');
+const debugLog = debug('server');
 const app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
-
-app.use(express.static(path.join(__dirname, 'public')));
-
+// ==================================
+// routes
 app.use('/', routes);
-app.use('/users', users);
+app.use('/profile', profile);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -25,6 +21,8 @@ app.use((req, res, next) => {
     next(err);
 });
 
+
+// ============================
 // error handlers
 
 // development error handler
@@ -32,7 +30,7 @@ app.use((req, res, next) => {
 if (app.get('env') === 'development') {
     app.use((err, req, res, next) => { // eslint-disable-line @typescript-eslint/no-unused-vars
         res.status(err[ 'status' ] || 500);
-        res.render('error', {
+        res.json({
             message: err.message,
             error: err
         });
@@ -43,14 +41,15 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use((err, req, res, next) => { // eslint-disable-line @typescript-eslint/no-unused-vars
     res.status(err.status || 500);
-    res.render('error', {
+    res.json({
         message: err.message,
-        error: {}
     });
 });
 
+
+// =========================================
 app.set('port', process.env.PORT || 3000);
 
 const server = app.listen(app.get('port'), function () {
-    debug(`Express server listening on port ${(server.address() as AddressInfo).port}`);
+    debugLog(`Express server listening on port ${(server.address() as AddressInfo).port}`);
 });

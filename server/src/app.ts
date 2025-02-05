@@ -1,17 +1,41 @@
 import express from 'express';
 import { AddressInfo } from "net";
 // import * as path from 'path';
-import debug from 'debug'
+import debug from 'debug';
+// import bodyParser from 'body-parser';
 
-import routes from './routes/index.js';
+import index from './routes/index.js';
 import profile from './routes/profile.js';
+import { devError, prodError } from './middleware/errorHandler.js';
+import { requestLog } from './middleware/loggers.js';
 
 const debugLog = debug('server');
 const app = express();
 
+// we might want to do things differently for dev and prod
+const environment = process.env.NODE_ENV;
+const isDevelopment = environment === 'development';
+
+
+// // does not work at the moment, will fix it later
+// // ================================
+// // body parsers for accessing request body
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+
+
+
+// ==============================
+// loggin setting
+if (isDevelopment) {
+    app.use(requestLog);
+}
+
+
+
 // ==================================
 // routes
-app.use('/', routes);
+app.use('/', index);
 app.use('/profile', profile);
 
 // catch 404 and forward to error handler
@@ -26,25 +50,12 @@ app.use((req, res, next) => {
 // error handlers
 
 // development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-    app.use((err, req, res, next) => { // eslint-disable-line @typescript-eslint/no-unused-vars
-        res.status(err[ 'status' ] || 500);
-        res.json({
-            message: err.message,
-            error: err
-        });
-    });
+if (isDevelopment) {
+    app.use(devError);
 }
 
 // production error handler
-// no stacktraces leaked to user
-app.use((err, req, res, next) => { // eslint-disable-line @typescript-eslint/no-unused-vars
-    res.status(err.status || 500);
-    res.json({
-        message: err.message,
-    });
-});
+app.use(prodError);
 
 
 // =========================================

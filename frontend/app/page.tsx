@@ -1,22 +1,35 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "@/context/AuthContext"
+
 // @ts-ignore
 import Image from "next/image";
 
 export default function SignupPage() {
+    const {signup} = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [username, setUserName] = useState("");
     const [agreed, setAgreed] = useState(false);
+    const [message, setMessage] = useState("");
 
-    const handleSignup = () => {
+    const handleSignup = async () => {
         if (!agreed) {
-            alert("You must agree to the Terms & Conditions.");
+            setMessage("You must agree to the Terms & Conditions.");
             return;
         }
-        console.log({ email, password, confirmPassword, username });
+
+        try {
+            const response = await signup(username, password);
+            setMessage(response.message);
+
+        } catch (err: any) {
+            setMessage(err.message || "Failed to sign up");
+        }
+
+        console.log({email, password, confirmPassword, username});
     };
 
     return (
@@ -87,6 +100,8 @@ export default function SignupPage() {
                             </a>
                         </label>
                     </div>
+
+                    {message && <p className="text-customDarkRed mt-4 ">{message}</p>}
 
                     {/* Submit Button */}
                     <button

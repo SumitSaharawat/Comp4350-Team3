@@ -16,7 +16,8 @@ export default {
         customDarkPurple: "#2c2638",
         customSmoky:"#5e586e",
         customMartinique: "#3c364c",
-        customMirage: "#111825"
+        customMirage: "#111825",
+        customDarkRed: "#9b2005"
       },
       spacing: {
         128: "32rem",

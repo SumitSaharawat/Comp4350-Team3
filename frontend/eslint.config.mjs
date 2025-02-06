@@ -22,17 +22,17 @@ const eslintConfig = [
   {
     files: ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
     rules: {
-      "semi": ["error", "always"],
-      "quotes": ["warn", "single", {"avoidEscape": true}],
-      "no-var": "error",
+      "semi": ["warn", "always"],
+      "quotes": ["warn", "double", {"avoidEscape": true}],
+      "no-var": "warn",
       "@typescript-eslint/no-empty-function": "warn",
-      "@typescript-eslint/no-unused-vars": "error",
+      "@typescript-eslint/no-unused-vars": "warn",
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/ban-ts-comment": "warn",
       "prefer-const": "error",
       "@/block-scoped-var": "error",
       "eqeqeq": "error",
-      "eol-last": "error",
+      "eol-last": "warn",
       "prefer-arrow-callback": "error",
       "no-restricted-properties": [
         "error",

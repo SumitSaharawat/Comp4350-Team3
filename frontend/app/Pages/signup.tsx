@@ -8,7 +8,6 @@ import Image from "next/image";
 
 export default function SignupPage() {
     const {signup} = useAuth();
-    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [username, setUserName] = useState("");
@@ -28,8 +27,6 @@ export default function SignupPage() {
         } catch (err: any) {
             setMessage(err.message || "Failed to sign up");
         }
-
-        console.log({email, password, confirmPassword, username});
     };
 
     return (
@@ -60,13 +57,6 @@ export default function SignupPage() {
                             placeholder="Name"
                             value={username}
                             onChange={(e) => setUserName(e.target.value)}
-                            className="w-full px-4 py-2 border-b border-gray-300 bg-transparent focus:outline-none focus:border-purple-500"
-                        />
-                        <input
-                            type="email"
-                            placeholder="Email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
                             className="w-full px-4 py-2 border-b border-gray-300 bg-transparent focus:outline-none focus:border-purple-500"
                         />
                         <input

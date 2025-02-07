@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useAuth } from "@/app/contexts/AuthContext";
+// @ts-ignore
 import Image from "next/image";
 
 export default function SignupPage() {

@@ -3,14 +3,20 @@ export interface User {
     username: string;
 }
 
-export async function login(username: string, password: string): Promise<void> {
+export async function login(username: string, password: string): Promise<{ message: string }> {
     console.log("API URL:", process.env.NEXT_PUBLIC_API_URL); //test API
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/login`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
         credentials: "include"
     });
+
+    if (!res.ok) {
+        throw new Error((await res.json()).message || "Failed to log in");
+    }
+
+    return res.json();
 }
 
 export async function getUser(): Promise<User | null> {

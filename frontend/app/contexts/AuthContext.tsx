@@ -5,7 +5,7 @@ import {getUser, login, logout, signup, User} from "@/app/api/auth";
 
 interface AuthContextType {
     user: User | null;
-    login: (username: string, password: string) => Promise<void>;
+    login: (username: string, password: string) => Promise<{ message: string }>;
     signup: (username: string, password: string) => Promise<{ message: string }>;
     logout: () => Promise<void>;
 }
@@ -21,9 +21,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     const handleLogin = async (username: string, password: string) => {
-        await login(username, password);
+        const result = await login(username, password);
         const user = await getUser();
         setUser(user);
+        return result;
     };
 
     const handleSignup = async (username: string, password: string) => {

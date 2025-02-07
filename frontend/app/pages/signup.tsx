@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/app/contexts/AuthContext"
-
-// @ts-ignore
+import { useAuth } from "@/app/contexts/AuthContext";
 import Image from "next/image";
 
 export default function SignupPage() {
@@ -24,8 +22,12 @@ export default function SignupPage() {
             const response = await signup(username, password);
             setMessage(response.message);
 
-        } catch (err: any) {
-            setMessage(err.message || "Failed to sign up");
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setMessage(err.message);
+            } else {
+                setMessage("Failed to sign up");
+            }
         }
     };
 

@@ -27,7 +27,6 @@ const eslintConfig = [
       "no-var": "warn",
       "@typescript-eslint/no-empty-function": "warn",
       "@typescript-eslint/no-unused-vars": "warn",
-      "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/ban-ts-comment": "warn",
       "prefer-const": "error",
       "@/block-scoped-var": "error",

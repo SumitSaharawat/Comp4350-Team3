@@ -76,13 +76,22 @@ export default function LoginPage() {
                         Log In
                     </button>
 
-                    {/* Already have an account */}
-                    <p className="text-sm text-gray-500 text-center">
-                        {"Don't have account? "}
-                        <Link href="/auth/signup" className="text-gray-900 hover:underline">
-                            Sign Up
-                        </Link>
-                    </p>
+                    <div className="relative space-y-5">
+                        <p className="text-sm text-gray-500 text-center">
+                            {"Don't have an account? "}
+                            <Link href="/auth/signup" className="text-gray-900 hover:underline">
+                                Sign Up
+                            </Link>
+                        </p>
+
+                        {/* Forgot Password */}
+                        <p className="text-sm text-gray-500 text-center">
+                            <Link href="/auth/reset-password" className="text-gray-700 hover:underline">
+                                Forgot password?
+                            </Link>
+                        </p>
+                    </div>
+
                 </div>
             </div>
         </div>

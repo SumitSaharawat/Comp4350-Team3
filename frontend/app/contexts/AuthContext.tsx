@@ -39,7 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const handleResetPassword = async (username: string, password: string) => {
         return await resetPassword(username, password);
-    }
+    };
 
     return (
         <AuthContext.Provider

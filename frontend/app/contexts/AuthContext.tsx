@@ -28,12 +28,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const handleSignup = async (username: string, password: string) => {
         return await signup(username, password);
-    }
+    };
 
     const handleLogout = async () =>{
         await logout();
         setUser(null);
-    }
+    };
 
     return (
         <AuthContext.Provider

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/context/AuthContext"
+import { useAuth } from "@/app/contexts/AuthContext"
 
 // @ts-ignore
 import Image from "next/image";

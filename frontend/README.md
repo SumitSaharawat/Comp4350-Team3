@@ -8,9 +8,10 @@
 │   ├── api        # All API routers
 │   ├── contexts        # All contexts folder
 │   │   ├── AuthContext.tsx  # connect between api and UI
-│   ├── pages      # Pages folder
-│   │   ├── signup.tsx      # Sign up page
-│   │   ├── login.tsx       # Log in page
+│   ├── signup      # signup folder
+│   │   ├── page.tsx 
+│   ├── login      # login folder
+│   │   ├── page.tsx 
 │   ├── page.tsx   # Homepage
 ├── .env.local     # Environment variables (ignored in version control)
 ├── next.config.js # Next.js configuration

@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useAuth } from "@/app/contexts/AuthContext";
 // @ts-ignore
 import Image from "next/image";
+// @ts-ignore
+import Link from "next/link";
 
 export default function SignupPage() {
     const {signup} = useAuth();
@@ -107,9 +109,9 @@ export default function SignupPage() {
                     {/* Already have an account */}
                     <p className="text-sm text-gray-500 text-center">
                         Already have an account?{" "}
-                        <a href="/login" className="text-gray-900 hover:underline">
+                        <Link href="/login" className="text-gray-900 hover:underline">
                             Log in
-                        </a>
+                        </Link>
                     </p>
                 </div>
             </div>

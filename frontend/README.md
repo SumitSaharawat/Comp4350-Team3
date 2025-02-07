@@ -3,22 +3,23 @@
 ## 📂 Folder Structure
 ```
 /frontend
-├── public          # Static assets (images, favicons, etc.)
-├── app             # Next.js app (routing system)
-│   ├── api        # All API routers
-│   ├── contexts        # All contexts folder
-│   │   ├── AuthContext.tsx  # connect between api and UI
-│   ├── signup      # signup folder
-│   │   ├── page.tsx 
-│   ├── login      # login folder
-│   │   ├── page.tsx 
-│   ├── page.tsx   # Homepage
-├── .env.local     # Environment variables (ignored in version control)
-├── next.config.js # Next.js configuration
-├── tailwind.config.ts  # Tailwind css configure
-├── package.json   # Project metadata and dependencies
-├── eslint.config.mjs  # Eslint configure
-└── README.md      # Project documentation
+├── public                      # Static assets (images, favicons, etc.)
+├── app                         # Next.js app (routing system)
+│   ├── api                     # All API routers
+│   ├── contexts                # All contexts folder
+│   │   ├── AuthContext.tsx     # connect between api and UI
+│   ├── auth                    # Authentication folders
+│   │   ├── login               # login folder
+│   │   │   ├── page.tsx 
+│   │   ├── signup              # signup folder
+│   │   │   ├── page.tsx 
+│   ├── page.tsx                # Homepage
+├── .env.local                  # Environment variables (ignored in version control)
+├── next.config.js              # Next.js configuration
+├── tailwind.config.ts          # Tailwind css configure
+├── package.json                # Project metadata and dependencies
+├── eslint.config.mjs           # Eslint configure
+└── README.md                   # Project documentation
 ```
 
 ## 🛠 Installation & Setup

@@ -74,8 +74,6 @@ export default function ResetPasswordPage() {
                         />
                     </div>
 
-                    {message && <p className="text-customDarkRed mt-4 ">{message}</p>}
-
                     {/* Submit Button */}
                     <button
                         onClick={handleResetPassword}
@@ -93,6 +91,11 @@ export default function ResetPasswordPage() {
                             Sign up
                         </Link>
                     </p>
+
+                    {/* Warning message block */}
+                    <div className="space-y-0">
+                        <p className="text-customDarkRed mb-0">{message}</p>
+                    </div>
                 </div>
             </div>
         </div>

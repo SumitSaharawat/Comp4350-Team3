@@ -66,8 +66,6 @@ export default function LoginPage() {
                         />
                     </div>
 
-                    {message && <p className="text-customDarkRed mt-4 ">{message}</p>}
-
                     {/* Submit Button */}
                     <button
                         onClick={handleLogin}
@@ -92,6 +90,10 @@ export default function LoginPage() {
                         </p>
                     </div>
 
+                    {/* Warning message block */}
+                    <div className="space-y-0">
+                        <p className="text-customDarkRed mb-0">{message}</p>
+                    </div>
                 </div>
             </div>
         </div>

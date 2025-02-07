@@ -96,8 +96,6 @@ export default function SignupPage() {
                         </label>
                     </div>
 
-                    {message && <p className="text-customDarkRed mt-4 ">{message}</p>}
-
                     {/* Submit Button */}
                     <button
                         onClick={handleSignup}
@@ -113,6 +111,11 @@ export default function SignupPage() {
                             Log in
                         </Link>
                     </p>
+
+                    {/* Warning message block */}
+                    <div className="space-y-0">
+                        <p className="text-customDarkRed mb-0">{message}</p>
+                    </div>
                 </div>
             </div>
         </div>

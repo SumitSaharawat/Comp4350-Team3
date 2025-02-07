@@ -15,7 +15,6 @@ export async function login(username: string, password: string): Promise<{ messa
     if (!res.ok) {
         throw new Error((await res.json()).message || "Failed to log in");
     }
-
     return res.json();
 }
 
@@ -46,8 +45,18 @@ export async function signup(username: string, password: string): Promise<{ mess
     if (!res.ok) {
         throw new Error((await res.json()).message || "Failed to sign up");
     }
-
     return res.json();
 }
 
+export async function resetPassword(username: string, newPassword: string): Promise<{ message: string }> {
+    const res = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, newPassword }),
+    });
 
+    if (!res.ok) {
+        throw new Error((await res.json()).message || "Failed to reset new password");
+    }
+    return res.json();
+}

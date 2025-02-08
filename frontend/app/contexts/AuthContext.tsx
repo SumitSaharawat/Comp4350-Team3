@@ -1,13 +1,14 @@
 "use client";
 
 import React, {createContext, useContext, useEffect, useState} from "react";
-import {getUser, login, logout, signup, User} from "@/app/api/auth";
+import {getUser, login, logout, signup, resetPassword, User} from "@/app/api/auth";
 
 interface AuthContextType {
     user: User | null;
     login: (username: string, password: string) => Promise<{ message: string }>;
     signup: (username: string, password: string) => Promise<{ message: string }>;
     logout: () => Promise<void>;
+    resetPassword: (username:string, password: string) => Promise<{ message: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -36,6 +37,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null);
     };
 
+    const handleResetPassword = async (username: string, password: string) => {
+        return await resetPassword(username, password);
+    };
+
     return (
         <AuthContext.Provider
             value={{
@@ -43,6 +48,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 login: handleLogin,
                 signup: handleSignup,
                 logout: handleLogout,
+                resetPassword: handleResetPassword,
             }}
         >
             {children}

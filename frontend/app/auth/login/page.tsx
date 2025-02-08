@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Input } from "@/components/ui/Input";
+import { AuthInput } from "@/components/ui/Input";
 import { useAuth } from "@/app/contexts/AuthContext";
 // @ts-ignore
 import Image from "next/image";
@@ -51,14 +51,14 @@ export default function LoginPage() {
 
                     {/* Form */}
                     <div className="space-y-6">
-                        <Input
+                        <AuthInput
                             type="text"
                             placeholder="Name"
                             value={username}
                             onChange={(e) => setUserName(e.target.value)}
                             className="w-full px-4 py-2 border-b border-gray-300 bg-transparent focus:outline-none focus:border-purple-500"
                         />
-                        <Input
+                        <AuthInput
                             type="password"
                             placeholder="Password"
                             value={password}

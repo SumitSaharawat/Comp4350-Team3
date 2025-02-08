@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useAuth } from "@/app/contexts/AuthContext";
-import { Input } from "@/components/ui/Input"
+import { AuthInput } from "@/components/ui/Input"
 
 // @ts-ignore
 import Image from "next/image";
@@ -53,19 +53,19 @@ export default function ResetPasswordPage() {
 
                     {/* Form */}
                     <div className="space-y-6 text-black">
-                        <Input
+                        <AuthInput
                             type="text"
                             placeholder="Name"
                             value={username}
                             onChange={(e) => setUserName(e.target.value)}
                         />
-                        <Input
+                        <AuthInput
                             type="password"
                             placeholder="New Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
-                        <Input
+                        <AuthInput
                             type="password"
                             placeholder="Confirm New Password"
                             value={confirmPassword}

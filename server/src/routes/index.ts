@@ -2,16 +2,11 @@
  * GET home page.
  */
 import express from 'express';
+import { getIndex, postIndex} from '../controller/indexController.js';
+
 const router = express.Router();
 
-router.get('/', (req: express.Request, res: express.Response) => {
-    console.log(`body: ${req.body}`);
-    res.json({ test: "This is a test" });
-});
-
-
-router.post('/', (req: express.Request, res: express.Response) => {
-    res.json({ test: "This is a test" });
-});
+router.get('/', getIndex);
+router.post('/', postIndex);
 
 export default router;

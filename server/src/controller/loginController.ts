@@ -32,3 +32,20 @@ export const loginController = (req: Request, res: Response, next) => {
     }
 }
 
+// logic to create account
+export const createAccountController = (req: Request, res: Response) => {
+    const {username, password} = req.body;
+    const userFound = users.find(user => user.username === username);
+
+    // if the username already exists, reject the account creation
+    if (userFound) {
+        res.status(403).json({message: "username already exists."});
+    }
+    // otherwise, create the account and return a successful message
+    // will be replaced by mongodb integration once its set up 
+    else {
+        const account = { id: users.length, username: username, password: bcrypt.hashSync(password, 10)};
+        users[users.length] = account;
+        res.status(200).json({message: "Account created successfully!"});
+    }
+}

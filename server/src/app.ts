@@ -5,7 +5,7 @@ import debug from 'debug';
 import bodyParser from 'body-parser';
 
 import index from './routes/index.js';
-import profile from './routes/profile.js';
+import user from './routes/user.js';
 import login from './routes/login.js';
 import { devError, prodError } from './middleware/errorHandler.js';
 import { requestLog } from './middleware/loggers.js';
@@ -37,7 +37,7 @@ if (isDevelopment) {
 // ==================================
 // routes
 app.use('/', index);
-app.use('/profile', profile);
+app.use('/api/user', user);
 app.use('/api/login', login);
 
 

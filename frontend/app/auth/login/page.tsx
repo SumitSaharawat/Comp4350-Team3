@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { AuthInput } from "@/components/ui/Input";
+import { AuthButton} from "@/components/ui/Button";
 import { useAuth } from "@/app/contexts/AuthContext";
+
 // @ts-ignore
 import Image from "next/image";
 // @ts-ignore
@@ -67,12 +69,11 @@ export default function LoginPage() {
                     </div>
 
                     {/* Submit Button */}
-                    <button
+                    <AuthButton
                         onClick={handleLogin}
-                        className="w-full bg-customMirage hover:bg-gray-700 text-white py-2 px-4 rounded-lg focus:outline-none focus:ring focus:ring-purple-300"
                     >
                         Log In
-                    </button>
+                    </AuthButton>
 
                     <div className="relative space-y-5">
                         <p className="text-sm text-gray-500 text-center">

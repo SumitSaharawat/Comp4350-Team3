@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { AuthInput } from "@/components/ui/Input"
+import { AuthButton } from "@/components/ui/Button";
 
 // @ts-ignore
 import Image from "next/image";
@@ -74,12 +75,11 @@ export default function ResetPasswordPage() {
                     </div>
 
                     {/* Submit Button */}
-                    <button
+                    <AuthButton
                         onClick={handleResetPassword}
-                        className="w-full bg-customMirage hover:bg-gray-700 text-white py-2 px-4 rounded-lg focus:outline-none focus:ring focus:ring-purple-300"
                     >
                         Submit
-                    </button>
+                    </AuthButton>
 
                     {/* Go back to Sign up / log in Page */}
                     <p className="text-sm text-gray-500 text-center flex justify-between">

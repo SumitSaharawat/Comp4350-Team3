@@ -1,3 +1,7 @@
+/**
+ * Middleware for errors
+ */
+
 // development error
 // This will return the stacktrace
 export const devError = (err, req, res, next) => { // eslint-disable-line @typescript-eslint/no-unused-vars

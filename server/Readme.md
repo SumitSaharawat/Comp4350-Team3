@@ -1,42 +1,62 @@
-## Getting Started
+# SimpleFinance Backend Express JS Project
 
-Follow these steps to set up and run the project:
-
-### 1. Clone the Repository
-
-### 2. Navigate to the Server Folder
-
-The repository is currently set up for the **server only**. Navigate to the `server` folder.
-
-### 3. Install Dependencies
-
-Install the required dependencies by running:
-
+## 📂 Folder Structure
 ```
-npm install
+/server
+├── src                         # Express js app 
+│   ├── controller              # Application logic
+│   ├── middleware              # Middleware layer
+│   ├── routes                  # Routing layer
+│   ├── app.ts                  # Server entry point
+├── .env                        # Environment variables (ignored in version control)
+├── tsconfig.json               # Typescript configuration
+├── package.json                # Project metadata and dependencies
+├── eslint.config.mjs           # Eslint configure
+└── README.md                   # Project documentation
 ```
 
-### 4. Build the Project
-
-Once the dependencies are installed, build the project using:
-
+## 🛠 Installation & Setup
+### 1️⃣ Clone the repository
+```sh
+git@github.com:Dean6622/Comp4350-Team3.git
+cd Comp4350-Team3/server
 ```
+
+### 2️⃣ Install dependencies
+```sh
+npm install 
+```
+
+## 📦 Building for Project
+```sh
 npm run build
 ```
 
-### 5. Run the Program
+Send requests to `http://localhost:3000` if the port is not defined in the environment variables
 
-After building the project, start the server by running:
 
-```
-npm start
-```
+## ✅ Code Quality
+- **Linting:** `npm run lint`
 
-------
+## 📚 Useful Commands
+| Command         | Description |
+|-----------------|-------------|
+| `npm run build` | Build for project |
+| `npm run start` | Start production server |
+| `npm run dev` | Start development server(custom environment variables) |
+| `npm run debug` | Start debugging server(detailed logs) |
+| `npm run lint`  | Run ESLint |
 
-## Notes
 
-The client-side part of the project is not set up yet
+## 🛠 Tech Stack
+- **Express js** (Web server Framework)
+- **ESLint** (Code quality)
 
+## 🙌 Contributing
+1. Clone this repository
+2. Create a new branch (`git checkout -b firstname-issuenumber-issuename`)
+3. Commit your changes (`git commit -m 'Add new feature'`)
+4. Push to your branch (`git push origin feature-branch`)
+5. Create a pull request with a reviewee
 
 

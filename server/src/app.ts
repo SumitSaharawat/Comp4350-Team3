@@ -2,10 +2,11 @@ import express from 'express';
 import { AddressInfo } from "net";
 // import * as path from 'path';
 import debug from 'debug';
-// import bodyParser from 'body-parser';
+import bodyParser from 'body-parser';
 
 import index from './routes/index.js';
-import profile from './routes/profile.js';
+import user from './routes/user.js';
+import login from './routes/login.js';
 import { devError, prodError } from './middleware/errorHandler.js';
 import { requestLog } from './middleware/loggers.js';
 
@@ -17,16 +18,16 @@ const environment = process.env.NODE_ENV;
 const isDevelopment = environment === 'development';
 
 
-// // does not work at the moment, will fix it later
-// // ================================
-// // body parsers for accessing request body
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
+
+// ================================
+// body parsers for accessing request body
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 
 // ==============================
-// loggin setting
+// logs setting
 if (isDevelopment) {
     app.use(requestLog);
 }
@@ -36,7 +37,9 @@ if (isDevelopment) {
 // ==================================
 // routes
 app.use('/', index);
-app.use('/profile', profile);
+app.use('/api/user', user);
+app.use('/api/login', login);
+
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

@@ -52,17 +52,17 @@ export const createAccountController = (req: Request, res: Response) => {
 
 // logic to reset password
 export const resetPasswordController = (req: Request, res: Response, next) => {
-    const {username, currPassword, newPassword } = req.body;
+    const {username, newPassword } = req.body;
     const userFound = users.find(user => user.username === username);
 
     // if the old password is correct, reset the password in the database
-    if (userFound && bcrypt.compareSync(currPassword, userFound.password)) {
+    if (userFound) {
         userFound.password = bcrypt.hashSync(newPassword, 10);
         res.status(200).json({ message: "Password changed successfully!" });
     } 
     // if the password is wrong, throw out the error for error handler
     else {
-        const error:AuthError = new Error(`Incorrect current password.`);
+        const error:AuthError = new Error(`User not found.`);
         error.status = 401;
         next(error);
     }

@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import { AddressInfo } from "net";
 // import * as path from 'path';
 import debug from 'debug';
@@ -17,6 +18,10 @@ const app = express();
 const environment = process.env.NODE_ENV;
 const isDevelopment = environment === 'development';
 
+app.use(cors({
+    origin: process.env.REACT_ORIGIN,
+    credentials: true
+}));
 
 
 // ================================
@@ -62,7 +67,7 @@ app.use(prodError);
 
 
 // =========================================
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.SERVER_PORT || 3000);
 
 const server = app.listen(app.get('port'), function () {
     debugLog(`Express server listening on port ${(server.address() as AddressInfo).port}`);

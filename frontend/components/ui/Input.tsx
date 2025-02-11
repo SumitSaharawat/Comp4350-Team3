@@ -15,7 +15,7 @@ const AuthInput = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<H
                 ref={ref}
                 {...props}
             />
-        )
+        );
     }
 );
 

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useAuth } from "@/app/contexts/AuthContext";
-import { AuthInput } from "@/components/ui/Input"
+import { AuthInput } from "@/components/ui/Input";
 import { AuthButton } from "@/components/ui/Button";
 
 // @ts-ignore

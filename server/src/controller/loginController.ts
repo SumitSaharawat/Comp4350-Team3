@@ -22,7 +22,11 @@ export const loginController = (req: Request, res: Response, next) => {
     // if the password is correct, return with a valid token for future use
     if (userFound && bcrypt.compareSync(password, userFound.password)) {
         const token = webToken.sign({ id: userFound.id, username: userFound.username }, LOGIN_KEY, { expiresIn: '1h' });
-        res.json({ token });
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure:false,
+            maxAge: 3600000,        // 1 hour
+        }).json({ message: "Login successful" });
     } 
     // if the password is wrong, throw out the error for error handler
     else {

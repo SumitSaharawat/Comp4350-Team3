@@ -4,6 +4,7 @@ import { AddressInfo } from "net";
 // import * as path from 'path';
 import debug from 'debug';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 
 import index from './routes/index.js';
 import user from './routes/user.js';
@@ -29,7 +30,7 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
+app.use(cookieParser());
 
 // ==============================
 // logs setting

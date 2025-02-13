@@ -10,7 +10,7 @@ interface AuthError extends Error {
 
 // Authenticate a request by checking if a token is included and correct
 export const authenticateToken = (req, res, next) => {
-    const token = req.headers['authorization']?.split(' ')[1];
+    const token = req?.cookies?.token;
     if (token) {
         webToken.verify(token, LOGIN_KEY, function(err, decoded) {
             // the token is incorrect or expired

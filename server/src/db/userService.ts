@@ -1,8 +1,7 @@
-import User from './src/db/userDB.js'; // Import the User model
-
+import User, {IUser} from './userDB.js'; // Import the User model
 
 // Function to add a new user
-export const addUser = async (username, password) => {
+export const addUser = async (username: string, password: string): Promise<IUser> => {
     try {
         const newUser = new User({ username, password });
         await newUser.save();
@@ -14,9 +13,19 @@ export const addUser = async (username, password) => {
     }
 };
 
+export const getAllUsers = async () => {
+    try {
+        const users = await User.find({}); // Fetch all users
+        console.log('Users retrieved:', users);
+        return users;
+    } catch (err) {
+        console.error('Error retrieving users:', err);
+        throw err;
+    }
+};
 
 // Function to delete a user by username
-export const deleteUser = async (username) => {
+export const deleteUser = async (username: string) => {
     try {
         const result = await User.deleteOne({ username });
         if (result.deletedCount > 0) {

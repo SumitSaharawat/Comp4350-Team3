@@ -1,4 +1,5 @@
 import User, {IUser} from './userDB.js'; // Import the User model
+import mongoose from 'mongoose';
 
 // Function to add a new user
 export const addUser = async (username: string, password: string): Promise<IUser> => {
@@ -24,14 +25,44 @@ export const getAllUsers = async () => {
     }
 };
 
-// Function to delete a user by username
-export const deleteUser = async (username: string) => {
+// Function to edit a user
+export const editUser = async (id: string, username?: string, password?: string): Promise<IUser | null> => {
     try {
-        const result = await User.deleteOne({ username });
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error('Invalid user ID format');
+        }
+
+        const updatedFields: Partial<IUser> = {};
+        
+        //Ensures only username and password are updated, not some other field
+        if (username) updatedFields.username = username;
+        if (password) updatedFields.password = password;
+
+        const updatedUser = await User.findByIdAndUpdate(id, updatedFields, { new: true });
+
+        if (!updatedUser) {
+            console.log('No user with the ID found.');
+            return null;
+        }
+
+        console.log('User updated successfully:', updatedUser);
+        return updatedUser;
+    } catch (err) {
+        console.error('Error updating user:', err);
+        throw err;
+    }
+};
+
+export const deleteUser = async (id: string) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error('Invalid user ID');
+        }
+        const result = await User.deleteOne({_id: id});
         if (result.deletedCount > 0) {
             console.log('User deleted successfully.');
         } else {
-            console.log('No user found with the given username.');
+            console.log('No user found.');
         }
         return result;
     } catch (err) {

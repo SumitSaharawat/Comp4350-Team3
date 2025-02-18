@@ -29,7 +29,7 @@ export const addTransaction = async (userId: string, date: string, amount: numbe
     }
 };
 
-// Function to get all transactions
+// get all transactions for a user
 export const getAllTransactions = async (userId: string): Promise<ITransaction[]> => {
     try {
         if (!mongoose.Types.ObjectId.isValid(userId)) {

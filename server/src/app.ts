@@ -9,6 +9,7 @@ import cookieParser from 'cookie-parser';
 import index from './routes/index.js';
 import user from './routes/user.js';
 import login from './routes/login.js';
+import transactions from './routes/transactions.js';
 import { devError, prodError } from './middleware/errorHandler.js';
 import { requestLog } from './middleware/loggers.js';
 
@@ -45,6 +46,7 @@ if (isDevelopment) {
 app.use('/', index);
 app.use('/api/user', user);
 app.use('/api/login', login);
+app.use('/api/transactions', transactions);
 
 
 // catch 404 and forward to error handler

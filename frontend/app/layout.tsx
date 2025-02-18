@@ -1,4 +1,5 @@
 import { AuthProvider } from "@/app/contexts/AuthContext";
+import { TransactionsProvider } from "./contexts/TransactionsContext";
 import "./globals.css";
 
 export default function RootLayout({
@@ -9,7 +10,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-       <AuthProvider>{children}</AuthProvider>
+        <TransactionsProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </TransactionsProvider>
       </body>
     </html>
   );

@@ -7,12 +7,14 @@ export interface ITag {
 }
 
 export interface ITransaction extends Document {
+    user: mongoose.Schema.Types.ObjectId;
     date: Date;
     amount: number;
     currency: string;
     tag: ITag
 }
 
+// Define the schema for tags
 const tagSchema = new Schema<ITag>({
     name: {type: String, required: true},
     color: {type: String, required: true, match: /^#([0-9A-Fa-f]{6})$/}
@@ -21,17 +23,22 @@ const tagSchema = new Schema<ITag>({
 
 // Define the schema for the transaction
 const transactionSchema = new Schema<ITransaction>({
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
     date: { type: Date, required: true },
     amount: { type: Number, required: true },
     currency: { type: String, required: true },
     tag: { type: tagSchema, required: true }, 
 });
 
+// Create the Mongoose model for transactions
 const Transaction = mongoose.model<ITransaction>('Transaction', transactionSchema);
 export default Transaction;
 
 
-// The controller class for transactions that I used to test on postman
+
+
+
+// The controller class with routers for transactions that I used to test on postman
 
 // import express from 'express';
 // import { addTransaction, deleteTransaction, editTransaction, getAllTransactions } from './transactionService';
@@ -40,10 +47,10 @@ export default Transaction;
 
 // // Route to create a transaction
 // router.post('/addTransaction', async (req, res) => {
-//     const { date, amount, currency, tag }= req.body;
+//     const { userId, date, amount, currency, tag }= req.body;
 
 //     try {
-//         const transaction = await addTransaction(date, amount, currency, tag);
+//         const transaction = await addTransaction(userId, date, amount, currency, tag);
 //         res.status(201).json({ message: 'Transaction added successfully', transaction });
 //     } catch (err) {
 //         res.status(500).json({ error: 'Error creating transaction' });
@@ -52,8 +59,10 @@ export default Transaction;
 
 // // Route to get all transactions
 // router.get('/getAllTransactions', async (req, res) => {
+//     const { userId } = req.body;
+
 //     try {
-//         const transactions = await getAllTransactions();
+//         const transactions = await getAllTransactions(userId);
 //         res.status(200).json(transactions);
 //     } catch (err) {
 //         res.status(500).json({ error: 'Error retrieving transactions' });

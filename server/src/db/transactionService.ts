@@ -1,11 +1,19 @@
 import Transaction, { ITransaction, ITag } from './transactionDB.js';
+import User from './userDB.js'
 import mongoose from 'mongoose';
 
-export const addTransaction = async (date: string, amount: number, currency: string, tag: ITag) => {
+export const addTransaction = async (userId: string, date: string, amount: number, currency: string, tag: ITag) => {
     try {
-        console.log("Received transaction data:", { date, amount, currency, tag });
+        console.log("Received transaction data:", { userId, date, amount, currency, tag });
+
+        // 🔹 Validate if user exists before proceeding
+        const userExists = await User.findById(userId);
+        if (!userExists) {
+            throw new Error('User does not exist');
+        }
 
         const newTransaction = new Transaction({
+            user: userId,
             date: new Date(date), 
             amount,
             currency,
@@ -22,10 +30,14 @@ export const addTransaction = async (date: string, amount: number, currency: str
 };
 
 // Function to get all transactions
-export const getAllTransactions = async (): Promise<ITransaction[]> => {
+export const getAllTransactions = async (userId: string): Promise<ITransaction[]> => {
     try {
-        const transactions = await Transaction.find();
-        console.log('Transactions retrieved:', transactions);
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            throw new Error('Invalid user ID format');
+        }
+
+        const transactions = await Transaction.find({user: userId}).populate('user');
+        console.log('Transactions retrieved for user ${userId}:', transactions);
         return transactions;
     } catch (err) {
         console.error('Error retrieving transactions:', err);
@@ -36,7 +48,7 @@ export const getAllTransactions = async (): Promise<ITransaction[]> => {
 export const editTransaction = async (id: string, date?: string, amount?: number, currency?: string, tag?: ITag): Promise<ITransaction | null> => {
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            throw new Error('Invalid transaction ID');
+            throw new Error('Invalid transaction ID format');
         }
 
         const updatedFields: Partial<ITransaction> = {};
@@ -49,7 +61,7 @@ export const editTransaction = async (id: string, date?: string, amount?: number
         const updatedTransaction = await Transaction.findByIdAndUpdate(id, updatedFields, { new: true });
 
         if (!updatedTransaction) {
-            console.log('No transactions with the ID found.');
+            console.log('No transaction found with the given ID.');
             return null;
         }
 
@@ -67,13 +79,13 @@ export const editTransaction = async (id: string, date?: string, amount?: number
 export const deleteTransaction = async (id: string) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            throw new Error('Invalid user ID');
+            throw new Error('Invalid user ID format');
         }
         const result = await Transaction.deleteOne({_id: id});
         if (result.deletedCount > 0) {
             console.log('User deleted successfully.');
         } else {
-            console.log('No user found.');
+            console.log('No user found with the given username.');
         }
         return result;
     } catch (err) {

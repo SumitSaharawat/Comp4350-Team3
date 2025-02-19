@@ -25,7 +25,8 @@ export const getAllUsersController = async (req: Request, res: Response) => {
 
 
 export const editUserController = async (req: Request, res: Response) => {
-    const { id, username, password } = req.body;
+    const { id } = req.params;
+    const { username, password } = req.body;
 
     try {
         const updatedUser = await editUser(id, username, password);
@@ -43,7 +44,7 @@ export const editUserController = async (req: Request, res: Response) => {
 
 
 export const deleteUserController = async (req: Request, res: Response) => {
-    const { id } = req.body;
+    const { id } = req.params;
     try {
         const result = await deleteUser(id);
         if (result.deletedCount > 0) {

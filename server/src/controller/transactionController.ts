@@ -14,7 +14,9 @@ export const addTransactionController = async (req: Request, res: Response) => {
 };
 
 export const getAllTransactionController = async (req: Request, res: Response) => {
+    console.log('Received get request');
     const { userId } = req.params;
+    console.log(`Fetching transactions for user: ${userId}`);
 
     try {
         const transactions = await getAllTransactions(userId);
@@ -45,7 +47,7 @@ export const editTransactionController = async(req: Request, res: Response) => {
 };
 
 export const deleteTransactionController = async (req: Request, res: Response) => {
-    const { id } = req.body;
+    const { id } = req.params;
     try {
         const result = await deleteTransaction(id);
         if (result.deletedCount > 0) {

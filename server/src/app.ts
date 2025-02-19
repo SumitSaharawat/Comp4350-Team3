@@ -6,8 +6,10 @@ import debug from 'debug';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 
+import connectDB from './db/db.js';
 import index from './routes/index.js';
 import user from './routes/user.js';
+import transaction from './routes/transaction.js';
 import login from './routes/login.js';
 import { devError, prodError } from './middleware/errorHandler.js';
 import { requestLog } from './middleware/loggers.js';
@@ -45,6 +47,12 @@ if (isDevelopment) {
 app.use('/', index);
 app.use('/api/user', user);
 app.use('/api/login', login);
+app.use('/api/transaction', transaction)
+
+// connect to DB
+connectDB().then(() => {
+    console.log("Database connection established. Starting app...");
+});
 
 
 // catch 404 and forward to error handler

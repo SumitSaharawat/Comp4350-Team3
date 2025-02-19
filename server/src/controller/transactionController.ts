@@ -9,7 +9,8 @@ export const addTransactionController = async (req: Request, res: Response) => {
         res.status(201).json({ message: 'Transaction added successfully', transaction });
     } 
     catch (err) {
-        res.status(500).json({ error: 'Error creating transaction' });
+        console.error('Error creating transaction:', err.message || err); // Log to terminal
+        return res.status(500).json({ error: err.message || 'Error creating transaction' }); 
     }
 };
 
@@ -23,7 +24,8 @@ export const getAllTransactionController = async (req: Request, res: Response) =
         res.status(200).json(transactions);
     } 
     catch (err) {
-        res.status(500).json({ error: 'Error retrieving transactions' });
+        console.error('Error retrieving transaction:', err.message || err); // Log to terminal
+        return res.status(500).json({ error: err.message || 'Error retrieving transaction' }); 
     }
 };
 
@@ -42,7 +44,8 @@ export const editTransactionController = async(req: Request, res: Response) => {
         }
     } 
     catch (err) {
-        res.status(500).json({ error: 'Error updating transaction' });
+        console.error('Error updating transaction:', err.message || err); // Log to terminal
+        return res.status(500).json({ error: err.message || 'Error updating transaction' }); 
     }
 };
 
@@ -51,14 +54,16 @@ export const deleteTransactionController = async (req: Request, res: Response) =
     try {
         const result = await deleteTransaction(id);
         if (result.deletedCount > 0) {
-            res.status(200).json({ message: 'User deleted successfully' });
+            res.status(200).json({ message: 'Transaction deleted successfully' });
         } 
         else {
-            res.status(404).json({ message: 'User not found' });
+            res.status(404).json({ message: 'Transaction not found' });
         }
     } 
     catch (err) {
-        res.status(500).json({ error: 'Error deleting user' });
+        console.error('Error deleting transaction:', err.message || err); // Log to terminal
+        return res.status(500).json({ error: err.message || 'Error deleting transaction' });
+        
     }
 };
 

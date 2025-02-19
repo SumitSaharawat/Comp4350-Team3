@@ -43,7 +43,7 @@ const transactionSchema = new Schema<ITransaction>({
         type: Date, 
         required: true,
         validate: {
-            validator: (value: Date) => !isNaN(value.getTime()),
+            validator: (value: Date) => value instanceof Date && !isNaN(value.getTime()),
             message: "Invalid date format"
         }
      },
@@ -60,9 +60,12 @@ const transactionSchema = new Schema<ITransaction>({
     tag: { 
         type: tagSchema, 
         required: false, 
-        default: { name: "___", color: "#000000" } 
+        default: { name: "null", color: "#000000" } 
     }, 
-});
+},
+{strict: 'throw'}
+
+);
 
 // Create the Mongoose model for transactions
 const Transaction = mongoose.model<ITransaction>('Transaction', transactionSchema);

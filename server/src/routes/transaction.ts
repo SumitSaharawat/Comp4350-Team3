@@ -2,6 +2,7 @@
 import express from 'express';
 import{ addTransactionController, getAllTransactionController, editTransactionController, deleteTransactionController } from '../controller/transactionController.js'
 import { authenticateToken } from '../middleware/authenticator.js';
+import { validateTransactionRequest, validateParams } from '../middleware/dbValidation.js';
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ const router = express.Router();
 
 //example parameter for getAllTransaction
 // http://localhost:3000/api/transaction/userId
-router.get('/:userId', authenticateToken, getAllTransactionController);
+router.get('/:userId', validateTransactionRequest, validateParams('userId'), getAllTransactionController);
 
 //Example body for addTransaction
 // {"userId": "67ae9db31873ddf7e7e06a8d",
@@ -20,13 +21,13 @@ router.get('/:userId', authenticateToken, getAllTransactionController);
 //     "name": "Food",
 //     "color": "#FF5733"
 //   }}
-router.post('/', authenticateToken, addTransactionController);
+router.post('/', validateTransactionRequest, addTransactionController);
 
 // http://localhost:3000/api/transaction/id
 // Same as post body except no userId
-router.put('/:id', authenticateToken, editTransactionController);
+router.put('/:id', validateTransactionRequest, validateParams("id"), editTransactionController);
 
 // http://localhost:3000/api/transaction/id
-router.delete('/:id', authenticateToken, deleteTransactionController);
+router.delete('/:id', validateTransactionRequest, validateParams("id"), deleteTransactionController);
 
 export default router;

@@ -8,7 +8,13 @@ export const addUser = async (username: string, password: string): Promise<IUser
         await newUser.save();
         console.log('User added successfully:', newUser);
         return newUser;
-    } catch (err) {
+    } 
+    catch (err) {
+        //duplicate key error mongoDB
+        if (err.code === 11000) {
+            console.error('Duplicate username:', err.message);
+            throw new Error('Username already exists');
+        }
         console.error('Error adding user:', err);
         throw err;
     }
@@ -19,7 +25,8 @@ export const getAllUsers = async () => {
         const users = await User.find({}); // Fetch all users
         console.log('Users retrieved:', users);
         return users;
-    } catch (err) {
+    } 
+    catch (err) {
         console.error('Error retrieving users:', err);
         throw err;
     }
@@ -47,7 +54,13 @@ export const editUser = async (id: string, username?: string, password?: string)
 
         console.log('User updated successfully:', updatedUser);
         return updatedUser;
-    } catch (err) {
+    } 
+    catch (err) {
+        //duplicate key error mongoDB
+        if (err.code === 11000) {
+            console.error('Duplicate username:', err.message);
+            throw new Error('Username already exists');
+        }
         console.error('Error updating user:', err);
         throw err;
     }
@@ -65,7 +78,8 @@ export const deleteUser = async (id: string) => {
             console.log('No user found.');
         }
         return result;
-    } catch (err) {
+    } 
+    catch (err) {
         console.error('Error deleting user:', err);
         throw err;
     }

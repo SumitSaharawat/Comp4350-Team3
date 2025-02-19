@@ -8,7 +8,8 @@ export const addUserController = async (req: Request, res: Response) => {
         res.status(201).json({ message: 'User created successfully', user });
     } 
     catch (err) {
-        res.status(500).json({ error: 'Error creating user' });
+        console.error('Error creating user:', err.message || err); // Log to terminal
+        return res.status(500).json({ error: err.message || 'Error creating user' });
     }
 };
 
@@ -19,7 +20,8 @@ export const getAllUsersController = async (req: Request, res: Response) => {
         res.status(200).json({ users });
     } 
     catch (err) {
-        res.status(500).json({ error: 'Error retrieving users' });
+        console.error('Error retrieving user:', err.message || err); // Log to terminal
+        return res.status(500).json({ error: err.message || 'Error retrieving user' });
     }
 };
 
@@ -38,7 +40,8 @@ export const editUserController = async (req: Request, res: Response) => {
         }
     } 
     catch (err) {
-        res.status(500).json({ error: 'Error updating user' });
+        console.error('Error updating user:', err.message || err); // Log to terminal
+        return res.status(500).json({ error: err.message || 'Error updating user' });
     }
 };
 
@@ -55,7 +58,8 @@ export const deleteUserController = async (req: Request, res: Response) => {
         }
     } 
     catch (err) {
-        res.status(500).json({ error: 'Error deleting user' });
+        console.error('Error deleting user:', err.message || err); // Log to terminal
+        return res.status(500).json({ error: err.message || 'Error deleting user' });
     }
 };
 

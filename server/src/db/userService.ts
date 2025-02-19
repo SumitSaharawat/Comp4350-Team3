@@ -32,6 +32,22 @@ export const getAllUsers = async () => {
     }
 };
 
+export const getUsersByUsername = async (username: string) => {
+    try {
+        const users = await User.find({ username });
+        if (users.length === 0) {
+            console.log('no users found with username:', username);
+        }
+        return users;
+    }
+    catch (err) {
+        console.error('Error retrieving users:', err);
+        throw err;
+    }
+}
+
+
+
 // Function to edit a user
 export const editUser = async (id: string, username?: string, password?: string): Promise<IUser | null> => {
     try {

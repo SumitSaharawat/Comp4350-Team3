@@ -4,9 +4,14 @@ import { useState, useEffect } from "react";
 import { useTransactions } from "@/app/contexts/TransactionsContext";
 import { Transaction } from "../api/transac";
 
+// components
+import Navbar from "@/components/ui/navbar";
+
 export default function TransactionsPage() {
     const { transactions, getTransactions } = useTransactions();
     const [data, setData] = useState<Transaction[]>([]);
+
+    const currencies = ["CAD", "USD"];
 
     useEffect(() => {
         const getDataOnRender = async () => {
@@ -25,23 +30,21 @@ export default function TransactionsPage() {
         };
 
         getDataOnRender();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-      setData(transactions);
+        setData(transactions);
     }, [transactions]);
 
     return (
-        <div>
-          <h2>Transactions</h2>
-          <ul>
-            {data.map((d) => (
-              <li key={d.id}>
-                {d.currency}: ${d.amount}
-              </li>
-            ))}
-          </ul>
-        </div>
-      );
+        <>
+            <Navbar
+                title="Transactions"
+                searchHint="Search Transactions"
+                dropDownName="Currency"
+                dropDownList={currencies}
+            />
+        </>
+    );
 }

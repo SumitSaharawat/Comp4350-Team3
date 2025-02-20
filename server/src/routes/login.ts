@@ -13,7 +13,9 @@ const router = express.Router();
 
 router.post('/', validateUserRequest, loginController);
 router.post('/signup', validateUserRequest, createAccountController);
+//For testing the login and signup you need username and password
 router.put('/reset-password', validateUserRequest, resetPasswordController);
+//For testing the reset-password you need id, username and newPassword as the body
 
 export default router;
 

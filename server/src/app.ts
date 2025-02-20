@@ -11,7 +11,6 @@ import index from './routes/index.js';
 import user from './routes/user.js';
 import transaction from './routes/transaction.js';
 import login from './routes/login.js';
-import transactions from './routes/transactions.js';
 import { devError, prodError } from './middleware/errorHandler.js';
 import { requestLog } from './middleware/loggers.js';
 

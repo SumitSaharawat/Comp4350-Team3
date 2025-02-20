@@ -10,20 +10,20 @@ const router = express.Router();
 
 //http://localhost:portNum/api/user
 
-router.get('/', validateUserRequest, getAllUsersController);
+router.get('/', authenticateToken, validateUserRequest, getAllUsersController);
 
 // example body for post: 
 // { 'username': 'someUser', 'password': 'somePass'}
 
-router.post('/', validateUserRequest, addUserController);
+router.post('/', authenticateToken, validateUserRequest, addUserController);
 
-//http://localhost:portNum/api/user/someID
+//http://localhost:portNum/api/user/someID  (probably a better way of doing it that im not thinking about)
 // example body for put:
 // { 'username': 'someUser', 'password': 'somePass'}
-router.put('/:id', validateUserRequest, validateParams("id"), editUserController);
+router.put('/:id', authenticateToken, validateUserRequest, validateParams("id"), editUserController);
 
 // example for delete:
-//http://localhost:portNum/api/user/someID
-router.delete('/:id', validateUserRequest, validateParams("id"), deleteUserController);
+//http://localhost:portNum/api/user/someID (same as the put path)
+router.delete('/:id', authenticateToken, validateUserRequest, validateParams("id"), deleteUserController);
 
 export default router;

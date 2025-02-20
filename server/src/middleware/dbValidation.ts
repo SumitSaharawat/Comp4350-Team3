@@ -30,7 +30,7 @@ export const validateParams = (paramName: string) => {
 };
 
 export const validateUserRequest = (req: Request, res: Response, next: NextFunction) => {
-    const allowedFields = ['username', 'password'];
+    const allowedFields = ['id', 'username', 'password', 'newPassword'];
     const bodyKeys = Object.keys(req.body);
 
     // Find unexpected fields
@@ -44,6 +44,7 @@ export const validateUserRequest = (req: Request, res: Response, next: NextFunct
 
     next(); 
 };
+
 
 
 

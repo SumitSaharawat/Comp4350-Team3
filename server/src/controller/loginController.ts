@@ -4,6 +4,7 @@
 import { Request, Response } from 'express';
 import webToken from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import { getUsersByUsername, addUser, editUser } from '../db/userService.js';
 
 interface AuthError extends Error {
     status?: number;
@@ -15,59 +16,92 @@ export const users = [{ id: 1, username: 'user', password: bcrypt.hashSync('pass
 export const LOGIN_KEY = "I_AM_KEY";
 
 // logic to verify if the password is correct
-export const loginController = (req: Request, res: Response, next) => {
+export const loginController = async (req: Request, res: Response, next) => {
     const {username, password} = req.body;
-    const userFound = users.find(user => user.username === username);
+    try {
+        const users = await getUsersByUsername(username);
+        if (users.length === 0) {
+            const error: AuthError = new Error(`User not found`);
+            error.status = 404;
+            return next(error);  // Handle case when no user is found
+        }
+        //const userFound = users.find(user => user.username === username);
 
-    // if the password is correct, return with a valid token for future use
-    if (userFound && bcrypt.compareSync(password, userFound.password)) {
-        const token = webToken.sign({ id: userFound.id, username: userFound.username }, LOGIN_KEY, { expiresIn: '1h' });
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure:false,
-            maxAge: 3600000,        // 1 hour
-        }).json({ message: "Login successful" });
-    } 
-    // if the password is wrong, throw out the error for error handler
-    else {
-        const error:AuthError = new Error(`Invalid credentials`);
-        error.status = 401;
-        next(error);
+        const userFound = users[0]; // assuming usernames are unique
+        // if the password is correct, return with a valid token for future use
+
+        if (bcrypt.compareSync(password, userFound.password)) {
+            const token = webToken.sign({ id: userFound.id, username: userFound.username }, LOGIN_KEY, { expiresIn: '1h' });
+            res.cookie("token", token, {
+                httpOnly: true,
+                secure:false,
+                maxAge: 3600000,        // 1 hour
+            }).json({ message: "Login successful" });
+        } 
+        // if the password is wrong, throw out the error for error handler
+        else {
+            const error:AuthError = new Error(`Invalid credentials`);
+            error.status = 401;
+            return next(error);
+        }
+
     }
+    catch (err) {
+        console.error('Error logging in:', err.message || err); // Log to terminal
+        return res.status(500).json({ error: err.message || 'Error logging in' });
+        //next(err);
+    }
+
 }
 
 // logic to create account
-export const createAccountController = (req: Request, res: Response) => {
+export const createAccountController = async (req: Request, res: Response) => {
     const {username, password} = req.body;
-    const userFound = users.find(user => user.username === username);
+    try {
 
-    // if the username already exists, reject the account creation
-    if (userFound) {
-        res.status(403).json({message: "username already exists."});
+        const existingUser = await getUsersByUsername(username);
+        // if the username already exists, reject the account creation
+        if (existingUser.length > 0) {
+            res.status(403).json({message: "username already exists."});
+        }
+        // otherwise, create the account and return a successful message
+        // will be replaced by mongodb integration once its set up 
+        else {
+            const newUser = await addUser(username, bcrypt.hashSync(password, 10));
+            res.status(200).json({message: "Account created successfully!"});
+        }
+        
     }
-    // otherwise, create the account and return a successful message
-    // will be replaced by mongodb integration once its set up 
-    else {
-        const account = { id: users.length, username: username, password: bcrypt.hashSync(password, 10)};
-        users[users.length] = account;
-        res.status(200).json({message: "Account created successfully!"});
+    catch (err) {
+        console.error('Error creating account:', err.message || err); // Log to terminal
+        return res.status(500).json({ error: err.message || 'Error creating account' });
+        //next(err);
     }
+
 }
 
 // logic to reset password
-export const resetPasswordController = (req: Request, res: Response, next) => {
+export const resetPasswordController = async (req: Request, res: Response, next) => {
     const {username, newPassword } = req.body;
-    const userFound = users.find(user => user.username === username);
+    try{
+        const users = await getUsersByUsername(username);
+        // if the old password is correct, reset the password in the database
+        if (users.length > 0) {
+            const user = users[0];
+            await editUser(user.id, username, bcrypt.hashSync(newPassword, 10))
+            res.status(200).json({ message: "Password changed successfully!" });
+        } 
+        // if the password is wrong, throw out the error for error handler
+        else {
+            const error:AuthError = new Error(`User not found.`);
+            error.status = 401;
+            next(error);
+        }
 
-    // if the old password is correct, reset the password in the database
-    if (userFound) {
-        userFound.password = bcrypt.hashSync(newPassword, 10);
-        res.status(200).json({ message: "Password changed successfully!" });
-    } 
-    // if the password is wrong, throw out the error for error handler
-    else {
-        const error:AuthError = new Error(`User not found.`);
-        error.status = 401;
-        next(error);
     }
+    catch(err) {
+        console.error('Error resetting password:', err.message || err); // Log to terminal
+        return res.status(500).json({ error: err.message || 'Error resetting password' });
+    }
+    
 }

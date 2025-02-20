@@ -10,7 +10,7 @@ const router = express.Router();
 
 //example parameter for getAllTransaction
 // http://localhost:3000/api/transaction/userId
-router.get('/:userId', validateTransactionRequest, validateParams('userId'), getAllTransactionController);
+router.get('/:userId', authenticateToken, validateTransactionRequest, validateParams('userId'), getAllTransactionController);
 
 //Example body for addTransaction
 // {"userId": "67ae9db31873ddf7e7e06a8d",
@@ -21,13 +21,13 @@ router.get('/:userId', validateTransactionRequest, validateParams('userId'), get
 //     "name": "Food",
 //     "color": "#FF5733"
 //   }}
-router.post('/', validateTransactionRequest, addTransactionController);
+router.post('/', authenticateToken, validateTransactionRequest, addTransactionController);
 
 // http://localhost:3000/api/transaction/id
 // Same as post body except no userId
-router.put('/:id', validateTransactionRequest, validateParams("id"), editTransactionController);
+router.put('/:id', authenticateToken, validateTransactionRequest, validateParams("id"), editTransactionController);
 
 // http://localhost:3000/api/transaction/id
-router.delete('/:id', validateTransactionRequest, validateParams("id"), deleteTransactionController);
+router.delete('/:id', authenticateToken, validateTransactionRequest, validateParams("id"), deleteTransactionController);
 
 export default router;

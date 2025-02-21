@@ -1,6 +1,10 @@
 /**
  * The logic to login a user with username and password
  */
+
+import dotenv from 'dotenv';
+dotenv.config();
+
 import { Request, Response } from 'express';
 import webToken from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
@@ -13,7 +17,7 @@ interface AuthError extends Error {
 // stub database
 export const users = [{ id: 1, username: 'user', password: bcrypt.hashSync('password', 10) }];
 // stay in the code for now, need to move it to environment variables later
-export const LOGIN_KEY = "I_AM_KEY";
+export const LOGIN_KEY = process.env.LOGIN_KEY;
 
 // logic to verify if the password is correct
 export const loginController = async (req: Request, res: Response, next) => {

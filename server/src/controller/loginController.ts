@@ -2,9 +2,6 @@
  * The logic to login a user with username and password
  */
 
-import dotenv from 'dotenv';
-dotenv.config();
-
 import { Request, Response } from 'express';
 import webToken from 'jsonwebtoken';
 import bcrypt from 'bcrypt';

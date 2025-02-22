@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AuthInput } from "@/components/ui/Input";
 import { AuthButton} from "@/components/ui/Button";
 import { useAuth } from "@/app/contexts/AuthContext";
+import { useRouter } from "next/navigation";
 
 // @ts-ignore
 import Image from "next/image";
@@ -15,11 +16,13 @@ export default function LoginPage() {
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
+    const router = useRouter();
 
     const handleLogin = async () => {
         try {
             const response = await login(username, password);
             setMessage(response.message);
+            router.push("/transactions");
 
         } catch (err: unknown) {
             if (err instanceof Error) {

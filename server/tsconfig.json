@@ -6,7 +6,8 @@
     "lib": ["es6"],
     "sourceMap": true,
     "outDir": "./build",
-    "strict": false
+    "strict": false,
+    "esModuleInterop": true
   },
   "exclude": [
     "node_modules",

@@ -4,7 +4,7 @@ import { loginController } from '../../src/controller/loginController.js';
 import { getUsersByUsername } from '../../src/db/userService.js';
 
 // Mock the database service
-jest.mock('../src/db/userService'); 
+jest.mock('../../src/db/userService'); 
 
 const app = express();
 app.use(express.json());

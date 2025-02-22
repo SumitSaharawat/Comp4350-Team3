@@ -6,9 +6,7 @@ import { AuthInput } from "@/components/ui/Input";
 import { AuthButton } from "@/components/ui/Button";
 import { useRouter } from "next/navigation";
 
-// @ts-ignore
 import Image from "next/image";
-// @ts-ignore
 import Link from "next/link";
 
 export default function SignupPage() {

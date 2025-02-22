@@ -6,6 +6,7 @@ import { Transaction } from "../api/transac";
 
 // components
 import Navbar from "@/components/ui/navbar";
+import TransactionList from "@/components/ui/TransactionList";
 
 export default function TransactionsPage() {
     const { transactions, getTransactions } = useTransactions();
@@ -44,6 +45,9 @@ export default function TransactionsPage() {
                 searchHint="Search Transactions"
                 dropDownName="Currency"
                 dropDownList={currencies}
+            />
+            <TransactionList
+                transactions={data} 
             />
         </>
     );

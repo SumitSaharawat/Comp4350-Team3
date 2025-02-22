@@ -2,11 +2,12 @@
   "name": "server",
   "version": "0.0.0",
   "private": true,
-  "scripts": {
-    "build": "tsc --build",
-    "clean": "tsc --build --clean",
-    "start": "node app"
-  },
+"scripts": {
+  "build": "tsc --build",
+  "clean": "tsc --build --clean",
+  "start": "node app",
+  "test": "jest"
+},
   "description": "Server",
   "author": {
     "name": ""

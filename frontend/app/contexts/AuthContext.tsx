@@ -2,7 +2,6 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import {
-    // getUser,
     login,
     logout,
     signup,
@@ -34,10 +33,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     //     getUser().then((user) => setUser(user));
     // }, []);
 
+    // get user info from localStorage (after refreshed page)
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
+    }, []);
+
     const handleLogin = async (username: string, password: string) => {
         const result = await login(username, password);
         // const user = await getUser();
         setUser(result.user);
+        localStorage.setItem("user", JSON.stringify(result.user)); // storage user info into localStorage
         return { message: result.message };
     };
 

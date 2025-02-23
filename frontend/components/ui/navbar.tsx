@@ -7,6 +7,7 @@ interface NavbarProps {
     searchHint: string;
     dropDownName: string;
     dropDownList: string[];
+    toggleSidebar: () => void;
 }
 
 // this is using daisyUI example code
@@ -15,17 +16,13 @@ export default function Navbar({
     searchHint,
     dropDownName,
     dropDownList,
+    toggleSidebar,
 }: NavbarProps) {
     const [showSideBar, setShowSideBar] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
 
     const onSelectDropdown = (item: string) => {
         console.log(item);
-    };
-
-    const onClickHamburger = () => {
-        const prevShowSideBar = showSideBar;
-        setShowSideBar(!prevShowSideBar);
     };
 
     useEffect(() => {
@@ -38,7 +35,7 @@ export default function Navbar({
             <div className="navbar bg-base-100 justify-between">
                 {/**Hamburger button and the title as the first piece in the nav bar*/}
                 <div className="flex items-center gap-2">
-                    <HamburgerButton onClickFunc={onClickHamburger} />
+                    <HamburgerButton onClickFunc={toggleSidebar} />
                     {/**Title */}
                     <a className="btn btn-ghost text-xl">{title}</a>
                 </div>

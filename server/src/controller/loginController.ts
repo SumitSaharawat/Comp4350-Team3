@@ -37,7 +37,7 @@ export const loginController = async (req: Request, res: Response, next) => {
                 httpOnly: true,
                 secure:false,
                 maxAge: 3600000,        // 1 hour
-            }).json({ message: "Login successful" });
+            }).json({user: {username: userFound.username, id: userFound._id}, message: "Login successfuly!"});
         } 
         // if the password is wrong, throw out the error for error handler
         else {

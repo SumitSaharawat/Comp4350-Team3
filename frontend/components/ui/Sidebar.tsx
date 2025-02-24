@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutGrid, RefreshCcw, LogOut, Plus } from "lucide-react";
+import { useAuth } from "@/app/contexts/AuthContext";
 
 interface SidebarProps {
     isOpen: boolean;
@@ -9,7 +10,7 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen }: SidebarProps) {
     const pathname = usePathname();
-
+    const { logout } = useAuth();
     const menuItems = [
         {
             name: "Dashboard",
@@ -55,13 +56,13 @@ export default function Sidebar({ isOpen }: SidebarProps) {
 
 
             <div className="absolute bottom-4 left-4 right-4">
-                <Link
-                    href="/auth/login"
-                    className="flex items-center gap-2 p-2 rounded text-gray-300 transition-colors hover:bg-gray-800 hover:text-white"
+                <button
+                    onClick={logout}
+                    className="flex items-center gap-2 p-2 rounded text-gray-300 transition-colors hover:bg-gray-800 hover:text-white w-full"
                 >
-                    <LogOut className="w-5 h-5" />
+                    <LogOut className="w-5 h-5"/>
                     <span>Sign Out</span>
-                </Link>
+                </button>
             </div>
         </div>
     );

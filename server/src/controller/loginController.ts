@@ -106,3 +106,9 @@ export const resetPasswordController = async (req: Request, res: Response, next)
     }
     
 }
+
+// logic to log out (clean httponly cookie)
+export const logoutController = (req, res) => {
+    res.clearCookie("token", { httpOnly: true, secure: false, sameSite: "Strict" });
+    res.status(200).json({ message: "Logged out successfully" });
+};

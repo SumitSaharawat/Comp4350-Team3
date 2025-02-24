@@ -44,7 +44,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     const handleResetPassword = async (username: string, password: string) => {
-        return await resetPassword(username, password);
+        try {
+            const result = await resetPassword(username, password);
+            setTimeout(() => {  // Give 2 sec to holding
+                window.location.href = "/auth/login";
+            }, 2000);
+
+            return result;
+        } catch (error) {
+            console.error("Reset password failed", error);
+            throw new Error("Reset password failed");
+        }
     };
 
     return (

@@ -18,7 +18,6 @@ export default function Navbar({
     dropDownList,
     toggleSidebar,
 }: NavbarProps) {
-    const [showSideBar, setShowSideBar] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
 
     const onSelectDropdown = (item: string) => {

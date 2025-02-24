@@ -1,13 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import {
-    login,
-    logout,
-    signup,
-    resetPassword,
-    User,
-} from "@/app/api/auth";
+import { login, logout, signup, resetPassword, User } from "@/app/api/auth";
 
 interface AuthContextType {
     user: User | null;
@@ -54,8 +48,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     const handleLogout = async () => {
-        await logout();
-        setUser(null);
+        try {
+            await logout();
+            localStorage.clear();
+            setUser(null);
+            window.location.href = "/auth/login";
+        } catch (error) {
+            console.error("Logout failed", error);
+        }
     };
 
     const handleResetPassword = async (username: string, password: string) => {

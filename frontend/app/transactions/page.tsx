@@ -8,11 +8,13 @@ import { useAuth } from "@/app/contexts/AuthContext";
 // components
 import Navbar from "@/components/ui/navbar";
 import TransactionList from "@/components/ui/TransactionList";
+import Sidebar from "@/components/ui/Sidebar";
 
 export default function TransactionsPage() {
     const { transactions, getTransactions } = useTransactions();
     const { user } = useAuth();
     const [data, setData] = useState<Transaction[]>([]);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const currencies = ["CAD", "USD"];
 
@@ -45,14 +47,26 @@ export default function TransactionsPage() {
     }, [transactions]);
 
     return (
-        <>
-            <Navbar
-                title="Transactions"
-                searchHint="Search Transactions"
-                dropDownName="Currency"
-                dropDownList={currencies}
-            />
-            <TransactionList transactions={data} />
-        </>
+        <div className="flex">
+            {/* Sidebar */}
+            <Sidebar isOpen={isSidebarOpen} />
+
+            <div
+                className={`flex-1 transition-all duration-300 ${
+                    isSidebarOpen ? "ml-64" : "ml-0"
+                }`}
+            >
+                <Navbar
+                    title="Transactions"
+                    searchHint="Search Transactions"
+                    dropDownName="Currency"
+                    dropDownList={currencies}
+                    toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+                />
+
+                {/* Transactions List */}
+                <TransactionList transactions={data} />
+            </div>
+        </div>
     );
 }

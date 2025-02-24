@@ -28,7 +28,7 @@ export async function getUser(): Promise<User | null> {
 }
 
 export async function logout(): Promise<void> {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/logout`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/login/logout`, {
         method: "POST",
         credentials: "include"
     });

@@ -1,7 +1,7 @@
 import request from 'supertest';
 import express from 'express';
-import { loginController } from '../../src/controller/loginController.js';
-import { getUsersByUsername } from '../../src/db/userService.js';
+import { loginController } from '../../src/controller/loginController';
+import { getUsersByUsername } from '../../src/db/userService';
 
 // Mock the database service
 jest.mock('../../src/db/userService'); 

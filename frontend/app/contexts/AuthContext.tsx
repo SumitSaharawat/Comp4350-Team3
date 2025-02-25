@@ -24,19 +24,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const handleLogin = async (username: string, password: string) => {
         try{
             const result = await login(username, password);
-            setTimeout(() => {  // Give 2 sec to holding
+            setTimeout(() => {  // Give 1 sec to holding
                 window.location.href = "/transactions";
-            }, 2000);
+            }, 1000);
 
             return result;
         }catch(error) {
             console.error("Login failed", error);
-            throw new Error("Login failed");
+            throw new Error(error instanceof Error ? error.message : "Login failed");
         }
     };
 
     const handleSignup = async (username: string, password: string) => {
-        return await signup(username, password);
+        try{
+            const result = await signup(username, password);
+            setTimeout(() => {  // Give 1 sec to holding
+                window.location.href = "/auth/login";
+            }, 1000);
+
+            return result;
+        }catch(error) {
+            console.error("Signup failed", error);
+            throw new Error(error instanceof Error ? error.message : "Signup failed");
+        }
     };
 
     const handleLogout = async () =>{
@@ -45,6 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             localStorage.clear();
             setUser(null);
             window.location.href = "/auth/login";
+
         } catch (error) {
             console.error("Logout failed", error);
         }
@@ -53,14 +64,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const handleResetPassword = async (username: string, password: string) => {
         try {
             const result = await resetPassword(username, password);
-            setTimeout(() => {  // Give 2 sec to holding
+            setTimeout(() => {  // Give 1 sec to holding
                 window.location.href = "/auth/login";
-            }, 2000);
+            }, 1000);
 
             return result;
         } catch (error) {
             console.error("Reset password failed", error);
-            throw new Error("Reset password failed");
+            throw new Error(error instanceof Error ? error.message : "Reset password failed");
         }
     };
 

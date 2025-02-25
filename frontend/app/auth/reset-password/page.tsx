@@ -5,6 +5,7 @@ import { useAuth } from "@/app/contexts/AuthContext";
 import { AuthInput } from "@/components/ui/Input";
 import { AuthButton } from "@/components/ui/Button";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function ResetPasswordPage() {
     const { resetPassword } = useAuth();
@@ -90,6 +91,14 @@ export default function ResetPasswordPage() {
                     <AuthButton onClick={handleResetPassword} loading={loading}>
                         Submit
                     </AuthButton>
+
+                    {/* Already have an account */}
+                    <p className="text-sm text-gray-500 text-center">
+                        Go to login?{" "}
+                        <Link href="/auth/login" className="text-gray-900 hover:underline">
+                            Log in
+                        </Link>
+                    </p>
 
                     {/* Message Block */}
                     {message && (

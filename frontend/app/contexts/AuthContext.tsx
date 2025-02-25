@@ -22,10 +22,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     const handleLogin = async (username: string, password: string) => {
-        const result = await login(username, password);
-        const user = await getUser();
-        setUser(user);
-        return result;
+        try{
+            const result = await login(username, password);
+            setTimeout(() => {  // Give 2 sec to holding
+                window.location.href = "/transactions";
+            }, 2000);
+
+            return result;
+        }catch(error) {
+            console.error("Login failed", error);
+            throw new Error("Login failed");
+        }
     };
 
     const handleSignup = async (username: string, password: string) => {

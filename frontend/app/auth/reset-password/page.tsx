@@ -87,8 +87,8 @@ export default function ResetPasswordPage() {
                     </div>
 
                     {/* Submit Button */}
-                    <AuthButton onClick={handleResetPassword} disabled={loading}>
-                        {loading ? "Processing..." : "Submit"}
+                    <AuthButton onClick={handleResetPassword} loading={loading}>
+                        Submit
                     </AuthButton>
 
                     {/* Message Block */}

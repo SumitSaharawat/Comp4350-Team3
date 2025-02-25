@@ -4,7 +4,12 @@ import { addTransaction, deleteTransaction, editTransaction, getAllTransactions 
 const formatTransaction = (transaction: any) => ({
     id: transaction._id.toString(), // Convert _id to id
     name: transaction.name,
-    date: transaction.date,
+    date: new Date(transaction.date).toLocaleDateString('en-CA', { 
+        weekday: 'short', 
+        year: 'numeric',
+        month: 'short', 
+        day: 'numeric'  
+    }),
     amount: transaction.amount,
     currency: transaction.currency,
     tagId: transaction.tag._id.toString(),
@@ -35,6 +40,8 @@ export const getAllTransactionController = async (req: Request, res: Response) =
 
     try {
         const transactions = await getAllTransactions(userId);
+        console.log('Formatted Transaction:', JSON.stringify(transactions.map(formatTransaction), null, 2));  // Pretty print
+
         console.log('All transactions received successfully:', transactions.map(formatTransaction));  // Log the formatted transaction
 
         res.status(200).json(transactions.map(formatTransaction));

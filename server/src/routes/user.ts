@@ -2,9 +2,9 @@
  * GET user profile page.
  */
 import express from 'express';
-import{ addUserController, getAllUsersController, editUserController, deleteUserController } from '../controller/userController.js'
-import { authenticateToken } from '../middleware/authenticator.js';
-import { validateUserRequest, validateParams } from '../middleware/dbValidation.js';
+import{ addUserController, getAllUsersController, editUserController, deleteUserController } from '../controller/userController'
+import { authenticateToken } from '../middleware/authenticator';
+import { validateUserRequest, validateParams } from '../middleware/dbValidation';
 
 const router = express.Router();
 

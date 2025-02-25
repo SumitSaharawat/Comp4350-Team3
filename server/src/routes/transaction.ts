@@ -1,8 +1,8 @@
 
 import express from 'express';
-import{ addTransactionController, getAllTransactionController, editTransactionController, deleteTransactionController } from '../controller/transactionController.js'
-import { authenticateToken } from '../middleware/authenticator.js';
-import { validateTransactionRequest, validateParams } from '../middleware/dbValidation.js';
+import{ addTransactionController, getAllTransactionController, editTransactionController, deleteTransactionController } from '../controller/transactionController'
+import { authenticateToken } from '../middleware/authenticator';
+import { validateTransactionRequest, validateParams } from '../middleware/dbValidation';
 
 const router = express.Router();
 

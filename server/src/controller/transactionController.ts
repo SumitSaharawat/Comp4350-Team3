@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { addTransaction, deleteTransaction, editTransaction, getAllTransactions } from '../db/transactionService.js';
+import { addTransaction, deleteTransaction, editTransaction, getAllTransactions } from '../db/transactionService';
 
 export const addTransactionController = async (req: Request, res: Response) => {
     const { userId, date, amount, currency, tag }= req.body;

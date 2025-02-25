@@ -1,5 +1,5 @@
 import e, { Request, Response } from 'express';
-import { addUser, getAllUsers, editUser, deleteUser } from '../db/userService.js'; 
+import { addUser, getAllUsers, editUser, deleteUser } from '../db/userService';
 
 export const addUserController = async (req: Request, res: Response) => {
     const { username, password } = req.body;

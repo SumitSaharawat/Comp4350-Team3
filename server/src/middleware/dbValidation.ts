@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
 
 export const validateTransactionRequest = (req: Request, res: Response, next: NextFunction) => {
-    const allowedFields = ['userId', 'date', 'amount', 'currency', 'tag'];
+    const allowedFields = ['userId', 'name', 'date', 'amount', 'currency', 'tag'];
     const bodyKeys = Object.keys(req.body);
 
     // Find unexpected fields

@@ -8,6 +8,7 @@ export interface ITag {
 
 export interface ITransaction extends Document {
     user: mongoose.Schema.Types.ObjectId;
+    name: string;
     date: Date;
     amount: number;
     currency: string;
@@ -24,7 +25,7 @@ const tagSchema = new Schema<ITag>({
         type: String, 
         required: true, match: /^#([0-9A-Fa-f]{6})$/
         }
-});
+}, {_id: true});
 
 
 // Define the schema for the transaction
@@ -38,6 +39,10 @@ const transactionSchema = new Schema<ITransaction>({
             message: "Invalid user ID format"
         }
 
+    },
+    name: {
+        type: String,
+        required: true,
     },
     date: { 
         type: Date, 

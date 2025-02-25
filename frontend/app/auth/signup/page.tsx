@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { AuthInput } from "@/components/ui/Input";
 import { AuthButton } from "@/components/ui/Button";
-import { useRouter } from "next/navigation";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -15,26 +14,38 @@ export default function SignupPage() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [username, setUserName] = useState("");
     const [agreed, setAgreed] = useState(false);
-    const [message, setMessage] = useState("");
-    const router = useRouter();
+    const [message, setMessage] = useState<{ text: string; type: "error" | "success" } | null>(null);
+    const [loading, setLoading] = useState(false);
 
     const handleSignup = async () => {
         if (!agreed) {
-            setMessage("You must agree to the Terms & Conditions.");
+            setMessage({text: "You must agree to the Terms & Conditions.", type: "error"});
+            return;
+        }
+        if (!username || !password || !confirmPassword) {
+            setMessage({ text: "All fields are required.", type: "error" });
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            setMessage({ text: "Passwords do not match.", type: "error" });
             return;
         }
 
         try {
+            setLoading(true);
             const response = await signup(username, password);
-            setMessage(response.message);
-            router.push("/auth/login");
+            setMessage({ text: response.message, type: "success" });
 
         } catch (err: unknown) {
             if (err instanceof Error) {
-                setMessage(err.message);
+                setMessage({ text: err.message, type: "error" });
             } else {
-                setMessage("Failed to sign up");
+                setMessage({ text: "Failed to sign up", type: "error" });
             }
+
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -98,9 +109,7 @@ export default function SignupPage() {
                     </div>
 
                     {/* Submit Button */}
-                    <AuthButton
-                        onClick={handleSignup}
-                    >
+                    <AuthButton onClick={handleSignup} loading={loading}>
                         Create account
                     </AuthButton>
 
@@ -112,10 +121,12 @@ export default function SignupPage() {
                         </Link>
                     </p>
 
-                    {/* Warning message block */}
-                    <div className="space-y-0">
-                        <p className="text-customDarkRed mb-0">{message}</p>
-                    </div>
+                    {/* Message Block */}
+                    {message && (
+                        <p className={`text-sm text-center ${message.type === "error" ? "text-red-600" : "text-green-600"}`}>
+                            {message.text}
+                        </p>
+                    )}
                 </div>
             </div>
         </div>

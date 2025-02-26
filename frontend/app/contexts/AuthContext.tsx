@@ -47,6 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
             const result = await login(username, password);
             localStorage.setItem("username", result.user.username);
+            localStorage.setItem("userid", result.user.id);
             setUser(result.user);
             setTimeout(() => {
                 // Give 1 sec to holding

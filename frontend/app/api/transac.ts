@@ -8,7 +8,7 @@ export interface Transaction {
 
 export async function getTransactionsFromServer(userId: string): Promise<Transaction[]> {
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transactions/:${userId}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${userId}`, {
         method: "GET",
         credentials: "include"
     });
@@ -18,6 +18,7 @@ export async function getTransactionsFromServer(userId: string): Promise<Transac
     }
 
     const data = await res.json();
+    console.log(`Inside transact.ts: ${JSON.stringify(data)}`);
     return data.transactions || [];
 }
 

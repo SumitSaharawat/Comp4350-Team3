@@ -8,12 +8,14 @@ interface NavbarProps {
     dropDownName: string;
     dropDownList: string[];
     toggleSidebar: () => void;
+    onSearchTermChange: (searchTerm: string) => void;
 }
 
 // this is using daisyUI example code
 export default function Navbar({
     title,
     searchHint,
+    onSearchTermChange,
     dropDownName,
     dropDownList,
     toggleSidebar,
@@ -44,6 +46,7 @@ export default function Navbar({
                     <SearchBar
                         searchHint={searchHint}
                         onSearchLaungh={setSearchTerm}
+                        onTextChange={onSearchTermChange}
                     />
                 </div>
 

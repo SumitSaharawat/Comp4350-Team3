@@ -22,6 +22,7 @@ export function TransactionsProvider({
 
     const handleGetTransactions = async (userId: string) => {
         const data = await getTransactionsFromServer(userId);
+        console.log(`Inside tranc context: ${data}`);
         if (Array.isArray(data)) {
             setTransactions(data);
             return true;

@@ -6,7 +6,7 @@ import { Transaction } from "../api/transac";
 import { useAuth } from "@/app/contexts/AuthContext";
 
 // components
-import Navbar from "@/components/ui/navbar";
+import Navbar from "@/components/ui/Navbar";
 import TransactionList from "@/components/ui/TransactionList";
 import Sidebar from "@/components/ui/Sidebar";
 
@@ -18,12 +18,16 @@ export default function TransactionsPage() {
 
     const currencies = ["CAD", "USD"];
 
+    const onSearchTermChange = (searchTerm: string) => {
+        console.log(searchTerm);
+    };
+
     useEffect(() => {
         const getDataOnRender = async () => {
-            console.log(`User is ${JSON.stringify(user)}`);
             try {
                 const success = await getTransactions(user?.id || "");
                 if (success) {
+                    console.log(`Get from backend: ${transactions}`);
                     setData(transactions);
                 }
             } catch (err) {
@@ -61,6 +65,7 @@ export default function TransactionsPage() {
                     searchHint="Search Transactions"
                     dropDownName="Currency"
                     dropDownList={currencies}
+                    onSearchTermChange={onSearchTermChange}
                     toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
                 />
 

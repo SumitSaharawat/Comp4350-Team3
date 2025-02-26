@@ -28,18 +28,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // }, []);
 
     // get user info from localStorage (after refreshed page)
-    useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        }
-    }, []);
+    // useEffect(() => {
+    //     const storedUser = localStorage.getItem("user");
+    //     if (storedUser) {
+    //         setUser(JSON.parse(storedUser));
+    //     }
+    // }, []);
 
     const handleLogin = async (username: string, password: string) => {
         const result = await login(username, password);
-        // const user = await getUser();
         setUser(result.user);
-        localStorage.setItem("user", JSON.stringify(result.user)); // storage user info into localStorage
         return { message: result.message };
     };
 

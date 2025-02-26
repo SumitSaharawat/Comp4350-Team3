@@ -1,11 +1,16 @@
 import e, { Request, Response } from 'express';
 import { addUser, getAllUsers, editUser, deleteUser } from '../db/userService.js'; 
 
+const formatUser = (user: any) => ({
+    id: user._id.toString(), 
+    username: user.username, 
+});
+
 export const addUserController = async (req: Request, res: Response) => {
     const { username, password } = req.body;
     try {
         const user = await addUser(username, password);
-        res.status(201).json({ message: 'User created successfully', user });
+        res.status(201).json({ message: 'User created successfully', user: formatUser(user) });
     } 
     catch (err) {
         console.error('Error creating user:', err.message || err); // Log to terminal
@@ -17,7 +22,7 @@ export const addUserController = async (req: Request, res: Response) => {
 export const getAllUsersController = async (req: Request, res: Response) => {
     try {
         const users = await getAllUsers();
-        res.status(200).json({ users });
+        res.status(200).json({ users: users.map(formatUser) });
     } 
     catch (err) {
         console.error('Error retrieving user:', err.message || err); // Log to terminal
@@ -33,7 +38,7 @@ export const editUserController = async (req: Request, res: Response) => {
     try {
         const updatedUser = await editUser(id, username, password);
         if (updatedUser) {
-            res.status(200).json({ message: 'User updated successfully', user: updatedUser });
+            res.status(200).json({ message: 'User updated successfully', user: formatUser(updatedUser) });
         } 
         else {
             res.status(404).json({ message: 'User not found' });

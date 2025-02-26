@@ -1,7 +1,14 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { login, logout, signup, resetPassword, User } from "@/app/api/auth";
+import {
+    login,
+    logout,
+    signup,
+    resetPassword,
+    User,
+    getUser,
+} from "@/app/api/auth";
 
 interface AuthContextType {
     user: User | null;
@@ -15,6 +22,7 @@ interface AuthContextType {
         username: string,
         password: string
     ) => Promise<{ message: string }>;
+    getUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -36,9 +44,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // }, []);
 
     const handleLogin = async (username: string, password: string) => {
-        const result = await login(username, password);
-        setUser(result.user);
-        return result;
+        try {
+            const result = await login(username, password);
+            localStorage.setItem("username", result.user.username);
+            setUser(result.user);
+            setTimeout(() => {
+                // Give 1 sec to holding
+                window.location.href = "/transactions";
+            }, 1000);
+
+            return result;
+        } catch (error) {
+            console.error("Login failed", error);
+            throw new Error(
+                error instanceof Error ? error.message : "Login failed"
+            );
+        }
     };
 
     const handleSignup = async (username: string, password: string) => {
@@ -86,6 +107,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
+    const handleGetUser = async () => {
+        const receivedUser = await getUser();
+        setUser(receivedUser);
+    };
+
     return (
         <AuthContext.Provider
             value={{
@@ -94,6 +120,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 signup: handleSignup,
                 logout: handleLogout,
                 resetPassword: handleResetPassword,
+                getUser: handleGetUser,
             }}
         >
             {children}

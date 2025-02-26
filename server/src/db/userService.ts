@@ -36,7 +36,7 @@ export const getUsersByUsername = async (username: string) => {
         if (users.length === 0) {
             console.log('no users found with username:', username);
         }
-        return users;
+        return users[0];
     }
     catch (err) {
         console.error('Error retrieving users:', err);

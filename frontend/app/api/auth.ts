@@ -18,7 +18,8 @@ export async function login(username: string, password: string): Promise<{ user:
 }
 
 export async function getUser(): Promise<User | null> {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
+    const username = localStorage.getItem("username");
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/${username}`, {
         method: "GET",
         credentials: "include"
     });

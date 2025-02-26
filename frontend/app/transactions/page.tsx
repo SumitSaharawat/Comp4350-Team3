@@ -12,7 +12,7 @@ import Sidebar from "@/components/ui/Sidebar";
 
 export default function TransactionsPage() {
     const { transactions, getTransactions } = useTransactions();
-    const { user } = useAuth();
+    const { user, getUser } = useAuth();
     const [data, setData] = useState<Transaction[]>([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -39,10 +39,10 @@ export default function TransactionsPage() {
             }
         };
 
-        if (user) {
-            getDataOnRender();
+        if (!user) {
+            getUser();
         }
-
+        getDataOnRender();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 

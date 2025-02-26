@@ -2,17 +2,20 @@
 
 import { useState } from "react";
 import { AuthInput } from "@/components/ui/Input";
-import { AuthButton} from "@/components/ui/Button";
+import { AuthButton } from "@/components/ui/Button";
 import { useAuth } from "@/app/contexts/AuthContext";
 
 import Image from "next/image";
 import Link from "next/link";
 
 export default function LoginPage() {
-    const {login} = useAuth();
+    const { login } = useAuth();
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
-    const [message, setMessage] = useState<{ text: string; type: "error" | "success" } | null>(null);
+    const [message, setMessage] = useState<{
+        text: string;
+        type: "error" | "success";
+    } | null>(null);
     const [loading, setLoading] = useState(false);
 
     const handleLogin = async () => {
@@ -25,15 +28,13 @@ export default function LoginPage() {
             setLoading(true);
             const response = await login(username, password);
             setMessage({ text: response.message, type: "success" });
-
         } catch (err: unknown) {
             if (err instanceof Error) {
                 setMessage({ text: err.message, type: "error" });
             } else {
                 setMessage({ text: "Failed to login", type: "error" });
             }
-        }
-        finally {
+        } finally {
             setLoading(false);
         }
     };
@@ -84,14 +85,20 @@ export default function LoginPage() {
                     <div className="relative space-y-5">
                         <p className="text-sm text-gray-500 text-center">
                             {"Don't have an account? "}
-                            <Link href="/auth/signup" className="text-gray-900 hover:underline">
+                            <Link
+                                href="/auth/signup"
+                                className="text-gray-900 hover:underline"
+                            >
                                 Sign Up
                             </Link>
                         </p>
 
                         {/* Forgot Password */}
                         <p className="text-sm text-gray-500 text-center">
-                            <Link href="/auth/reset-password" className="text-gray-700 hover:underline">
+                            <Link
+                                href="/auth/reset-password"
+                                className="text-gray-700 hover:underline"
+                            >
                                 Forgot password?
                             </Link>
                         </p>
@@ -99,7 +106,13 @@ export default function LoginPage() {
 
                     {/* Message Block */}
                     {message && (
-                        <p className={`text-sm text-center ${message.type === "error" ? "text-red-600" : "text-green-600"}`}>
+                        <p
+                            className={`text-sm text-center ${
+                                message.type === "error"
+                                    ? "text-red-600"
+                                    : "text-green-600"
+                            }`}
+                        >
                             {message.text}
                         </p>
                     )}

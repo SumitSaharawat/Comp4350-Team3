@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 interface searchBarProps {
     searchHint?: string;
     onTextChange?: (inputText: string) => void;
-    onSearchLaungh: (inputText: string) => void;
+    onSearchLaungh?: (inputText: string) => void;
 }
 
 const AuthInput = React.forwardRef<
@@ -30,20 +30,18 @@ const SearchBar = ({
     onTextChange,
     onSearchLaungh,
 }: searchBarProps) => {
-    const [searchTerm, setSearchTerm] = React.useState("");
-
-    React.useEffect(() => {
-        if (onTextChange) onTextChange(searchTerm);
-    }, [searchTerm, onTextChange]);
-
     return (
         <label className="input input-bordered flex items-center gap-2">
             <input
                 type="text"
                 className="grow"
                 placeholder={searchHint}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyDown={() => onSearchLaungh(searchTerm)}
+                onChange={(e) => {
+                    if (onTextChange) onTextChange(e.target.value);
+                }}
+                onKeyDown={(e) => {
+                    if (onSearchLaungh) onSearchLaungh(e.currentTarget.value);
+                }}
             />
             <svg
                 viewBox="0 0 16 16"

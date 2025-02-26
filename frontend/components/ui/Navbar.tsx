@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { HamburgerButton } from "./Button";
 import { SearchBar } from "./Input";
 
@@ -20,15 +19,9 @@ export default function Navbar({
     dropDownList,
     toggleSidebar,
 }: NavbarProps) {
-    const [searchTerm, setSearchTerm] = useState("");
-
     const onSelectDropdown = (item: string) => {
         console.log(item);
     };
-
-    useEffect(() => {
-        console.log(searchTerm);
-    }, [searchTerm]);
 
     return (
         <>
@@ -45,7 +38,6 @@ export default function Navbar({
                 <div className="flex-1 flex justify-center">
                     <SearchBar
                         searchHint={searchHint}
-                        onSearchLaungh={setSearchTerm}
                         onTextChange={onSearchTermChange}
                     />
                 </div>

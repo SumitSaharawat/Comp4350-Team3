@@ -3,7 +3,8 @@ export interface Transaction {
     id: string,
     date: Date,
     amount: number,
-    currency: string
+    currency: string,
+    name: string,
 }
 
 export async function getTransactionsFromServer(userId: string): Promise<Transaction[]> {
@@ -18,7 +19,6 @@ export async function getTransactionsFromServer(userId: string): Promise<Transac
     }
 
     const data = await res.json();
-    console.log(`Inside transact.ts: ${JSON.stringify(data)}`);
-    return data.transactions || [];
+    return data || [];
 }
 

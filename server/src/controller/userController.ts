@@ -32,7 +32,7 @@ export const getSingleUserController = async (req: Request, res: Response) => {
         const { username } = req.params;
         console.log(`get user: ${username}`);
         const users = await getUsersByUsername(username);
-        res.status(200).json({ users: users.map(formatUser) });
+        res.status(200).json(users.map(formatUser)[0]);
     } catch (err) {
         console.error("Error retrieving user:", err.message || err); // Log to terminal
         return res

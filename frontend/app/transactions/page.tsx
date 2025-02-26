@@ -25,6 +25,7 @@ export default function TransactionsPage() {
     useEffect(() => {
         const getDataOnRender = async () => {
             try {
+                console.log(`User is : ${JSON.stringify(user)}`);
                 const success = await getTransactions(user?.id || "");
                 if (success) {
                     console.log(`Get from backend: ${transactions}`);

@@ -4,7 +4,6 @@ import mongoose from 'mongoose';
 
 export const addTransaction = async (userId: string, name: string, date: string, amount: number, currency: string) => {
     try {
-        console.log("Received transaction data:", { userId, name, date, amount, currency });
 
         // 🔹 Validate if user exists before proceeding
         const userExists = await User.findById(userId);
@@ -21,7 +20,6 @@ export const addTransaction = async (userId: string, name: string, date: string,
         });
 
         await newTransaction.save();
-        console.log('Transaction added successfully:', newTransaction);
         return newTransaction;
     } catch (err) {
         if (err.name === 'ValidationError') {
@@ -40,7 +38,6 @@ export const getAllTransactions = async (userId: string): Promise<ITransaction[]
         }
 
         const transactions = await Transaction.find({user: userId}).populate('user');
-        console.log('Transactions retrieved for user ${userId}:', transactions);
         return transactions;
     } catch (err) {
         if (err.name === 'ValidationError') {
@@ -71,7 +68,6 @@ export const editTransaction = async (id: string, name?: string, date?: string, 
 
         await updatedTransaction.save();
 
-        console.log('Transaction updated successfully:', updatedTransaction);
         return updatedTransaction;
     } 
     catch (err) {

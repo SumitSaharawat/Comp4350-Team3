@@ -3,9 +3,10 @@
 import { useState, useEffect } from "react";
 import { useTransactions } from "@/app/contexts/TransactionsContext";
 import { Transaction } from "../api/transac";
+import { useAuth } from "@/app/contexts/AuthContext";
 
 // components
-import Navbar from "@/components/ui/navbar";
+import Navbar from "@/components/ui/Navbar";
 import TransactionList from "@/components/ui/TransactionList";
 import Sidebar from "@/components/ui/Sidebar";
 import {FloatingButton} from "@/components/ui/Button";
@@ -13,17 +14,24 @@ import TransactionFormModal from "@/components/ui/TransactionFormModal";
 
 export default function TransactionsPage() {
     const { transactions, getTransactions } = useTransactions();
+    const { user, getUser } = useAuth();
     const [data, setData] = useState<Transaction[]>([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isFormOpen, setIsFormOpen] = useState(false);
 
     const currencies = ["CAD", "USD"];
 
+    const onSearchTermChange = (searchTerm: string) => {
+        console.log(searchTerm);
+    };
+
     useEffect(() => {
         const getDataOnRender = async () => {
             try {
-                const success = await getTransactions();
+                console.log(`User is : ${JSON.stringify(user)}`);
+                const success = await getTransactions(user?.id || "");
                 if (success) {
+                    console.log(`Get from backend: ${transactions}`);
                     setData(transactions);
                 }
             } catch (err) {
@@ -35,9 +43,12 @@ export default function TransactionsPage() {
             }
         };
 
+        if (!user) {
+            getUser();
+        }
         getDataOnRender();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [user]);
 
     useEffect(() => {
         setData(transactions);
@@ -46,14 +57,19 @@ export default function TransactionsPage() {
     return (
         <div className="flex">
             {/* Sidebar */}
-            <Sidebar isOpen={isSidebarOpen}/>
+            <Sidebar isOpen={isSidebarOpen} />
 
-            <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
+            <div
+                className={`flex-1 transition-all duration-300 ${
+                    isSidebarOpen ? "ml-64" : "ml-0"
+                }`}
+            >
                 <Navbar
                     title="Transactions"
                     searchHint="Search Transactions"
                     dropDownName="Currency"
                     dropDownList={currencies}
+                    onSearchTermChange={onSearchTermChange}
                     toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
                 />
 

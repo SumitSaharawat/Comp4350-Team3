@@ -45,6 +45,22 @@ export const validateUserRequest = (req: Request, res: Response, next: NextFunct
     next(); 
 };
 
+export const validateTagRequest = (req: Request, res: Response, next: NextFunction) => {
+    const allowedFields = ['transactionId', 'id', 'name', 'color'];
+    const bodyKeys = Object.keys(req.body);
+
+    // Find unexpected fields
+    const unexpectedFields = bodyKeys.filter(key => !allowedFields.includes(key));
+
+    if (unexpectedFields.length > 0) {
+        return res.status(400).json({ 
+            error: `Unexpected field(s): ${unexpectedFields.join(', ')}` 
+        });
+    }
+
+    next(); 
+};
+
 
 
 

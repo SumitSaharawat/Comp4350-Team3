@@ -12,18 +12,13 @@ const formatTransaction = (transaction: any) => ({
     }),
     amount: transaction.amount,
     currency: transaction.currency,
-    tagId: transaction.tag._id.toString(),
-    tag: {
-        name: transaction.tag.name,
-        color: transaction.tag.color
-    }
 });
 
 export const addTransactionController = async (req: Request, res: Response) => {
-    const { userId, name, date, amount, currency, tag }= req.body;
+    const { userId, name, date, amount, currency }= req.body;
 
     try {
-        const transaction = await addTransaction(userId, name, date, amount, currency, tag);
+        const transaction = await addTransaction(userId, name, date, amount, currency);
         res.status(201).json({ message: 'Transaction added successfully', transaction: formatTransaction(transaction) });
 
     } 
@@ -54,10 +49,10 @@ export const getAllTransactionController = async (req: Request, res: Response) =
 
 export const editTransactionController = async(req: Request, res: Response) => {
     const { id } = req.params;
-    const { name, date, amount, currency, tag } = req.body;
+    const { name, date, amount, currency } = req.body;
 
     try {
-        const updatedTransaction = await editTransaction(id, name, date, amount, currency, tag);
+        const updatedTransaction = await editTransaction(id, name, date, amount, currency);
         if (updatedTransaction) {
             res.status(200).json({ message: 'Transaction updated successfully', transaction: formatTransaction(updatedTransaction) });
         } 

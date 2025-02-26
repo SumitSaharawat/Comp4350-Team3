@@ -8,19 +8,19 @@ const router = express.Router();
 
 //http://localhost:portNum/api/tag
 
-router.get('/:transactionId', validateTagRequest, getAllTagsController);
+router.get('/:transactionId', authenticateToken, validateTagRequest, getAllTagsController);
 
 
 
-router.post('/', validateTagRequest, addTagController);
+router.post('/', authenticateToken, validateTagRequest, addTagController);
 
 //http://localhost:portNum/api/user/someID  (probably a better way of doing it that im not thinking about)
 // example body for put:
 // { 'name': 'someTag', 'color': 'someHexcode'}
-router.put('/:id', validateTagRequest, validateParams("id"), editTagController);
+router.put('/:id', authenticateToken, validateTagRequest, validateParams("id"), editTagController);
 
 // example for delete:
 //http://localhost:portNum/api/tag/someID (same as the put path)
-router.delete('/:id', validateTagRequest, validateParams("id"), deleteTagController);
+router.delete('/:id', authenticateToken, validateTagRequest, validateParams("id"), deleteTagController);
 
 export default router;

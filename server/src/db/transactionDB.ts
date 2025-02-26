@@ -1,32 +1,14 @@
 import mongoose, { Document } from 'mongoose';
 const Schema = mongoose.Schema;
 
-export interface ITag {
-    name: string;
-    color: string; //hex code
-}
-
 export interface ITransaction extends Document {
     user: mongoose.Schema.Types.ObjectId;
     name: string;
     date: Date;
     amount: number;
     currency: string;
-    tag: ITag
+
 }
-
-// Define the schema for tags
-const tagSchema = new Schema<ITag>({
-    name: { 
-            type: String, 
-            required: [true, "Tag is required"]
-        },
-    color: {
-        type: String, 
-        required: true, match: /^#([0-9A-Fa-f]{6})$/
-        }
-}, {_id: true});
-
 
 // Define the schema for the transaction
 const transactionSchema = new Schema<ITransaction>({
@@ -62,11 +44,6 @@ const transactionSchema = new Schema<ITransaction>({
         required: true,
         match: [/^[A-Z]{3}$/, "Invalid currency format (e.g., CAD)"],
      },
-    tag: { 
-        type: tagSchema, 
-        required: false, 
-        default: { name: "null", color: "#000000" } 
-    }, 
 },
 {strict: 'throw'}
 

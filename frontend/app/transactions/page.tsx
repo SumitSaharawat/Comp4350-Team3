@@ -63,7 +63,7 @@ export default function TransactionsPage() {
                 {/* Floating + button */}
                 <FloatingButton toggle={() => setIsFormOpen(!isFormOpen)} />
 
-                {/* transaction form window */}
+                {/* transaction window */}
                 <TransactionFormModal isOpen={isFormOpen} toggle={() => setIsFormOpen(!isFormOpen)} />
             </div>
         </div>

@@ -38,11 +38,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const handleLogin = async (username: string, password: string) => {
         const result = await login(username, password);
         setUser(result.user);
-        return { message: result.message };
+        return result;
     };
 
     const handleSignup = async (username: string, password: string) => {
-        return await signup(username, password);
+        try {
+            const result = await signup(username, password);
+            setTimeout(() => {
+                // Give 1 sec to holding
+                window.location.href = "/auth/login";
+            }, 1000);
+
+            return result;
+        } catch (error) {
+            console.error("Signup failed", error);
+            throw new Error(
+                error instanceof Error ? error.message : "Signup failed"
+            );
+        }
     };
 
     const handleLogout = async () => {
@@ -57,7 +70,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     const handleResetPassword = async (username: string, password: string) => {
-        return await resetPassword(username, password);
+        try {
+            const result = await resetPassword(username, password);
+            setTimeout(() => {
+                // Give 1 sec to holding
+                window.location.href = "/auth/login";
+            }, 1000);
+
+            return result;
+        } catch (error) {
+            console.error("Reset password failed", error);
+            throw new Error(
+                error instanceof Error ? error.message : "Reset password failed"
+            );
+        }
     };
 
     return (

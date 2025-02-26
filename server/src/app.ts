@@ -10,6 +10,7 @@ import connectDB from './db/db.js';
 import index from './routes/index.js';
 import user from './routes/user.js';
 import transaction from './routes/transaction.js';
+import tag from './routes/tag.js';
 import login from './routes/login.js';
 import { devError, prodError } from './middleware/errorHandler.js';
 import { requestLog } from './middleware/loggers.js';
@@ -47,7 +48,8 @@ if (isDevelopment) {
 app.use('/', index);
 app.use('/api/user', user);
 app.use('/api/login', login);
-app.use('/api/transaction', transaction)
+app.use('/api/transaction', transaction);
+app.use('/api/tag', tag);
 
 // connect to DB
 connectDB().then(() => {

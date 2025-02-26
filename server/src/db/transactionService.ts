@@ -1,8 +1,8 @@
-import Transaction, { ITransaction, ITag } from './transactionDB.js';
+import Transaction, { ITransaction } from './transactionDB.js';
 import User from './userDB.js'
 import mongoose from 'mongoose';
 
-export const addTransaction = async (userId: string, date: string, amount: number, currency: string, tag: ITag) => {
+export const addTransaction = async (userId: string, name: string, date: string, amount: number, currency: string) => {
     try {
 
         // 🔹 Validate if user exists before proceeding
@@ -13,10 +13,10 @@ export const addTransaction = async (userId: string, date: string, amount: numbe
 
         const newTransaction = new Transaction({
             user: userId,
+            name,
             date: new Date(date), 
             amount,
             currency,
-            tag
         });
 
         await newTransaction.save();
@@ -49,7 +49,7 @@ export const getAllTransactions = async (userId: string): Promise<ITransaction[]
 };
 
 //To edit, need to enter in the body, all the fields again, even ones that you didn't intend to replace. If you don't enter tag, it deletes it and sets it to default.
-export const editTransaction = async (id: string, date?: string, amount?: number, currency?: string, tag?: ITag): Promise<ITransaction | null> => {
+export const editTransaction = async (id: string, name?: string, date?: string, amount?: number, currency?: string): Promise<ITransaction | null> => {
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) {
             throw new Error('Invalid transaction ID format');
@@ -61,20 +61,10 @@ export const editTransaction = async (id: string, date?: string, amount?: number
             return null;
         }
 
-        // const updatedFields: Partial<ITransaction> = {};
-
         if (date) updatedTransaction.date = new Date(date); 
+        if (name) updatedTransaction.name = name;
         if (amount) updatedTransaction.amount = amount;
         if (currency) updatedTransaction.currency = currency;
-        if (tag) 
-            updatedTransaction.tag = tag;
-        else {
-            updatedTransaction.tag = {name: "null", color: "#000000"};
-        }
-
-      //  const updatedTransaction = await Transaction.findByIdAndUpdate(id, updatedFields, { new: true });
-
-
 
         await updatedTransaction.save();
 

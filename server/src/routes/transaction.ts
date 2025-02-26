@@ -17,10 +17,7 @@ router.get('/:userId', authenticateToken, validateTransactionRequest, validatePa
 //   "date": "2025-02-17T12:00:00Z",
 //   "amount": 100.50,
 //   "currency": "USD",
-//   "tag": {
-//     "name": "Food",
-//     "color": "#FF5733"
-//   }}
+//   }
 router.post('/', authenticateToken, validateTransactionRequest, addTransactionController);
 
 // http://localhost:3000/api/transaction/id

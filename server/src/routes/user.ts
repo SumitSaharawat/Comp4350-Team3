@@ -1,6 +1,6 @@
-/*
- * GET user profile page.
- */
+
+// GET user profile page.
+
 import express from 'express';
 import{ addUserController, getAllUsersController, editUserController, deleteUserController } from '../controller/userController'
 import { authenticateToken } from '../middleware/authenticator';

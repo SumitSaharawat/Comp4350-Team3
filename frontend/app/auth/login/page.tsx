@@ -5,28 +5,36 @@ import { AuthInput } from "@/components/ui/Input";
 import { AuthButton} from "@/components/ui/Button";
 import { useAuth } from "@/app/contexts/AuthContext";
 
-// @ts-ignore
 import Image from "next/image";
-// @ts-ignore
 import Link from "next/link";
 
 export default function LoginPage() {
     const {login} = useAuth();
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
-    const [message, setMessage] = useState("");
+    const [message, setMessage] = useState<{ text: string; type: "error" | "success" } | null>(null);
+    const [loading, setLoading] = useState(false);
 
     const handleLogin = async () => {
+        if (!username || !password) {
+            setMessage({ text: "All fields are required.", type: "error" });
+            return;
+        }
+
         try {
+            setLoading(true);
             const response = await login(username, password);
-            setMessage(response.message);
+            setMessage({ text: response.message, type: "success" });
 
         } catch (err: unknown) {
             if (err instanceof Error) {
-                setMessage(err.message);
+                setMessage({ text: err.message, type: "error" });
             } else {
-                setMessage("Failed to log in");
+                setMessage({ text: "Failed to login", type: "error" });
             }
+        }
+        finally {
+            setLoading(false);
         }
     };
 
@@ -69,9 +77,7 @@ export default function LoginPage() {
                     </div>
 
                     {/* Submit Button */}
-                    <AuthButton
-                        onClick={handleLogin}
-                    >
+                    <AuthButton onClick={handleLogin} loading={loading}>
                         Log In
                     </AuthButton>
 
@@ -91,10 +97,12 @@ export default function LoginPage() {
                         </p>
                     </div>
 
-                    {/* Warning message block */}
-                    <div className="space-y-0">
-                        <p className="text-customDarkRed mb-0">{message}</p>
-                    </div>
+                    {/* Message Block */}
+                    {message && (
+                        <p className={`text-sm text-center ${message.type === "error" ? "text-red-600" : "text-green-600"}`}>
+                            {message.text}
+                        </p>
+                    )}
                 </div>
             </div>
         </div>

@@ -47,7 +47,8 @@ if (isDevelopment) {
 app.use('/', index);
 app.use('/api/user', user);
 app.use('/api/login', login);
-app.use('/api/transaction', transaction)
+app.use('/api/transaction', transaction);
+app.use('/api/tag', tag);
 
 // connect to DB
 connectDB().then(() => {

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const dbURI = 'mongodb+srv://comp4350:qwer@simplefinance.sjbyl.mongodb.net/SimpleFinance?retryWrites=true&w=majority&appName=SimpleFinance';
+const dbURI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@simplefinance.sjbyl.mongodb.net/SimpleFinance?retryWrites=true&w=majority&appName=SimpleFinance`;
 
 const connectDB = async () => {
     try {

@@ -8,11 +8,14 @@ import { Transaction } from "../api/transac";
 import Navbar from "@/components/ui/navbar";
 import TransactionList from "@/components/ui/TransactionList";
 import Sidebar from "@/components/ui/Sidebar";
+import {FloatingButton} from "@/components/ui/Button";
+import TransactionFormModal from "@/components/ui/TransactionFormModal";
 
 export default function TransactionsPage() {
     const { transactions, getTransactions } = useTransactions();
     const [data, setData] = useState<Transaction[]>([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isFormOpen, setIsFormOpen] = useState(false);
 
     const currencies = ["CAD", "USD"];
 
@@ -55,9 +58,13 @@ export default function TransactionsPage() {
                 />
 
                 {/* Transactions List */}
-                <TransactionList
-                    transactions={data}
-                />
+                <TransactionList transactions={data} />
+
+                {/* Floating + button */}
+                <FloatingButton toggle={() => setIsFormOpen(!isFormOpen)} />
+
+                {/* transaction form window */}
+                <TransactionFormModal isOpen={isFormOpen} toggle={() => setIsFormOpen(!isFormOpen)} />
             </div>
         </div>
     );

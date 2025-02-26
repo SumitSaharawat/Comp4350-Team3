@@ -1,7 +1,8 @@
-import e, { Request, Response } from 'express';
+import { Request, Response } from 'express';
+import { IUser } from '../db/userDB.js';
 import { addUser, getAllUsers, editUser, deleteUser } from '../db/userService.js'; 
 
-const formatUser = (user: any) => ({
+const formatUser = (user: IUser) => ({
     id: user._id.toString(), 
     username: user.username, 
 });

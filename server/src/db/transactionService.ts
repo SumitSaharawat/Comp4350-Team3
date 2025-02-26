@@ -25,7 +25,7 @@ export const addTransaction = async (userId: string, name: string, date: string,
         return newTransaction;
     } catch (err) {
         if (err.name === 'ValidationError') {
-            throw new Error(`Validation Error: ${Object.values(err.errors).map(e => (e as any).message).join(', ')}`);
+            throw new Error(`Validation Error: ${Object.values(err.errors).map(e => (e as mongoose.Error.ValidationError).message).join(', ')}`);
         }
         console.error('Error adding transaction:', err);
         throw err;
@@ -44,7 +44,7 @@ export const getAllTransactions = async (userId: string): Promise<ITransaction[]
         return transactions;
     } catch (err) {
         if (err.name === 'ValidationError') {
-            throw new Error(`Validation Error: ${Object.values(err.errors).map(e => (e as any).message).join(', ')}`);
+            throw new Error(`Validation Error: ${Object.values(err.errors).map(e => (e as mongoose.Error.ValidationError).message).join(', ')}`);
         }
         console.error('Error retrieving transactions:', err);
         throw err;
@@ -76,7 +76,7 @@ export const editTransaction = async (id: string, name?: string, date?: string, 
     } 
     catch (err) {
         if (err.name === 'ValidationError') {
-            const errorMessages = Object.values(err.errors).map((e: any) => e.message).join(', ');
+            const errorMessages = Object.values(err.errors).map((e: mongoose.Error.ValidationError) => e.message).join(', ');
             console.error('Validation failed:', errorMessages);
             throw new Error(`Validation Error: ${errorMessages}`);
         }
@@ -102,7 +102,7 @@ export const deleteTransaction = async (id: string) => {
         return result;
     } catch (err) {
         if (err.name === 'ValidationError') {
-            throw new Error(`Validation Error: ${Object.values(err.errors).map(e => (e as any).message).join(', ')}`);
+            throw new Error(`Validation Error: ${Object.values(err.errors).map(e => (e as mongoose.Error.ValidationError).message).join(', ')}`);
         }
         console.error('Error deleting user:', err);
         throw err;

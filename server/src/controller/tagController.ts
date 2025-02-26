@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
+import { ITag } from '../db/tagDB.js';
 import { addTag, getAllTags, editTag, deleteTag } from '../db/tagService.js'; 
 
-const formatTag = (tag: any) => ({
+const formatTag = (tag: ITag) => ({
     id: tag._id.toString(), 
     name: tag.name, 
     color: tag.color,

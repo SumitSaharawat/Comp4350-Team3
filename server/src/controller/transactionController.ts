@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
+import { ITransaction } from '../db/transactionDB.js';
 import { addTransaction, deleteTransaction, editTransaction, getAllTransactions } from '../db/transactionService.js';
 
-const formatTransaction = (transaction: any) => ({
+const formatTransaction = (transaction: ITransaction) => ({
     id: transaction._id.toString(), // Convert _id to id
     name: transaction.name,
     date: new Date(transaction.date).toLocaleDateString('en-CA', { 

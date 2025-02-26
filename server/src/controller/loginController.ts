@@ -68,7 +68,7 @@ export const createAccountController = async (req: Request, res: Response) => {
         // otherwise, create the account and return a successful message
         // will be replaced by mongodb integration once its set up 
         else {
-            const newUser = await addUser(username, bcrypt.hashSync(password, 10));
+            await addUser(username, bcrypt.hashSync(password, 10));
             res.status(200).json({message: "Account created successfully!"});
         }
         

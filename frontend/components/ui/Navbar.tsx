@@ -1,28 +1,20 @@
 import { HamburgerButton } from "./Button";
-import { SearchBar } from "./Input";
+import { ReactNode } from "react";
 
 interface NavbarProps {
     title: string;
-    searchHint: string;
-    dropDownName: string;
-    dropDownList: string[];
+    middleComponent?: ReactNode;
+    rightComponent?: ReactNode;
     toggleSidebar: () => void;
-    onSearchTermChange: (searchTerm: string) => void;
 }
 
 // this is using daisyUI example code
 export default function Navbar({
     title,
-    searchHint,
-    onSearchTermChange,
-    dropDownName,
-    dropDownList,
+    middleComponent,
+    rightComponent,
     toggleSidebar,
 }: NavbarProps) {
-    const onSelectDropdown = (item: string) => {
-        console.log(item);
-    };
-
     return (
         <>
             {/**The navigation bar */}
@@ -35,28 +27,10 @@ export default function Navbar({
                 </div>
 
                 {/**Search bar */}
-                <div className="flex-1 flex justify-center">
-                    <SearchBar
-                        searchHint={searchHint}
-                        onTextChange={onSearchTermChange}
-                    />
-                </div>
+                {middleComponent}
 
                 {/**Drop down */}
-                <details className="dropdown">
-                    <summary className="btn m-1">{dropDownName}</summary>
-                    <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                        {dropDownList.map((d) => {
-                            return (
-                                <li key={d}>
-                                    <a onClick={() => onSelectDropdown(d)}>
-                                        {d}
-                                    </a>
-                                </li>
-                            );
-                        })}
-                    </ul>
-                </details>
+                {rightComponent}
             </div>
         </>
     );

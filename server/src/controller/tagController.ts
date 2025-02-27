@@ -9,9 +9,9 @@ const formatTag = (tag: ITag) => ({
 });
 
 export const addTagController = async (req: Request, res: Response) => {
-    const { transactionId, name, color } = req.body;
+    const { name, color } = req.body;
     try {
-        const tag = await addTag(transactionId, name, color);
+        const tag = await addTag(name, color);
         const formattedTag = formatTag(tag);
 
         console.log('Formatted Tag:', formattedTag);
@@ -25,10 +25,8 @@ export const addTagController = async (req: Request, res: Response) => {
 };
 
 export const getAllTagsController = async (req: Request, res: Response) => {
-    const { transactionId } = req.params;
-
     try {
-        const tags = await getAllTags(transactionId);
+        const tags = await getAllTags();
         const formattedTags = tags.map(formatTag);
 
         console.log('Formatted Tags:', formattedTags);

@@ -1,107 +1,169 @@
-import request from 'supertest';
-import express from 'express';
-import bodyParser from 'body-parser';
-import {
-    addTransactionController,
-    getAllTransactionController,
-    editTransactionController,
-    deleteTransactionController
+import { Request, Response } from 'express';
+import { 
+    addTransactionController, 
+    getAllTransactionController, 
+    editTransactionController, 
+    deleteTransactionController 
 } from '../../src/controller/transactionController';
-import * as transactionService from '../../src/db/transactionService';
 
-jest.mock('../../src/db/transactionService', () => ({
-    ...jest.requireActual('../../src/db/transactionService'),
-    addTransaction: jest.fn(),
-    getAllTransactions: jest.fn(),
-    editTransaction: jest.fn(),
-    deleteTransaction: jest.fn(),
-}));
+import { 
+    addTransaction, 
+    getAllTransactions, 
+    editTransaction, 
+    deleteTransaction 
+} from '../../src/db/transactionService';
+
+// Mock transactionService
+jest.mock('../../src/db/transactionService');
 
 describe('Transaction Controller', () => {
-    const app = express();
-    app.use(bodyParser.json());
-    app.post('/transaction', addTransactionController);
-    app.get('/transaction/:userId', getAllTransactionController);
-    app.put('/transaction/:id', editTransactionController);
-    app.delete('/transaction/:id', deleteTransactionController);
+    let mockReq: Partial<Request>;
+    let mockRes: Partial<Response>;
+    let jsonMock: jest.Mock;
+    let statusMock: jest.Mock;
+
+    beforeEach(() => {
+        jsonMock = jest.fn();
+        statusMock = jest.fn().mockReturnValue({ json: jsonMock });
+
+        mockRes = {
+            status: statusMock,
+            json: jsonMock,
+        };
+    });
 
     afterEach(() => {
         jest.clearAllMocks();
     });
 
-    test('should return 201 if transaction is added successfully', async () => {
-        const transaction = { id: '123', userId: 'user1', date: '2024-02-25', amount: 100, currency: 'USD', tag: { name: 'Food', color: '#ff0000' } };
-        (transactionService.addTransaction as jest.Mock).mockResolvedValue(transaction);
-        
-        const response = await request(app).post('/transaction').send(transaction);
-        
-        expect(response.status).toBe(201);
-        expect(response.body.message).toBe('Transaction added successfully');
-        expect(transactionService.addTransaction).toHaveBeenCalledWith('user1', '2024-02-25', 100, 'USD', { name: 'Food', color: '#ff0000' });
+    describe('addTransactionController', () => {
+        it('should return 201 and transaction data when successful', async () => {
+            mockReq = { body: { userId: '123', name: 'Test', date: '2025-02-26', amount: 100, currency: 'USD' } };
+            const mockTransaction = { _id: '1', ...mockReq.body };
+
+            (addTransaction as jest.Mock).mockResolvedValue(mockTransaction);
+
+            await addTransactionController(mockReq as Request, mockRes as Response);
+
+            expect(addTransaction).toHaveBeenCalledWith('123', 'Test', '2025-02-26', 100, 'USD');
+            expect(statusMock).toHaveBeenCalledWith(201);
+            expect(jsonMock).toHaveBeenCalledWith({
+                message: 'Transaction added successfully',
+                transaction: expect.objectContaining({ id: '1', name: 'Test', amount: 100, currency: 'USD' }),
+            });
+        });
+
+        it('should return 500 if transaction creation fails', async () => {
+            mockReq = { body: { userId: '123', name: 'Test', date: '2025-02-26', amount: 100, currency: 'USD' } };
+
+            (addTransaction as jest.Mock).mockRejectedValue(new Error('Database error'));
+
+            await addTransactionController(mockReq as Request, mockRes as Response);
+
+            expect(statusMock).toHaveBeenCalledWith(500);
+            expect(jsonMock).toHaveBeenCalledWith({ error: 'Database error' });
+        });
     });
 
-    test('should return 500 if transaction creation fails', async () => {
-        (transactionService.addTransaction as jest.Mock).mockRejectedValue(new Error('Database error'));
-        
-        const response = await request(app).post('/transaction').send({ userId: 'user1', date: '2024-02-25', amount: 100, currency: 'USD', tag: { name: 'Food', color: '#ff0000' } });
-        
-        expect(response.status).toBe(500);
-        expect(response.body.error).toBe('Database error');
+    describe('getAllTransactionController', () => {
+        it('should return 200 and a list of transactions', async () => {
+            mockReq = { params: { userId: '123' } };
+            const mockTransactions = [{ _id: '1', name: 'Test', date: '2025-02-26', amount: 100, currency: 'USD' }];
+
+            (getAllTransactions as jest.Mock).mockResolvedValue(mockTransactions);
+
+            await getAllTransactionController(mockReq as Request, mockRes as Response);
+
+            expect(getAllTransactions).toHaveBeenCalledWith('123');
+            expect(statusMock).toHaveBeenCalledWith(200);
+            expect(jsonMock).toHaveBeenCalledWith([
+                expect.objectContaining({ id: '1', name: 'Test', amount: 100, currency: 'USD' }),
+            ]);
+        });
+
+        it('should return 500 if retrieval fails', async () => {
+            mockReq = { params: { userId: '123' } };
+
+            (getAllTransactions as jest.Mock).mockRejectedValue(new Error('Database error'));
+
+            await getAllTransactionController(mockReq as Request, mockRes as Response);
+
+            expect(statusMock).toHaveBeenCalledWith(500);
+            expect(jsonMock).toHaveBeenCalledWith({ error: 'Database error' });
+        });
     });
 
-    test('should return 200 with all transactions for a user', async () => {
-        const transactions = [{ id: '123', userId: 'user1', date: '2024-02-25', amount: 100, currency: 'USD', tag: { name: 'Food', color: '#ff0000' } }];
-        (transactionService.getAllTransactions as jest.Mock).mockResolvedValue(transactions);
-        
-        const response = await request(app).get('/transaction/user1');
-        
-        expect(response.status).toBe(200);
-        expect(response.body).toEqual(transactions);
+    describe('editTransactionController', () => {
+        it('should return 200 and updated transaction data if transaction exists', async () => {
+            mockReq = { params: { id: '1' }, body: { name: 'Updated Test' } };
+            const mockTransaction = { _id: '1', name: 'Updated Test', date: '2025-02-26', amount: 100, currency: 'USD' };
+
+            (editTransaction as jest.Mock).mockResolvedValue(mockTransaction);
+
+            await editTransactionController(mockReq as Request, mockRes as Response);
+
+            expect(editTransaction).toHaveBeenCalledWith('1', 'Updated Test', undefined, undefined, undefined);
+            expect(statusMock).toHaveBeenCalledWith(200);
+            expect(jsonMock).toHaveBeenCalledWith({
+                message: 'Transaction updated successfully',
+                transaction: expect.objectContaining({ id: '1', name: 'Updated Test' }),
+            });
+        });
+
+        it('should return 404 if transaction does not exist', async () => {
+            mockReq = { params: { id: '1' }, body: { name: 'Updated Test' } };
+
+            (editTransaction as jest.Mock).mockResolvedValue(null);
+
+            await editTransactionController(mockReq as Request, mockRes as Response);
+
+            expect(statusMock).toHaveBeenCalledWith(404);
+            expect(jsonMock).toHaveBeenCalledWith({ message: 'Transaction not found' });
+        });
+
+        it('should return 500 if update fails', async () => {
+            mockReq = { params: { id: '1' }, body: { name: 'Updated Test' } };
+
+            (editTransaction as jest.Mock).mockRejectedValue(new Error('Database error'));
+
+            await editTransactionController(mockReq as Request, mockRes as Response);
+
+            expect(statusMock).toHaveBeenCalledWith(500);
+            expect(jsonMock).toHaveBeenCalledWith({ error: 'Database error' });
+        });
     });
 
-    test('should return 500 if fetching transactions fails', async () => {
-        (transactionService.getAllTransactions as jest.Mock).mockRejectedValue(new Error('Database error'));
-        
-        const response = await request(app).get('/transaction/user1');
-        
-        expect(response.status).toBe(500);
-        expect(response.body.error).toBe('Database error');
-    });
+    describe('deleteTransactionController', () => {
+        it('should return 200 if transaction is deleted', async () => {
+            mockReq = { params: { id: '1' } };
+            (deleteTransaction as jest.Mock).mockResolvedValue({ deletedCount: 1 });
 
-    test('should return 200 if transaction is updated successfully', async () => {
-        const updatedTransaction = { id: '123', userId: 'user1', date: '2024-02-26', amount: 150, currency: 'USD', tag: { name: 'Groceries', color: '#00ff00' } };
-        (transactionService.editTransaction as jest.Mock).mockResolvedValue(updatedTransaction);
-        
-        const response = await request(app).put('/transaction/123').send(updatedTransaction);
-        
-        expect(response.status).toBe(200);
-        expect(response.body.message).toBe('Transaction updated successfully');
-    });
+            await deleteTransactionController(mockReq as Request, mockRes as Response);
 
-    test('should return 404 if transaction to update is not found', async () => {
-        (transactionService.editTransaction as jest.Mock).mockResolvedValue(null);
-        
-        const response = await request(app).put('/transaction/123').send({ date: '2024-02-26', amount: 150, currency: 'USD', tag: { name: 'Groceries', color: '#00ff00' } });
-        
-        expect(response.status).toBe(404);
-        expect(response.body.message).toBe('Transaction not found');
-    });
+            expect(deleteTransaction).toHaveBeenCalledWith('1');
+            expect(statusMock).toHaveBeenCalledWith(200);
+            expect(jsonMock).toHaveBeenCalledWith({ message: 'Transaction deleted successfully' });
+        });
 
-    test('should return 200 if transaction is deleted successfully', async () => {
-        (transactionService.deleteTransaction as jest.Mock).mockResolvedValue({ deletedCount: 1 });
-        
-        const response = await request(app).delete('/transaction/123');
-        
-        expect(response.status).toBe(200);
-        expect(response.body.message).toBe('Transaction deleted successfully');
-    });
+        it('should return 404 if transaction is not found', async () => {
+            mockReq = { params: { id: '1' } };
+            (deleteTransaction as jest.Mock).mockResolvedValue({ deletedCount: 0 });
 
-    test('should return 404 if transaction to delete is not found', async () => {
-        (transactionService.deleteTransaction as jest.Mock).mockResolvedValue({ deletedCount: 0 });
-        
-        const response = await request(app).delete('/transaction/123');
-        
-        expect(response.status).toBe(404);
-        expect(response.body.message).toBe('Transaction not found');
+            await deleteTransactionController(mockReq as Request, mockRes as Response);
+
+            expect(statusMock).toHaveBeenCalledWith(404);
+            expect(jsonMock).toHaveBeenCalledWith({ message: 'Transaction not found' });
+        });
+
+        it('should return 500 if deletion fails', async () => {
+            mockReq = { params: { id: '1' } };
+
+            (deleteTransaction as jest.Mock).mockRejectedValue(new Error('Database error'));
+
+            await deleteTransactionController(mockReq as Request, mockRes as Response);
+
+            expect(statusMock).toHaveBeenCalledWith(500);
+            expect(jsonMock).toHaveBeenCalledWith({ error: 'Database error' });
+        });
     });
 });

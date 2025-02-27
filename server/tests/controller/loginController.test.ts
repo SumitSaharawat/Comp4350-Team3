@@ -1,87 +1,117 @@
 import request from 'supertest';
 import express from 'express';
-import bodyParser from 'body-parser';
-import { loginController, createAccountController, resetPasswordController } from '../../src/controller/loginController';
-import * as userService from '../../src/db/userService';
+import { loginController, createAccountController, resetPasswordController, logoutController } from '../../src/controller/loginController';
+import { addUser, getUsersByUsername, editUser } from '../../src/db/userService';
 import bcrypt from 'bcrypt';
-import mongoose from 'mongoose';
+import jwt from 'jsonwebtoken';
+
+const app = express();
+app.use(express.json());
+app.post('/login', loginController);
+app.post('/register', createAccountController);
+app.post('/reset-password', resetPasswordController);
+app.post('/logout', logoutController);
 
 jest.mock('../../src/db/userService');
+jest.mock('jsonwebtoken');
+
+const mockUser = {
+    id: '1',
+    username: 'testUser',
+    password: bcrypt.hashSync('password123', 10),
+};
 
 describe('Login Controller', () => {
-    const app = express();
-    app.use(bodyParser.json());
-    app.post('/login', loginController);
-    app.post('/register', createAccountController);
-    app.post('/reset-password', resetPasswordController);
-
-    afterEach(() => {
+    beforeEach(() => {
         jest.clearAllMocks();
     });
 
-    test('should return 404 if user is not found', async () => {
-        (userService.getUsersByUsername as jest.Mock).mockResolvedValue([]);
-        const response = await request(app).post('/login').send({ username: 'unknown', password: 'password' });
-        expect(response.status).toBe(404);
-    });
+    test('should login successfully with correct credentials', async () => {
+        (getUsersByUsername as jest.Mock).mockResolvedValue([mockUser]);
+        (jwt.sign as jest.Mock).mockReturnValue('fakeToken');
 
-    test('should return 401 if password is incorrect', async () => {
-        const hashedPassword = bcrypt.hashSync('correct_password', 10);
-        (userService.getUsersByUsername as jest.Mock).mockResolvedValue([
-            { _id: new mongoose.Types.ObjectId(), username: 'user', password: hashedPassword },
-        ]);
+        const response = await request(app)
+            .post('/login')
+            .send({ username: 'testUser', password: 'password123' });
 
-        const response = await request(app).post('/login').send({ username: 'user', password: 'wrong_password' });
-        expect(response.status).toBe(401);
-    });
-
-    test('should return a token if login is successful', async () => {
-        const hashedPassword = bcrypt.hashSync('password', 10);
-        (userService.getUsersByUsername as jest.Mock).mockResolvedValue([
-            { _id: new mongoose.Types.ObjectId(), username: 'user', password: hashedPassword },
-        ]);
-
-        const response = await request(app).post('/login').send({ username: 'user', password: 'password' });
         expect(response.status).toBe(200);
         expect(response.body.message).toBe('Login successful');
     });
 
-    test('should return 403 if username already exists when registering', async () => {
-        (userService.getUsersByUsername as jest.Mock).mockResolvedValue([
-            { _id: new mongoose.Types.ObjectId(), username: 'user' },
-        ]);
+    test('should return 401 for invalid credentials', async () => {
+        (getUsersByUsername as jest.Mock).mockResolvedValue([mockUser]);
 
-        const response = await request(app).post('/register').send({ username: 'user', password: 'password' });
+        const response = await request(app)
+            .post('/login')
+            .send({ username: 'testUser', password: 'wrongPassword' });
+
+        expect(response.status).toBe(401);
+    });
+
+    test('should return 404 if user does not exist', async () => {
+        (getUsersByUsername as jest.Mock).mockResolvedValue([]);
+
+        const response = await request(app)
+            .post('/login')
+            .send({ username: 'nonExistentUser', password: 'password123' });
+
+        expect(response.status).toBe(404);
+    });
+});
+
+describe('Account Creation Controller', () => {
+    test('should create a new account successfully', async () => {
+        (getUsersByUsername as jest.Mock).mockResolvedValue([]);
+        (addUser as jest.Mock).mockResolvedValue(mockUser);
+
+        const response = await request(app)
+            .post('/register')
+            .send({ username: 'newUser', password: 'newPassword' });
+
+        expect(response.status).toBe(200);
+        expect(response.body.message).toBe('Account created successfully!');
+    });
+
+    test('should return 403 if username already exists', async () => {
+        (getUsersByUsername as jest.Mock).mockResolvedValue([mockUser]);
+
+        const response = await request(app)
+            .post('/register')
+            .send({ username: 'testUser', password: 'password123' });
+
         expect(response.status).toBe(403);
     });
+});
 
-    test('should return 200 if account is created successfully', async () => {
-        (userService.getUsersByUsername as jest.Mock).mockResolvedValue([]);
-        (userService.addUser as jest.Mock).mockResolvedValue({ _id: new mongoose.Types.ObjectId(), username: 'new_user' });
+describe('Password Reset Controller', () => {
+    test('should reset password successfully', async () => {
+        (getUsersByUsername as jest.Mock).mockResolvedValue([mockUser]);
+        (editUser as jest.Mock).mockResolvedValue({ ...mockUser, password: bcrypt.hashSync('newPassword', 10) });
 
-        const response = await request(app).post('/register').send({ username: 'new_user', password: 'password' });
+        const response = await request(app)
+            .post('/reset-password')
+            .send({ username: 'testUser', newPassword: 'newPassword' });
+
         expect(response.status).toBe(200);
+        expect(response.body.message).toBe('Password changed successfully!');
     });
 
-    test('should return 200 if password is reset successfully', async () => {
-        (userService.getUsersByUsername as jest.Mock).mockResolvedValue([
-            { _id: new mongoose.Types.ObjectId(), username: 'user' },
-        ]);
-        (userService.editUser as jest.Mock).mockResolvedValue({
-            _id: new mongoose.Types.ObjectId(),
-            username: 'user',
-            password: bcrypt.hashSync('new_password', 10),
-        });
+    test('should return 401 if user is not found', async () => {
+        (getUsersByUsername as jest.Mock).mockResolvedValue([]);
 
-        const response = await request(app).post('/reset-password').send({ username: 'user', newPassword: 'new_password' });
-        expect(response.status).toBe(200);
-    });
+        const response = await request(app)
+            .post('/reset-password')
+            .send({ username: 'nonExistentUser', newPassword: 'newPassword' });
 
-    test('should return 401 if user is not found when resetting password', async () => {
-        (userService.getUsersByUsername as jest.Mock).mockResolvedValue([]);
-        (userService.editUser as jest.Mock).mockResolvedValue(null);
-
-        const response = await request(app).post('/reset-password').send({ username: 'unknown', newPassword: 'new_password' });
         expect(response.status).toBe(401);
+    });
+});
+
+describe('Logout Controller', () => {
+    test('should clear cookie and logout successfully', async () => {
+        const response = await request(app).post('/logout');
+
+        expect(response.status).toBe(200);
+        expect(response.body.message).toBe('Logged out successfully');
     });
 });

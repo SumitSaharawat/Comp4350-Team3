@@ -8,10 +8,11 @@ import { addTransactionsToServer } from "@/app/api/transac";
 interface TransactionFormModalProps {
     isOpen: boolean;
     toggle: () => void;
-    // refreshTransactions: () => void;
+    refreshTransactions: () => void;
 }
 
-export default function TransactionFormModal({ isOpen, toggle }: TransactionFormModalProps) {
+export default function TransactionFormModal({ isOpen, toggle, refreshTransactions}: TransactionFormModalProps) {
+    const [name, setName] = useState<string>("");
     const [amount, setAmount] = useState<number | "">("");
     const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
     const [currency, setCurrency] = useState<string>("CAD"); // Default CAD
@@ -22,15 +23,14 @@ export default function TransactionFormModal({ isOpen, toggle }: TransactionForm
     const handleSubmit = async () => {
         setMessage(null);
 
-        if (!amount || !currency || !selectedDate) {
+        if (!name || !amount || !currency || !selectedDate) {
             setMessage({ text: "All fields are required.", type: "error" });
             return;
         }
 
         const userid = localStorage.getItem("userid");
-        const username = localStorage.getItem("username");
-        if (!userid || !username) {
-            setMessage({ text: "User ID or user name not found, please log in again.", type: "error" });
+        if (!userid) {
+            setMessage({ text: "User ID not found, please log in again.", type: "error" });
             return;
         }
 
@@ -39,12 +39,12 @@ export default function TransactionFormModal({ isOpen, toggle }: TransactionForm
             // Format date to `yyyy-MM-dd`
             const formattedDate = selectedDate.toISOString().split("T")[0];
 
-            await addTransactionsToServer(userid, username, formattedDate, Number(amount), currency);
+            await addTransactionsToServer(userid, name, formattedDate, Number(amount), currency);
             setMessage({ text: "Transaction added successfully!", type: "success" });
 
             setTimeout(() => {
                 toggle(); // Close modal
-                //refreshTransactions(); // Refresh transaction list
+                refreshTransactions(); // Refresh transaction list
             }, 1500);
         } catch (error) {
             setMessage({ text: error instanceof Error ? error.message : "Failed to add transaction", type: "error" });
@@ -65,11 +65,20 @@ export default function TransactionFormModal({ isOpen, toggle }: TransactionForm
                     onClick={toggle}
                     className="absolute top-2 right-2 text-gray-600 hover:text-black"
                 >
-                    <X size={20} />
+                    <X size={20}/>
                 </button>
 
                 {/* Title */}
                 <h2 className="text-xl font-bold mb-4 text-center">Add Transaction</h2>
+
+                {/* Transaction name */}
+                <input
+                    type="text"
+                    placeholder="Transaction Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full border border-gray-300 p-2 rounded mb-2"
+                />
 
                 {/* Amount Input */}
                 <input

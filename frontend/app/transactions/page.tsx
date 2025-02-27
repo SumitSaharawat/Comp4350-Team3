@@ -28,26 +28,25 @@ export default function TransactionsPage() {
         setData(searchedData);
     };
 
-    useEffect(() => {
-        const getDataOnRender = async () => {
-            try {
-                const success = await getTransactions(
-                    user?.id || (localStorage.getItem("userid") as string)
-                );
-                if (success) {
-                    setData(transactions);
-                }
-            } catch (err) {
-                if (err instanceof Error) {
-                    console.error(err.message);
-                } else {
-                    console.error("Transactions fetch failed!");
-                }
+    const getDataOnRender = async () => {
+        try {
+            const success = await getTransactions(
+                user?.id || (localStorage.getItem("userid") as string)
+            );
+            if (success) {
+                setData(transactions);
             }
-        };
+        } catch (err) {
+            if (err instanceof Error) {
+                console.error(err.message);
+            } else {
+                console.error("Transactions fetch failed!");
+            }
+        }
+    };
 
+    useEffect(() => {
         getDataOnRender();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     useEffect(() => {
@@ -80,7 +79,11 @@ export default function TransactionsPage() {
                 <FloatingButton toggle={() => setIsFormOpen(!isFormOpen)} />
 
                 {/* transaction window */}
-                <TransactionFormModal isOpen={isFormOpen} toggle={() => setIsFormOpen(!isFormOpen)} />
+                <TransactionFormModal
+                    isOpen={isFormOpen}
+                    toggle={() => setIsFormOpen(!isFormOpen)}
+                    refreshTransactions={getDataOnRender}
+                />
             </div>
         </div>
     );

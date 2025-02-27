@@ -1,5 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { Plus } from "lucide-react";
+
 
 interface HamburgerButtonProps {
     onClickFunc: () => void;
@@ -73,7 +75,23 @@ const HamburgerButton = ({ onClickFunc }: HamburgerButtonProps) => {
     );
 };
 
+interface FloatingButtonProps {
+    toggle: () => void;
+}
+
+const FloatingButton = ({ toggle }: FloatingButtonProps) => {
+    return (
+        <button
+            onClick={toggle}
+            className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-all transform hover:scale-105"
+        >
+            <Plus size={24} />
+        </button>
+    );
+};
+
 AuthButton.displayName = "AuthButton";
 HamburgerButton.displayName = "HamburgerButton";
+FloatingButton.displayName = "FloatingButton";
 
-export { AuthButton, HamburgerButton };
+export { AuthButton, HamburgerButton, FloatingButton };

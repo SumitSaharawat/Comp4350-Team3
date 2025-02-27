@@ -1,6 +1,6 @@
-import Transaction, { ITransaction } from './transactionDB.js';
-import User from './userDB.js'
-import Tag from './tagDB.js'
+import Transaction, { ITransaction } from './transactionDB';
+import User from './userDB'
+import Tag from './tagDB'
 import mongoose from 'mongoose';
 
 export const addTransaction = async (userId: string, name: string, date: string, amount: number, currency: string, tags?: string[]) => {

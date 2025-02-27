@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { ITransaction } from '../db/transactionDB.js';
-import { addTransaction, deleteTransaction, editTransaction, getAllTransactions } from '../db/transactionService.js';
+import { ITransaction } from '../db/transactionDB';
+import { addTransaction, deleteTransaction, editTransaction, getAllTransactions } from '../db/transactionService';
 
 const formatTransaction = (transaction: ITransaction) => ({
     id: transaction._id.toString(), // Convert _id to id

@@ -8,7 +8,7 @@ const router = express.Router();
 
 //http://localhost:portNum/api/tag
 
-router.get('/:transactionId', authenticateToken, validateTagRequest, getAllTagsController);
+router.get('/', authenticateToken, validateTagRequest, getAllTagsController);
 
 
 

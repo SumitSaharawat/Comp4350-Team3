@@ -14,6 +14,7 @@ router.get('/:userId', authenticateToken, validateTransactionRequest, validatePa
 
 //Example body for addTransaction
 // {"userId": "67ae9db31873ddf7e7e06a8d",
+//   "name": "xxxx"
 //   "date": "2025-02-17T12:00:00Z",
 //   "amount": 100.50,
 //   "currency": "USD",

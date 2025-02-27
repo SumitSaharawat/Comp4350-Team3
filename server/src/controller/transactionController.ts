@@ -13,13 +13,14 @@ const formatTransaction = (transaction: ITransaction) => ({
     }),
     amount: transaction.amount,
     currency: transaction.currency,
+    tags: transaction.tags?.map(tag => tag.toString()) || [] // Convert ObjectId[] to string[]
 });
 
 export const addTransactionController = async (req: Request, res: Response) => {
-    const { userId, name, date, amount, currency }= req.body;
+    const { userId, name, date, amount, currency, tags }= req.body;
 
     try {
-        const transaction = await addTransaction(userId, name, date, amount, currency);
+        const transaction = await addTransaction(userId, name, date, amount, currency, tags);
         res.status(201).json({ message: 'Transaction added successfully', transaction: formatTransaction(transaction) });
 
     } 
@@ -50,10 +51,10 @@ export const getAllTransactionController = async (req: Request, res: Response) =
 
 export const editTransactionController = async(req: Request, res: Response) => {
     const { id } = req.params;
-    const { name, date, amount, currency } = req.body;
+    const { name, date, amount, currency, tags } = req.body;
 
     try {
-        const updatedTransaction = await editTransaction(id, name, date, amount, currency);
+        const updatedTransaction = await editTransaction(id, name, date, amount, currency, tags);
         if (updatedTransaction) {
             res.status(200).json({ message: 'Transaction updated successfully', transaction: formatTransaction(updatedTransaction) });
         } 

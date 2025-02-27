@@ -7,6 +7,7 @@ export interface ITransaction extends Document {
     date: Date;
     amount: number;
     currency: string;
+    tags?: mongoose.Types.ObjectId[];
 
 }
 
@@ -44,6 +45,9 @@ const transactionSchema = new Schema<ITransaction>({
         required: true,
         match: [/^[A-Z]{3}$/, "Invalid currency format (e.g., CAD)"],
      },
+     tags: [{ 
+        type: [mongoose.Types.ObjectId], ref: 'Tag', default: []
+     }]
 },
 {strict: 'throw'}
 

@@ -36,3 +36,15 @@ export async function addTransactionsToServer(userId: string, name: string, date
     }
     return res.json();
 }
+
+export async function deleteTransactionFromServer(transactionId: string): Promise<{ message: string }> {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${transactionId}`, {
+        method: "DELETE",
+        credentials: "include",
+    });
+
+    if (!res.ok) {
+        throw new Error((await res.json()).message || "Failed to delete transaction");
+    }
+    return res.json();
+}

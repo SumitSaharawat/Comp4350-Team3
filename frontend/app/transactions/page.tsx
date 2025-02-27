@@ -9,12 +9,15 @@ import { useAuth } from "@/app/contexts/AuthContext";
 import Navbar from "@/components/ui/Navbar";
 import TransactionList from "@/components/ui/TransactionList";
 import Sidebar from "@/components/ui/Sidebar";
+import {FloatingButton} from "@/components/ui/Button";
+import TransactionFormModal from "@/components/ui/TransactionFormModal";
 
 export default function TransactionsPage() {
     const { transactions, getTransactions } = useTransactions();
     const { user } = useAuth();
     const [data, setData] = useState<Transaction[]>([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isFormOpen, setIsFormOpen] = useState(false);
 
     const currencies = ["CAD", "USD"];
 
@@ -25,26 +28,25 @@ export default function TransactionsPage() {
         setData(searchedData);
     };
 
-    useEffect(() => {
-        const getDataOnRender = async () => {
-            try {
-                const success = await getTransactions(
-                    user?.id || (localStorage.getItem("userid") as string)
-                );
-                if (success) {
-                    setData(transactions);
-                }
-            } catch (err) {
-                if (err instanceof Error) {
-                    console.error(err.message);
-                } else {
-                    console.error("Transactions fetch failed!");
-                }
+    const getDataOnRender = async () => {
+        try {
+            const success = await getTransactions(
+                user?.id || (localStorage.getItem("userid") as string)
+            );
+            if (success) {
+                setData(transactions);
             }
-        };
+        } catch (err) {
+            if (err instanceof Error) {
+                console.error(err.message);
+            } else {
+                console.error("Transactions fetch failed!");
+            }
+        }
+    };
 
+    useEffect(() => {
         getDataOnRender();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     useEffect(() => {
@@ -72,6 +74,16 @@ export default function TransactionsPage() {
 
                 {/* Transactions List */}
                 <TransactionList transactions={data} />
+
+                {/* Floating + button */}
+                <FloatingButton toggle={() => setIsFormOpen(!isFormOpen)} />
+
+                {/* transaction window */}
+                <TransactionFormModal
+                    isOpen={isFormOpen}
+                    toggle={() => setIsFormOpen(!isFormOpen)}
+                    refreshTransactions={getDataOnRender}
+                />
             </div>
         </div>
     );

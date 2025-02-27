@@ -6,14 +6,14 @@ import debug from 'debug';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 
-import connectDB from './db/db.js';
-import index from './routes/index.js';
-import user from './routes/user.js';
-import transaction from './routes/transaction.js';
-import tag from './routes/tag.js';
-import login from './routes/login.js';
-import { devError, prodError } from './middleware/errorHandler.js';
-import { requestLog } from './middleware/loggers.js';
+import connectDB from './db/db';
+import index from './routes/index';
+import user from './routes/user';
+import transaction from './routes/transaction';
+import login from './routes/login';
+import { devError, prodError } from './middleware/errorHandler';
+import { requestLog } from './middleware/loggers';
+import tag from './routes/tag';
 
 const debugLog = debug('server');
 const app = express();

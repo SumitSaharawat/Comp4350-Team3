@@ -2,7 +2,7 @@
  * GET home page.
  */
 import express from 'express';
-import { getIndex, postIndex} from '../controller/indexController.js';
+import { getIndex, postIndex} from '../controller/indexController';
 
 const router = express.Router();
 

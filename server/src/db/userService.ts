@@ -1,4 +1,4 @@
-import User, {IUser} from './userDB.js'; // Import the User model
+import User, {IUser} from './userDB'; // Import the User model
 import mongoose from 'mongoose';
 
 // Function to add a new user

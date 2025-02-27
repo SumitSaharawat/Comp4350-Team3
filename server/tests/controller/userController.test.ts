@@ -1,141 +1,192 @@
-import request from 'supertest';
-import express from 'express';
-import { addUserController, getAllUsersController, editUserController, deleteUserController } from '../../src/controller/userController';
-import { addUser, getAllUsers, editUser, deleteUser } from '../../src/db/userService';
+import { Request, Response } from 'express';
+import { addUserController, getSingleUserController, editUserController, deleteUserController } from '../../src/controller/userController';
+import { addUser, getUsersByUsername, editUser, deleteUser } from '../../src/db/userService';
 
-jest.mock('../../src/db/userService'); // Mocking userService
-
-const app = express();
-app.use(express.json());
-
-app.post('/users', addUserController);
-app.get('/users', getAllUsersController);
-app.put('/users/:id', editUserController);
-app.delete('/users/:id', deleteUserController);
+// Mock userService
+jest.mock('../../src/db/userService');
+const mockAddUser = addUser as jest.Mock;
+const mockGetUsersByUsername = getUsersByUsername as jest.Mock;
+const mockEditUser = editUser as jest.Mock;
+const mockDeleteUser = deleteUser as jest.Mock;
 
 describe('User Controller', () => {
-    // POST /users - Create User
-    describe('POST /users', () => {
+
+    let req: Partial<Request>;
+    let res: Partial<Response>;
+
+    beforeEach(() => {
+        req = {};
+        res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+        };
+    });
+
+    describe('addUserController', () => {
         it('should create a user successfully', async () => {
-            // Mock userService.addUser
-            (addUser as jest.Mock).mockResolvedValue({
-                _id: '123',
-                username: 'testUser',
-                password: 'password123',
+            const newUser = { username: 'testuser', password: 'password123' };
+            const mockUser = { _id: '1', username: 'testuser', password: 'password123' };
+
+            mockAddUser.mockResolvedValue(mockUser);
+
+            req.body = newUser;
+
+            await addUserController(req as Request, res as Response);
+
+            expect(res.status).toHaveBeenCalledWith(201);
+            expect(res.json).toHaveBeenCalledWith({
+                message: "User created successfully",
+                user: { id: mockUser._id, username: mockUser.username },
             });
-
-            const response = await request(app)
-                .post('/users')
-                .send({ username: 'testUser', password: 'password123' });
-
-            expect(response.status).toBe(201);
-            expect(response.body.message).toBe('User created successfully');
-            expect(response.body.user.username).toBe('testUser');
         });
 
-        it('should return error if username already exists', async () => {
-            // Mock userService.addUser to throw an error
-            (addUser as jest.Mock).mockRejectedValue(new Error('Username already exists'));
+        it('should return an error if user creation fails', async () => {
+            const newUser = { username: 'testuser', password: 'password123' };
+            const error = new Error('Error creating user');
+            mockAddUser.mockRejectedValue(error);
 
-            const response = await request(app)
-                .post('/users')
-                .send({ username: 'testUser', password: 'newpassword123' });
+            req.body = newUser;
 
-            expect(response.status).toBe(500);
-            expect(response.body.error).toBe('Username already exists');
+            await addUserController(req as Request, res as Response);
+
+            expect(res.status).toHaveBeenCalledWith(500);
+            expect(res.json).toHaveBeenCalledWith({ error: 'Error creating user' });
         });
     });
 
-    // GET /users - Get All Users
-    describe('GET /users', () => {
-        it('should return all users successfully', async () => {
-            // Mock userService.getAllUsers
-            (getAllUsers as jest.Mock).mockResolvedValue([
-                { _id: '1', username: 'user1', password: 'password1' },
-                { _id: '2', username: 'user2', password: 'password2' },
-            ]);
+    describe('getSingleUserController', () => {
+        it('should return a single user by username', async () => {
+            const username = 'testuser';
+            const mockUser = [{ _id: '1', username: 'testuser', password: 'password123' }];
 
-            const response = await request(app).get('/users');
+            mockGetUsersByUsername.mockResolvedValue(mockUser);
 
-            expect(response.status).toBe(200);
-            expect(response.body.users.length).toBe(2);
+            req.params = { username };
+
+            await getSingleUserController(req as Request, res as Response);
+
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.json).toHaveBeenCalledWith({
+                id: mockUser[0]._id,
+                username: mockUser[0].username,
+            });
         });
 
-        it('should handle errors when retrieving users', async () => {
-            // Mock userService.getAllUsers to throw an error
-            (getAllUsers as jest.Mock).mockRejectedValue(new Error('Error retrieving users'));
+        it('should return an error if user is not found', async () => {
+            const username = 'nonexistentuser';
 
-            const response = await request(app).get('/users');
+            mockGetUsersByUsername.mockResolvedValue([]);
 
-            expect(response.status).toBe(500);
-            expect(response.body.error).toBe('Error retrieving users');
-        });
-    });
+            req.params = { username };
 
-    // PUT /users/:id - Edit User
-    describe('PUT /users/:id', () => {
-        it('should update a user successfully', async () => {
-            const updatedUser = { _id: '123', username: 'updatedUser', password: 'newpassword123' };
+            await getSingleUserController(req as Request, res as Response);
 
-            // Mock userService.editUser
-            (editUser as jest.Mock).mockResolvedValue(updatedUser);
-
-            const response = await request(app)
-                .put('/users/123')
-                .send({ username: 'updatedUser', password: 'newpassword123' });
-
-            expect(response.status).toBe(200);
-            expect(response.body.message).toBe('User updated successfully');
-            expect(response.body.user.username).toBe('updatedUser');
+            expect(res.status).toHaveBeenCalledWith(404);
+            expect(res.json).toHaveBeenCalledWith({ error: 'User not found' });
         });
 
-        it('should return error if user not found', async () => {
-            // Mock userService.editUser to return null (user not found)
-            (editUser as jest.Mock).mockResolvedValue(null);
+        it('should handle errors during retrieval', async () => {
+            const username = 'testuser';
+            const error = new Error('Error retrieving user');
+            mockGetUsersByUsername.mockRejectedValue(error);
 
-            const response = await request(app)
-                .put('/users/123')
-                .send({ username: 'updatedUser', password: 'newpassword123' });
+            req.params = { username };
 
-            expect(response.status).toBe(404);
-            expect(response.body.message).toBe('User not found');
-        });
+            await getSingleUserController(req as Request, res as Response);
 
-        it('should return error if user ID format is invalid', async () => {
-            const response = await request(app)
-                .put('/users/invalidId')
-                .send({ username: 'invalidUser', password: 'password123' });
-
-            expect(response.status).toBe(404);
+            expect(res.status).toHaveBeenCalledWith(500);
+            expect(res.json).toHaveBeenCalledWith({ error: 'Error retrieving user' });
         });
     });
 
-    // DELETE /users/:id - Delete User
-    describe('DELETE /users/:id', () => {
-        it('should delete a user successfully', async () => {
-            // Mock userService.deleteUser
-            (deleteUser as jest.Mock).mockResolvedValue({ deletedCount: 1 });
+    describe('editUserController', () => {
+        it('should update user successfully', async () => {
+            const id = '1';
+            const updatedData = { username: 'newusername', password: 'newpassword123' };
+            const updatedUser = { _id: id, username: 'newusername', password: 'newpassword123' };
 
-            const response = await request(app).delete('/users/123');
+            mockEditUser.mockResolvedValue(updatedUser);
 
-            expect(response.status).toBe(200);
-            expect(response.body.message).toBe('User deleted successfully');
+            req.params = { id };
+            req.body = updatedData;
+
+            await editUserController(req as Request, res as Response);
+
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.json).toHaveBeenCalledWith({
+                message: 'User updated successfully',
+                user: { id: updatedUser._id, username: updatedUser.username },
+            });
         });
 
-        it('should return error if user not found', async () => {
-            // Mock userService.deleteUser to return { deletedCount: 0 }
-            (deleteUser as jest.Mock).mockResolvedValue({ deletedCount: 0 });
+        it('should return an error if user update fails', async () => {
+            const id = '1';
+            const updatedData = { username: 'newusername', password: 'newpassword123' };
+            const error = new Error('Error updating user');
+            mockEditUser.mockRejectedValue(error);
 
-            const response = await request(app).delete('/users/123');
+            req.params = { id };
+            req.body = updatedData;
 
-            expect(response.status).toBe(404);
-            expect(response.body.message).toBe('User not found');
+            await editUserController(req as Request, res as Response);
+
+            expect(res.status).toHaveBeenCalledWith(500);
+            expect(res.json).toHaveBeenCalledWith({ error: 'Error updating user' });
         });
 
-        it('should return error if user ID is invalid', async () => {
-            const response = await request(app).delete('/users/invalidId');
+        it('should return not found if user does not exist', async () => {
+            const id = '1';
+            const updatedData = { username: 'newusername', password: 'newpassword123' };
+            mockEditUser.mockResolvedValue(null);
 
-            expect(response.status).toBe(404);
+            req.params = { id };
+            req.body = updatedData;
+
+            await editUserController(req as Request, res as Response);
+
+            expect(res.status).toHaveBeenCalledWith(404);
+            expect(res.json).toHaveBeenCalledWith({ message: 'User not found' });
+        });
+    });
+
+    describe('deleteUserController', () => {
+        it('should delete user successfully', async () => {
+            const id = '1';
+            const result = { deletedCount: 1 };
+            mockDeleteUser.mockResolvedValue(result);
+
+            req.params = { id };
+
+            await deleteUserController(req as Request, res as Response);
+
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.json).toHaveBeenCalledWith({ message: 'User deleted successfully' });
+        });
+
+        it('should return not found if user does not exist', async () => {
+            const id = '1';
+            const result = { deletedCount: 0 };
+            mockDeleteUser.mockResolvedValue(result);
+
+            req.params = { id };
+
+            await deleteUserController(req as Request, res as Response);
+
+            expect(res.status).toHaveBeenCalledWith(404);
+            expect(res.json).toHaveBeenCalledWith({ message: 'User not found' });
+        });
+
+        it('should return error if deletion fails', async () => {
+            const id = '1';
+            const error = new Error('Error deleting user');
+            mockDeleteUser.mockRejectedValue(error);
+
+            req.params = { id };
+
+            await deleteUserController(req as Request, res as Response);
+
+            expect(res.status).toHaveBeenCalledWith(500);
+            expect(res.json).toHaveBeenCalledWith({ error: 'Error deleting user' });
         });
     });
 });

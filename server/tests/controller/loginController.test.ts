@@ -35,7 +35,7 @@ describe('Login Controller', () => {
             .send({ username: 'testUser', password: 'password123' });
 
         expect(response.status).toBe(200);
-        expect(response.body.message).toBe('Login successful');
+        expect(response.body.message).toBe('Login successfuly!');
     });
 
     test('should return 401 for invalid credentials', async () => {

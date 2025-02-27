@@ -5,7 +5,7 @@
 import { Request, Response } from 'express';
 import webToken from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { getUsersByUsername, addUser, editUser } from '../db/userService.js';
+import { getUsersByUsername, addUser, editUser } from '../db/userService';
 
 interface AuthError extends Error {
     status?: number;

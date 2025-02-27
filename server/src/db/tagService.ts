@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import Tag, { ITag } from './tagDB.js'; // Import the Tag model
+import Tag, { ITag } from './tagDB'; // Import the Tag model
 
 // Function to add a new tag
 export const addTag = async (name: string, color: string): Promise<ITag> => {

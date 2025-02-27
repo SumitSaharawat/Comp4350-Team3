@@ -9,8 +9,13 @@ import { useAuth } from "@/app/contexts/AuthContext";
 import Navbar from "@/components/ui/Navbar";
 import TransactionList from "@/components/ui/TransactionList";
 import Sidebar from "@/components/ui/Sidebar";
-import {FloatingButton} from "@/components/ui/Button";
+import {
+    FloatingButton,
+    DropDownButton,
+    FilterButton,
+} from "@/components/ui/Button";
 import TransactionFormModal from "@/components/ui/TransactionFormModal";
+import { SearchBar } from "@/components/ui/Input";
 
 export default function TransactionsPage() {
     const { transactions, getTransactions } = useTransactions();
@@ -23,7 +28,7 @@ export default function TransactionsPage() {
 
     const onSearchTermChange = (searchTerm: string) => {
         const searchedData = transactions.filter((transaction) =>
-            transaction.name.includes(searchTerm)
+            transaction.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
         setData(searchedData);
     };
@@ -68,7 +73,58 @@ export default function TransactionsPage() {
     // **CLOSE MODAL**
     const closeModal = () => {
         setIsFormOpen(false);
-        setTimeout(() => setEditTransaction(null), 300); // Ensure reset after closing
+        setTimeout(() => setEditTransaction(null), 300);
+      
+    const searchHint = "Search Transaction";
+    const CategoryList = ["CAD", "USD"];
+    const onSelectCategory = (items: string[]) => {
+        if (items.length > 0) {
+            const filtereddData = transactions.filter((transaction) =>
+                items.some((i) =>
+                    transaction.currency.toLowerCase().includes(i.toLowerCase())
+                )
+            );
+            setData(filtereddData);
+        } else {
+            setData(transactions);
+        }
+    };
+    const middleComponent = () => {
+        return (
+            <div className="flex-1 flex justify-center">
+                <SearchBar
+                    searchHint={searchHint || ""}
+                    onTextChange={onSearchTermChange}
+                />
+                <FilterButton
+                    filterName="Category"
+                    filterOptions={CategoryList}
+                    onSelectOption={onSelectCategory}
+                />
+            </div>
+        );
+    };
+
+    const currencyList = ["CAD", "USD"];
+    const onSelectCurrency = (item: string) => {
+        console.log(item);
+    };
+
+    const rightComponent = () => {
+        return (
+            <details className="dropdown">
+                <summary className="btn m-1">{"Currency"}</summary>
+                <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                    {currencyList.map((d) => {
+                        return (
+                            <li key={d}>
+                                <a onClick={() => onSelectCurrency(d)}>{d}</a>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </details>
+        );
     };
 
     return (
@@ -83,10 +139,7 @@ export default function TransactionsPage() {
             >
                 <Navbar
                     title="Transactions"
-                    searchHint="Search Transactions"
-                    dropDownName="Currency"
-                    dropDownList={currencies}
-                    onSearchTermChange={onSearchTermChange}
+                    middleComponent={middleComponent()}
                     toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
                 />
 

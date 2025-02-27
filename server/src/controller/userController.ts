@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { IUser } from '../db/userDB.js';
+import { IUser } from '../db/userDB';
 import {
     addUser,
     getUsersByUsername,
     editUser,
     deleteUser,
-} from "../db/userService.js";
+} from "../db/userService";
 
 const formatUser = (user: IUser) => ({
     id: user._id.toString(), 
@@ -33,7 +33,11 @@ export const getSingleUserController = async (req: Request, res: Response) => {
         const { username } = req.params;
         console.log(`get user: ${username}`);
         const users = await getUsersByUsername(username);
-        res.status(200).json(users.map(formatUser)[0]);
+        if (users.length === 0){
+            res.status(404).json({ message: "User not found" });
+        }else{
+            res.status(200).json(users.map(formatUser)[0]);
+        }
     } catch (err) {
         console.error("Error retrieving user:", err.message || err); // Log to terminal
         return res

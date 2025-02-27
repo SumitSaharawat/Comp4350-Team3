@@ -2,7 +2,7 @@
  * Authenticate the token, used by any path that needs to be protected
  */
 import webToken from 'jsonwebtoken';
-import { LOGIN_KEY } from "../controller/loginController.js";
+import { LOGIN_KEY } from "../controller/loginController";
 
 interface AuthError extends Error {
     status?: number;

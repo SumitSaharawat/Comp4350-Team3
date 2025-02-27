@@ -169,7 +169,6 @@ describe('Tag Controller', () => {
   });
 
   afterAll(() => {
-    // Restore all mocks after tests complete
     jest.restoreAllMocks();
   });
 });

@@ -2,6 +2,7 @@ import request from 'supertest';
 import express from 'express';
 import { loginController, createAccountController, resetPasswordController, logoutController } from '../../src/controller/loginController';
 import { addUser, getUsersByUsername, editUser } from '../../src/db/userService';
+import * as userService from '../../src/db/userService';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -57,6 +58,17 @@ describe('Login Controller', () => {
 
         expect(response.status).toBe(404);
     });
+
+    test('should return 500 if catch error', async () => {
+        jest.spyOn(userService, 'getUsersByUsername').mockRejectedValue(new Error('Database error'));
+    
+        const response = await request(app)
+            .post('/login')
+            .send({ username: 'testUser', password: 'testPass' });
+    
+        expect(response.status).toBe(500);
+        expect(response.body).toHaveProperty('error', 'Internal Server Error');
+    });    
 });
 
 describe('Account Creation Controller', () => {
@@ -80,6 +92,17 @@ describe('Account Creation Controller', () => {
             .send({ username: 'testUser', password: 'password123' });
 
         expect(response.status).toBe(403);
+    });
+
+    test('should return 500 if there is a server error', async () => {
+        (getUsersByUsername as jest.Mock).mockResolvedValue([]);
+        (addUser as jest.Mock).mockRejectedValueOnce(new Error('Database error'));
+
+        const response = await request(app)
+            .post('/register')
+            .send({ username: 'newUser', password: 'newPassword' });
+
+        expect(response.status).toBe(500);
     });
 });
 
@@ -113,5 +136,16 @@ describe('Logout Controller', () => {
 
         expect(response.status).toBe(200);
         expect(response.body.message).toBe('Logged out successfully');
+    });
+
+    test('should return 500 if there is a server error', async () => {
+        (getUsersByUsername as jest.Mock).mockResolvedValue([mockUser]);
+        (editUser as jest.Mock).mockRejectedValueOnce(new Error('Database error'));
+
+        const response = await request(app)
+            .post('/reset-password')
+            .send({ username: 'testUser', newPassword: 'newPassword' });
+
+        expect(response.status).toBe(500);
     });
 });

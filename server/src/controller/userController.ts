@@ -1,4 +1,5 @@
-import e, { Request, Response } from "express";
+import { Request, Response } from "express";
+import { IUser } from '../db/userDB.js';
 import {
     addUser,
     getUsersByUsername,
@@ -6,9 +7,9 @@ import {
     deleteUser,
 } from "../db/userService.js";
 
-const formatUser = (user: any) => ({
-    id: user._id.toString(),
-    username: user.username,
+const formatUser = (user: IUser) => ({
+    id: user._id.toString(), 
+    username: user.username, 
 });
 
 export const addUserController = async (req: Request, res: Response) => {

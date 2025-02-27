@@ -14,7 +14,7 @@ import TransactionFormModal from "@/components/ui/TransactionFormModal";
 
 export default function TransactionsPage() {
     const { transactions, getTransactions } = useTransactions();
-    const { user, getUser } = useAuth();
+    const { user } = useAuth();
     const [data, setData] = useState<Transaction[]>([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isFormOpen, setIsFormOpen] = useState(false);
@@ -22,30 +22,30 @@ export default function TransactionsPage() {
     const currencies = ["CAD", "USD"];
 
     const onSearchTermChange = (searchTerm: string) => {
-        console.log(searchTerm);
+        const searchedData = transactions.filter((transaction) =>
+            transaction.name.includes(searchTerm)
+        );
+        setData(searchedData);
     };
 
     useEffect(() => {
         const getDataOnRender = async () => {
             try {
-                console.log(`User is : ${JSON.stringify(user)}`);
-                const success = await getTransactions(user?.id || "");
+                const success = await getTransactions(
+                    user?.id || (localStorage.getItem("userid") as string)
+                );
                 if (success) {
-                    console.log(`Get from backend: ${transactions}`);
                     setData(transactions);
                 }
             } catch (err) {
                 if (err instanceof Error) {
-                    console.log(err.message);
+                    console.error(err.message);
                 } else {
-                    console.log("Transactions fetch failed!");
+                    console.error("Transactions fetch failed!");
                 }
             }
         };
 
-        if (!user) {
-            getUser();
-        }
         getDataOnRender();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);

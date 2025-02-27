@@ -43,6 +43,9 @@ export default function TransactionFormModal({ isOpen, toggle, refreshTransactio
             setMessage({ text: "Transaction added successfully!", type: "success" });
 
             setTimeout(() => {
+                setMessage(null);
+                setName("");
+                setAmount("");
                 toggle(); // Close modal
                 refreshTransactions(); // Refresh transaction list
             }, 1500);

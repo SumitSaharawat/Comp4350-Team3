@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
 
 export const validateTransactionRequest = (req: Request, res: Response, next: NextFunction) => {
-    const allowedFields = ['userId', 'name', 'date', 'amount', 'currency'];
+    const allowedFields = ['userId', 'name', 'date', 'amount', 'currency', 'tags'];
     const bodyKeys = Object.keys(req.body);
 
     // Find unexpected fields
@@ -46,7 +46,7 @@ export const validateUserRequest = (req: Request, res: Response, next: NextFunct
 };
 
 export const validateTagRequest = (req: Request, res: Response, next: NextFunction) => {
-    const allowedFields = ['transactionId', 'id', 'name', 'color'];
+    const allowedFields = ['id', 'name', 'color'];
     const bodyKeys = Object.keys(req.body);
 
     // Find unexpected fields

@@ -1,9 +1,9 @@
 export interface User {
-    id: number;
+    id: string;
     username: string;
 }
 
-export async function login(username: string, password: string): Promise<{ message: string }> {
+export async function login(username: string, password: string): Promise<{ user: User, message: string }> {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -18,7 +18,8 @@ export async function login(username: string, password: string): Promise<{ messa
 }
 
 export async function getUser(): Promise<User | null> {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
+    const username = localStorage.getItem("username");
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/${username}`, {
         method: "GET",
         credentials: "include"
     });

@@ -1,7 +1,13 @@
-import e, { Request, Response } from 'express';
-import { addUser, getAllUsers, editUser, deleteUser } from '../db/userService';
+import { Request, Response } from "express";
+import { IUser } from '../db/userDB';
+import {
+    addUser,
+    getUsersByUsername,
+    editUser,
+    deleteUser,
+} from "../db/userService";
 
-const formatUser = (user: any) => ({
+const formatUser = (user: IUser) => ({
     id: user._id.toString(), 
     username: user.username, 
 });
@@ -10,26 +16,31 @@ export const addUserController = async (req: Request, res: Response) => {
     const { username, password } = req.body;
     try {
         const user = await addUser(username, password);
-        res.status(201).json({ message: 'User created successfully', user: formatUser(user) });
-    } 
-    catch (err) {
-        console.error('Error creating user:', err.message || err); // Log to terminal
-        return res.status(500).json({ error: err.message || 'Error creating user' });
+        res.status(201).json({
+            message: "User created successfully",
+            user: formatUser(user),
+        });
+    } catch (err) {
+        console.error("Error creating user:", err.message || err); // Log to terminal
+        return res
+            .status(500)
+            .json({ error: err.message || "Error creating user" });
     }
 };
 
-
-export const getAllUsersController = async (req: Request, res: Response) => {
+export const getSingleUserController = async (req: Request, res: Response) => {
     try {
-        const users = await getAllUsers();
-        res.status(200).json({ users: users.map(formatUser) });
-    } 
-    catch (err) {
-        console.error('Error retrieving user:', err.message || err); // Log to terminal
-        return res.status(500).json({ error: err.message || 'Error retrieving user' });
+        const { username } = req.params;
+        console.log(`get user: ${username}`);
+        const users = await getUsersByUsername(username);
+        res.status(200).json(users.map(formatUser)[0]);
+    } catch (err) {
+        console.error("Error retrieving user:", err.message || err); // Log to terminal
+        return res
+            .status(500)
+            .json({ error: err.message || "Error retrieving user" });
     }
 };
-
 
 export const editUserController = async (req: Request, res: Response) => {
     const { id } = req.params;
@@ -38,33 +49,34 @@ export const editUserController = async (req: Request, res: Response) => {
     try {
         const updatedUser = await editUser(id, username, password);
         if (updatedUser) {
-            res.status(200).json({ message: 'User updated successfully', user: formatUser(updatedUser) });
-        } 
-        else {
-            res.status(404).json({ message: 'User not found' });
+            res.status(200).json({
+                message: "User updated successfully",
+                user: formatUser(updatedUser),
+            });
+        } else {
+            res.status(404).json({ message: "User not found" });
         }
-    } 
-    catch (err) {
-        console.error('Error updating user:', err.message || err); // Log to terminal
-        return res.status(500).json({ error: err.message || 'Error updating user' });
+    } catch (err) {
+        console.error("Error updating user:", err.message || err); // Log to terminal
+        return res
+            .status(500)
+            .json({ error: err.message || "Error updating user" });
     }
 };
-
 
 export const deleteUserController = async (req: Request, res: Response) => {
     const { id } = req.params;
     try {
         const result = await deleteUser(id);
         if (result.deletedCount > 0) {
-            res.status(200).json({ message: 'User deleted successfully' });
-        } 
-        else {
-            res.status(404).json({ message: 'User not found' });
+            res.status(200).json({ message: "User deleted successfully" });
+        } else {
+            res.status(404).json({ message: "User not found" });
         }
-    } 
-    catch (err) {
-        console.error('Error deleting user:', err.message || err); // Log to terminal
-        return res.status(500).json({ error: err.message || 'Error deleting user' });
+    } catch (err) {
+        console.error("Error deleting user:", err.message || err); // Log to terminal
+        return res
+            .status(500)
+            .json({ error: err.message || "Error deleting user" });
     }
 };
-

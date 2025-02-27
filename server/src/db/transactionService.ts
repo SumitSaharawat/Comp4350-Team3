@@ -1,15 +1,25 @@
 import Transaction, { ITransaction } from './transactionDB';
 import User from './userDB'
+import Tag from './tagDB'
 import mongoose from 'mongoose';
 
-export const addTransaction = async (userId: string, name: string, date: string, amount: number, currency: string) => {
+export const addTransaction = async (userId: string, name: string, date: string, amount: number, currency: string, tags?: string[]) => {
     try {
-        console.log("Received transaction data:", { userId, name, date, amount, currency });
 
         // 🔹 Validate if user exists before proceeding
         const userExists = await User.findById(userId);
         if (!userExists) {
             throw new Error('User does not exist');
+        }
+
+         // 🔹 Validate and filter out invalid tag IDs
+         const validTags = tags?.filter(tagId => mongoose.Types.ObjectId.isValid(tagId)) || [];
+
+         // 🔹 Ensure all provided tags exist in the database
+        const existingTags = await Tag.find({ _id: { $in: validTags } });
+
+        if (existingTags.length !== validTags.length) {
+            throw new Error('One or more tags do not exist.');
         }
 
         const newTransaction = new Transaction({
@@ -18,14 +28,14 @@ export const addTransaction = async (userId: string, name: string, date: string,
             date: new Date(date), 
             amount,
             currency,
+            tags: validTags
         });
 
         await newTransaction.save();
-        console.log('Transaction added successfully:', newTransaction);
         return newTransaction;
     } catch (err) {
         if (err.name === 'ValidationError') {
-            throw new Error(`Validation Error: ${Object.values(err.errors).map(e => (e as any).message).join(', ')}`);
+            throw new Error(`Validation Error: ${Object.values(err.errors).map(e => (e as mongoose.Error.ValidationError).message).join(', ')}`);
         }
         console.error('Error adding transaction:', err);
         throw err;
@@ -40,11 +50,10 @@ export const getAllTransactions = async (userId: string): Promise<ITransaction[]
         }
 
         const transactions = await Transaction.find({user: userId}).populate('user');
-        console.log('Transactions retrieved for user ${userId}:', transactions);
         return transactions;
     } catch (err) {
         if (err.name === 'ValidationError') {
-            throw new Error(`Validation Error: ${Object.values(err.errors).map(e => (e as any).message).join(', ')}`);
+            throw new Error(`Validation Error: ${Object.values(err.errors).map(e => (e as mongoose.Error.ValidationError).message).join(', ')}`);
         }
         console.error('Error retrieving transactions:', err);
         throw err;
@@ -52,7 +61,7 @@ export const getAllTransactions = async (userId: string): Promise<ITransaction[]
 };
 
 //To edit, need to enter in the body, all the fields again, even ones that you didn't intend to replace. If you don't enter tag, it deletes it and sets it to default.
-export const editTransaction = async (id: string, name?: string, date?: string, amount?: number, currency?: string): Promise<ITransaction | null> => {
+export const editTransaction = async (id: string, name?: string, date?: string, amount?: number, currency?: string, tags?: string[]): Promise<ITransaction | null> => {
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) {
             throw new Error('Invalid transaction ID format');
@@ -69,14 +78,31 @@ export const editTransaction = async (id: string, name?: string, date?: string, 
         if (amount) updatedTransaction.amount = amount;
         if (currency) updatedTransaction.currency = currency;
 
+         if (tags !== undefined) {
+            if (tags.length > 0) {
+                const validTags = tags
+                    .filter(tagId => mongoose.Types.ObjectId.isValid(tagId))
+                    .map(tagId => new mongoose.Types.ObjectId(tagId));
+
+                const existingTags = await Tag.find({ _id: { $in: validTags } });
+
+                if (existingTags.length !== validTags.length) {
+                    throw new Error('One or more tags do not exist.');
+                }
+
+                updatedTransaction.tags = validTags;
+            } else {
+                updatedTransaction.tags = [];
+            }
+        }
+
         await updatedTransaction.save();
 
-        console.log('Transaction updated successfully:', updatedTransaction);
         return updatedTransaction;
     } 
     catch (err) {
         if (err.name === 'ValidationError') {
-            const errorMessages = Object.values(err.errors).map((e: any) => e.message).join(', ');
+            const errorMessages = Object.values(err.errors).map((e: mongoose.Error.ValidationError) => e.message).join(', ');
             console.error('Validation failed:', errorMessages);
             throw new Error(`Validation Error: ${errorMessages}`);
         }
@@ -102,7 +128,7 @@ export const deleteTransaction = async (id: string) => {
         return result;
     } catch (err) {
         if (err.name === 'ValidationError') {
-            throw new Error(`Validation Error: ${Object.values(err.errors).map(e => (e as any).message).join(', ')}`);
+            throw new Error(`Validation Error: ${Object.values(err.errors).map(e => (e as mongoose.Error.ValidationError).message).join(', ')}`);
         }
         console.error('Error deleting user:', err);
         throw err;

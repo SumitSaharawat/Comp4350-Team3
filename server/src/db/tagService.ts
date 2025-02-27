@@ -1,17 +1,10 @@
 import mongoose from 'mongoose';
 import Tag, { ITag } from './tagDB'; // Import the Tag model
-import Transaction from './transactionDB';
 
 // Function to add a new tag
-export const addTag = async (transactionId: string, name: string, color: string): Promise<ITag> => {
+export const addTag = async (name: string, color: string): Promise<ITag> => {
     try {
-        // 🔹 Validate if transaction exists before proceeding
-        const transactionExists = await Transaction.findById(transactionId);
-        if (!transactionExists) {
-            throw new Error('User does not exist');
-        }
-        
-        const newTag = new Tag({ transactionId, name, color });
+        const newTag = new Tag({ name, color });
         await newTag.save();
         console.log('Tag added successfully:', newTag);
         return newTag;
@@ -23,13 +16,10 @@ export const addTag = async (transactionId: string, name: string, color: string)
 };
 
 // Function to get all tags
-export const getAllTags = async (transactionId: string): Promise<ITag[]> => {
+export const getAllTags = async (): Promise<ITag[]> => {
     try {
-        if (!mongoose.Types.ObjectId.isValid(transactionId)) {
-            throw new Error('Invalid user ID format');
-        }
-        
-        const tags = await Tag.find({ transactionId }).populate('transactionId'); // Fetch all tags
+   
+        const tags = await Tag.find(); // Fetch all tags
         console.log('Tags retrieved:', tags);
         return tags;
     } 

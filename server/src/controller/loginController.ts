@@ -37,7 +37,7 @@ export const loginController = async (req: Request, res: Response, next) => {
                 httpOnly: true,
                 secure:false,
                 maxAge: 3600000,        // 1 hour
-            }).json({ message: "Login successful" });
+            }).json({user: {username: userFound.username, id: userFound._id}, message: "Login successfuly!"});
         } 
         // if the password is wrong, throw out the error for error handler
         else {
@@ -68,7 +68,7 @@ export const createAccountController = async (req: Request, res: Response) => {
         // otherwise, create the account and return a successful message
         // will be replaced by mongodb integration once its set up 
         else {
-            const newUser = await addUser(username, bcrypt.hashSync(password, 10));
+            await addUser(username, bcrypt.hashSync(password, 10));
             res.status(200).json({message: "Account created successfully!"});
         }
         

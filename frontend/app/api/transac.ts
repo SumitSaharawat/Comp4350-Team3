@@ -1,23 +1,24 @@
 
 export interface Transaction {
-    id: number,
+    id: string,
     date: Date,
     amount: number,
-    currency: string
+    currency: string,
+    name: string,
 }
 
-export async function getTransactionsFromServer(): Promise<Transaction[]> {
+export async function getTransactionsFromServer(userId: string): Promise<Transaction[]> {
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transactions`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${userId}`, {
         method: "GET",
         credentials: "include"
     });
 
     if (!res.ok) {
-        throw new Error((await res.json()).message || "Failed to log in");
+        throw new Error((await res.json()).message || "Failed to fetch transactions");
     }
 
     const data = await res.json();
-    return data.transactions || [];
+    return data || [];
 }
 

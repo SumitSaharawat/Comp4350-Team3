@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import Tag, { ITag } from './tagDB.js'; // Import the Tag model
-import Transaction from './transactionDB.js';
+import Tag, { ITag } from './tagDB'; // Import the Tag model
+import Transaction from './transactionDB';
 
 // Function to add a new tag
 export const addTag = async (transactionId: string, name: string, color: string): Promise<ITag> => {

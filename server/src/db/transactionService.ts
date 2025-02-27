@@ -1,4 +1,4 @@
-import Transaction, { ITransaction, ITag } from './transactionDB';
+import Transaction, { ITransaction } from './transactionDB';
 import User from './userDB'
 import mongoose from 'mongoose';
 

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { addTag, getAllTags, editTag, deleteTag } from '../db/tagService.js'; 
+import { addTag, getAllTags, editTag, deleteTag } from '../db/tagService'; 
 
 const formatTag = (tag: any) => ({
     id: tag._id.toString(), 
@@ -46,13 +46,12 @@ export const editTagController = async (req: Request, res: Response) => {
 
     try {
         const updatedTag = await editTag(id, name, color);
-        const formattedTag = formatTag(updatedTag);
-
-        console.log('Formatted Tag:', formattedTag);
         if (updatedTag) {
+            // Only format the tag if it exists
+            const formattedTag = formatTag(updatedTag);
+            console.log('Formatted Tag:', formattedTag);
             res.status(200).json({ message: 'Tag updated successfully', tag: formattedTag });
-        } 
-        else {
+        } else {
             res.status(404).json({ message: 'Tag not found' });
         }
     } 
@@ -61,6 +60,7 @@ export const editTagController = async (req: Request, res: Response) => {
         return res.status(500).json({ error: err.message || 'Error updating tag' });
     }
 };
+
 
 export const deleteTagController = async (req: Request, res: Response) => {
     const { id } = req.params;

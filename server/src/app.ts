@@ -13,6 +13,7 @@ import transaction from './routes/transaction';
 import login from './routes/login';
 import { devError, prodError } from './middleware/errorHandler';
 import { requestLog } from './middleware/loggers';
+import tag from './routes/tag';
 
 const debugLog = debug('server');
 const app = express();

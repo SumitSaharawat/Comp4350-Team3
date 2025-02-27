@@ -18,7 +18,7 @@ export default function TransactionsPage() {
     const [data, setData] = useState<Transaction[]>([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isFormOpen, setIsFormOpen] = useState(false);
-
+    const [editTransaction, setEditTransaction] = useState<Transaction | null>(null);
     const currencies = ["CAD", "USD"];
 
     const onSearchTermChange = (searchTerm: string) => {
@@ -53,6 +53,24 @@ export default function TransactionsPage() {
         setData(transactions);
     }, [transactions]);
 
+    // **OPEN MODAL FOR ADDING**
+    const openAddModal = () => {
+        setEditTransaction(null);
+        setIsFormOpen(true);
+    };
+
+    // **OPEN MODAL FOR EDITING**
+    const openEditModal = (transaction: Transaction) => {
+        setEditTransaction(transaction);
+        setIsFormOpen(true);
+    };
+
+    // **CLOSE MODAL**
+    const closeModal = () => {
+        setIsFormOpen(false);
+        setTimeout(() => setEditTransaction(null), 300); // Ensure reset after closing
+    };
+
     return (
         <div className="flex">
             {/* Sidebar */}
@@ -73,16 +91,18 @@ export default function TransactionsPage() {
                 />
 
                 {/* Transactions List */}
-                <TransactionList transactions={data} />
+                <TransactionList transactions={data} onEdit={openEditModal} />
 
                 {/* Floating + button */}
-                <FloatingButton toggle={() => setIsFormOpen(!isFormOpen)} />
+                <FloatingButton toggle={openAddModal} />
 
-                {/* transaction window */}
+                {/* Transaction Form Modal (for both ADD & EDIT) */}
                 <TransactionFormModal
                     isOpen={isFormOpen}
-                    toggle={() => setIsFormOpen(!isFormOpen)}
+                    toggle={closeModal}
                     refreshTransactions={getDataOnRender}
+                    mode={editTransaction ? "edit" : "add"}
+                    existingTransaction={editTransaction}
                 />
             </div>
         </div>

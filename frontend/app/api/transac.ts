@@ -22,7 +22,12 @@ export async function getTransactionsFromServer(userId: string): Promise<Transac
     return data || [];
 }
 
-export async function addTransactionsToServer(userId: string, name: string, date: string, amount: number, currency: string): Promise< {message:string}> {
+export async function addTransactionsToServer(
+    userId: string,
+    name: string,
+    date: string,
+    amount: number,
+    currency: string): Promise< {message:string}> {
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transaction/`, {
         method: "POST",
@@ -33,6 +38,26 @@ export async function addTransactionsToServer(userId: string, name: string, date
 
     if (!res.ok) {
         throw new Error((await res.json()).message || "Failed to add transaction");
+    }
+    return res.json();
+}
+
+export async function editTransactionsOnServer(
+    transactionId: string,
+    name: string,
+    date: string,
+    amount: number,
+    currency: string): Promise< {message:string}> {
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${transactionId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({name, date, amount, currency}),
+        credentials: "include"
+    });
+
+    if (!res.ok) {
+        throw new Error((await res.json()).message || "Failed to edit transaction");
     }
     return res.json();
 }

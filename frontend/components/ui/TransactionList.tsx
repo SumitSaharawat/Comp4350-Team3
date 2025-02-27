@@ -1,15 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
+import { MoreHorizontal, Trash2, Edit2 } from "lucide-react";
 import { Transaction } from "@/app/api/transac";
-import { useTransactions } from "@/app/contexts/TransactionsContext";
-import { Trash2, Edit2, MoreHorizontal } from "lucide-react";
+import {useTransactions} from "@/app/contexts/TransactionsContext";
 
 interface TransactionListProps {
     transactions: Transaction[];
+    onEdit: (transaction: Transaction) => void;
 }
 
-export default function TransactionList({ transactions }: TransactionListProps) {
+export default function TransactionList({ transactions, onEdit }: TransactionListProps) {
     const { deleteTransaction } = useTransactions();
     const [expandedRow, setExpandedRow] = useState<string | null>(null);
 
@@ -26,7 +27,7 @@ export default function TransactionList({ transactions }: TransactionListProps) 
     return (
         <div className="w-full max-h-96 overflow-y-auto border border-gray-300 rounded-lg shadow-sm">
             <table className="w-full border-collapse">
-                <thead className="sticky top-0 bg-gray-200 dark:bg-gray-800 text-black dark:text-white">
+                <thead className="sticky top-0 bg-gray-200 text-black">
                 <tr>
                     <th className="border-b border-gray-400 px-2 py-2 font-bold text-left">Name</th>
                     <th className="border-b border-gray-400 px-3 py-2 font-bold text-left">Date</th>
@@ -36,25 +37,21 @@ export default function TransactionList({ transactions }: TransactionListProps) 
                 </tr>
                 </thead>
 
-                <tbody className="text-black dark:text-white">
+                <tbody className="text-black">
                 {transactions.length > 0 ? (
                     transactions.map((tx) => (
                         <React.Fragment key={tx.id}>
                             {/* Transaction Row */}
-                            <tr className="hover:bg-gray-200 dark:hover:bg-gray-600">
-                                <td className="border-b border-gray-400 px-2 py-2 text-left">
-                                    {tx.name || ""}
-                                </td>
+                            <tr className="hover:bg-gray-200">
+                                <td className="border-b border-gray-400 px-2 py-2 text-left">{tx.name || ""}</td>
                                 <td className="border-b border-gray-400 px-3 py-2 text-left">
                                     {new Date(tx.date).toLocaleDateString()}
                                 </td>
                                 <td className="border-b border-gray-400 px-4 py-2 text-left">
                                     {tx.amount.toFixed(2)}
                                 </td>
-                                <td className="border-b border-gray-400 px-4 py-2 text-left">
-                                    {tx.currency}
-                                </td>
-                                {/* Toggle Action Button */}
+                                <td className="border-b border-gray-400 px-4 py-2 text-left">{tx.currency}</td>
+                                {/* Toggle Actions Button */}
                                 <td className="border-b border-gray-400 px-4 py-2 text-center">
                                     <button
                                         onClick={() => toggleRow(tx.id)}
@@ -65,7 +62,7 @@ export default function TransactionList({ transactions }: TransactionListProps) 
                                 </td>
                             </tr>
 
-                            {/* Hidden Action Row */}
+                            {/* Hidden Action Row (Appears on Toggle) */}
                             {expandedRow === tx.id && (
                                 <tr>
                                     <td colSpan={5} className="border-b border-gray-400 p-2 text-center">
@@ -78,8 +75,8 @@ export default function TransactionList({ transactions }: TransactionListProps) 
                                                 Delete
                                             </button>
                                             <button
+                                                onClick={() => onEdit(tx)}
                                                 className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
-                                                onClick={() => console.log("Edit Transaction", tx.id)}
                                             >
                                                 <Edit2 size={18} />
                                                 Edit
@@ -92,9 +89,7 @@ export default function TransactionList({ transactions }: TransactionListProps) 
                     ))
                 ) : (
                     <tr>
-                        <td colSpan={5} className="text-center text-gray-500 py-4">
-                            No transactions found.
-                        </td>
+                        <td colSpan={5} className="text-center text-gray-500 py-4">No transactions found.</td>
                     </tr>
                 )}
                 </tbody>

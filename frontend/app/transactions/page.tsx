@@ -57,12 +57,12 @@ export default function TransactionsPage() {
     }, [transactions]);
 
     const searchHint = "Search Transaction";
-    const CategoryList = ["First", "Second"];
+    const CategoryList = ["CAD", "USD"];
     const onSelectCategory = (items: string[]) => {
         if (items.length > 0) {
             const filtereddData = transactions.filter((transaction) =>
                 items.some((i) =>
-                    transaction.name.toLowerCase().includes(i.toLowerCase())
+                    transaction.currency.toLowerCase().includes(i.toLowerCase())
                 )
             );
             setData(filtereddData);
@@ -121,7 +121,6 @@ export default function TransactionsPage() {
                 <Navbar
                     title="Transactions"
                     middleComponent={middleComponent()}
-                    rightComponent={rightComponent()}
                     toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
                 />
 

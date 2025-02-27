@@ -1,22 +1,22 @@
 import { Request, Response } from 'express';
 import { 
-    addTagController, 
-    getAllTagsController, 
-    editTagController, 
-    deleteTagController 
-} from '../../src/controller/tagController';
+    addTransactionController, 
+    getAllTransactionController, 
+    editTransactionController, 
+    deleteTransactionController 
+} from '../../src/controller/transactionController';
 
 import { 
-    addTag, 
-    getAllTags, 
-    editTag, 
-    deleteTag 
-} from '../../src/db/tagService';
+    addTransaction, 
+    getAllTransactions, 
+    editTransaction, 
+    deleteTransaction 
+} from '../../src/db/transactionService';
 
-// Mock tagService
-jest.mock('../../src/db/tagService');
+// Mock transactionService
+jest.mock('../../src/db/transactionService');
 
-describe('Tag Controller', () => {
+describe('Transaction Controller', () => {
     let mockReq: Partial<Request>;
     let mockRes: Partial<Response>;
     let jsonMock: jest.Mock;
@@ -36,109 +36,134 @@ describe('Tag Controller', () => {
         jest.clearAllMocks();
     });
 
-    describe('addTagController', () => {
-        it('should return 201 and tag data when successful', async () => {
-            mockReq = { body: { name: 'Test Tag', color: '#FFFFFF' } };
-            const mockTag = { _id: '1', ...mockReq.body };
+    describe('addTransactionController', () => {
+        it('should return 201 and transaction data when successful', async () => {
+            mockReq = { body: { userId: '123', name: 'Test', date: '2025-02-26', amount: 100, currency: 'USD', tags:["food"]} };
+            const mockTransaction = { _id: '1', ...mockReq.body };
 
-            (addTag as jest.Mock).mockResolvedValue(mockTag);
+            (addTransaction as jest.Mock).mockResolvedValue(mockTransaction);
 
-            await addTagController(mockReq as Request, mockRes as Response);
+            await addTransactionController(mockReq as Request, mockRes as Response);
 
-            expect(addTag).toHaveBeenCalledWith('Test Tag', '#FFFFFF');
+            expect(addTransaction).toHaveBeenCalledWith('123', 'Test', '2025-02-26', 100, 'USD',["food"]);
             expect(statusMock).toHaveBeenCalledWith(201);
             expect(jsonMock).toHaveBeenCalledWith({
-                message: 'Tag created successfully',
-                tag: expect.objectContaining({ id: '1', name: 'Test Tag', color: '#FFFFFF' }),
+                message: 'Transaction added successfully',
+                transaction: expect.objectContaining({ id: '1', name: 'Test', amount: 100, currency: 'USD' ,tags:["food"]}),
             });
         });
 
-        it('should return 500 if tag creation fails', async () => {
-            mockReq = { body: { name: 'Test Tag', color: '#FFFFFF' } };
+        it('should return 500 if transaction creation fails', async () => {
+            mockReq = { body: { userId: '123', name: 'Test', date: '2025-02-26', amount: 100, currency: 'USD',tags:["food"] } };
 
-            (addTag as jest.Mock).mockRejectedValue(new Error('Database error'));
+            (addTransaction as jest.Mock).mockRejectedValue(new Error('Database error'));
 
-            await addTagController(mockReq as Request, mockRes as Response);
+            await addTransactionController(mockReq as Request, mockRes as Response);
 
             expect(statusMock).toHaveBeenCalledWith(500);
             expect(jsonMock).toHaveBeenCalledWith({ error: 'Database error' });
         });
     });
 
-    describe('getAllTagsController', () => {
-        it('should return 200 and a list of tags', async () => {
-            const mockTags = [{ _id: '1', name: 'Test Tag', color: '#FFFFFF' }];
+    describe('getAllTransactionController', () => {
+        it('should return 200 and a list of transactions', async () => {
+            mockReq = { params: { userId: '123' } };
+            const mockTransactions = [{ _id: '1', name: 'Test', date: '2025-02-26', amount: 100, currency: 'USD',tags:["food"] }];
 
-            (getAllTags as jest.Mock).mockResolvedValue(mockTags);
+            (getAllTransactions as jest.Mock).mockResolvedValue(mockTransactions);
 
-            await getAllTagsController(mockReq as Request, mockRes as Response);
+            await getAllTransactionController(mockReq as Request, mockRes as Response);
 
-            expect(getAllTags).toHaveBeenCalled();
+            expect(getAllTransactions).toHaveBeenCalledWith('123');
             expect(statusMock).toHaveBeenCalledWith(200);
-            expect(jsonMock).toHaveBeenCalledWith({
-                tags: [expect.objectContaining({ id: '1', name: 'Test Tag', color: '#FFFFFF' })],
-            });
+            expect(jsonMock).toHaveBeenCalledWith([
+                expect.objectContaining({ id: '1', name: 'Test', amount: 100, currency: 'USD' ,tags:["food"]}),
+            ]);
         });
 
         it('should return 500 if retrieval fails', async () => {
-            (getAllTags as jest.Mock).mockRejectedValue(new Error('Database error'));
+            mockReq = { params: { userId: '123' } };
 
-            await getAllTagsController(mockReq as Request, mockRes as Response);
+            (getAllTransactions as jest.Mock).mockRejectedValue(new Error('Database error'));
+
+            await getAllTransactionController(mockReq as Request, mockRes as Response);
 
             expect(statusMock).toHaveBeenCalledWith(500);
             expect(jsonMock).toHaveBeenCalledWith({ error: 'Database error' });
         });
     });
 
-    describe('editTagController', () => {
-        it('should return 200 and updated tag data if tag exists', async () => {
-            mockReq = { params: { id: '1' }, body: { name: 'Updated Tag' } };
-            const mockTag = { _id: '1', name: 'Updated Tag', color: '#FFFFFF' };
+    describe('editTransactionController', () => {
+        it('should return 200 and updated transaction data if transaction exists', async () => {
+            mockReq = { params: { id: '1' }, body: { name: 'Updated Test' } };
+            const mockTransaction = { _id: '1', name: 'Updated Test', date: '2025-02-26', amount: 100, currency: 'USD',tags:["food"] };
 
-            (editTag as jest.Mock).mockResolvedValue(mockTag);
+            (editTransaction as jest.Mock).mockResolvedValue(mockTransaction);
 
-            await editTagController(mockReq as Request, mockRes as Response);
+            await editTransactionController(mockReq as Request, mockRes as Response);
 
-            expect(editTag).toHaveBeenCalledWith('1', 'Updated Tag', undefined);
+            expect(editTransaction).toHaveBeenCalledWith('1', 'Updated Test', undefined, undefined, undefined,undefined);
             expect(statusMock).toHaveBeenCalledWith(200);
             expect(jsonMock).toHaveBeenCalledWith({
-                message: 'Tag updated successfully',
-                tag: expect.objectContaining({ id: '1', name: 'Updated Tag', color: '#FFFFFF' }),
+                message: 'Transaction updated successfully',
+                transaction: expect.objectContaining({ id: '1', name: 'Updated Test' }),
             });
         });
 
-        it('should return 404 if tag does not exist', async () => {
-            mockReq = { params: { id: '1' }, body: { name: 'Updated Tag' } };
+        it('should return 404 if transaction does not exist', async () => {
+            mockReq = { params: { id: '1' }, body: { name: 'Updated Test' } };
 
-            (editTag as jest.Mock).mockResolvedValue(null);
+            (editTransaction as jest.Mock).mockResolvedValue(null);
 
-            await editTagController(mockReq as Request, mockRes as Response);
+            await editTransactionController(mockReq as Request, mockRes as Response);
 
             expect(statusMock).toHaveBeenCalledWith(404);
-            expect(jsonMock).toHaveBeenCalledWith({ message: 'Tag not found' });
+            expect(jsonMock).toHaveBeenCalledWith({ message: 'Transaction not found' });
+        });
+
+        it('should return 500 if update fails', async () => {
+            mockReq = { params: { id: '1' }, body: { name: 'Updated Test' } };
+
+            (editTransaction as jest.Mock).mockRejectedValue(new Error('Database error'));
+
+            await editTransactionController(mockReq as Request, mockRes as Response);
+
+            expect(statusMock).toHaveBeenCalledWith(500);
+            expect(jsonMock).toHaveBeenCalledWith({ error: 'Database error' });
         });
     });
 
-    describe('deleteTagController', () => {
-        it('should return 200 if tag is deleted', async () => {
+    describe('deleteTransactionController', () => {
+        it('should return 200 if transaction is deleted', async () => {
             mockReq = { params: { id: '1' } };
-            (deleteTag as jest.Mock).mockResolvedValue({ deletedCount: 1 });
+            (deleteTransaction as jest.Mock).mockResolvedValue({ deletedCount: 1 });
 
-            await deleteTagController(mockReq as Request, mockRes as Response);
+            await deleteTransactionController(mockReq as Request, mockRes as Response);
 
-            expect(deleteTag).toHaveBeenCalledWith('1');
+            expect(deleteTransaction).toHaveBeenCalledWith('1');
             expect(statusMock).toHaveBeenCalledWith(200);
-            expect(jsonMock).toHaveBeenCalledWith({ message: 'Tag deleted successfully' });
+            expect(jsonMock).toHaveBeenCalledWith({ message: 'Transaction deleted successfully' });
         });
 
-        it('should return 404 if tag is not found', async () => {
+        it('should return 404 if transaction is not found', async () => {
             mockReq = { params: { id: '1' } };
-            (deleteTag as jest.Mock).mockResolvedValue({ deletedCount: 0 });
+            (deleteTransaction as jest.Mock).mockResolvedValue({ deletedCount: 0 });
 
-            await deleteTagController(mockReq as Request, mockRes as Response);
+            await deleteTransactionController(mockReq as Request, mockRes as Response);
 
             expect(statusMock).toHaveBeenCalledWith(404);
-            expect(jsonMock).toHaveBeenCalledWith({ message: 'Tag not found' });
+            expect(jsonMock).toHaveBeenCalledWith({ message: 'Transaction not found' });
+        });
+
+        it('should return 500 if deletion fails', async () => {
+            mockReq = { params: { id: '1' } };
+
+            (deleteTransaction as jest.Mock).mockRejectedValue(new Error('Database error'));
+
+            await deleteTransactionController(mockReq as Request, mockRes as Response);
+
+            expect(statusMock).toHaveBeenCalledWith(500);
+            expect(jsonMock).toHaveBeenCalledWith({ error: 'Database error' });
         });
     });
 });

@@ -82,7 +82,7 @@ describe('User Controller', () => {
             await getSingleUserController(req as Request, res as Response);
 
             expect(res.status).toHaveBeenCalledWith(404);
-            expect(res.json).toHaveBeenCalledWith({ error: 'User not found' });
+            expect(res.json).toHaveBeenCalledWith({ message: "User not found" });
         });
 
         it('should handle errors during retrieval', async () => {

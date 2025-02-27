@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { HamburgerButton } from "./Button";
 import { SearchBar } from "./Input";
 
@@ -8,25 +7,21 @@ interface NavbarProps {
     dropDownName: string;
     dropDownList: string[];
     toggleSidebar: () => void;
+    onSearchTermChange: (searchTerm: string) => void;
 }
 
 // this is using daisyUI example code
 export default function Navbar({
     title,
     searchHint,
+    onSearchTermChange,
     dropDownName,
     dropDownList,
     toggleSidebar,
 }: NavbarProps) {
-    const [searchTerm, setSearchTerm] = useState("");
-
     const onSelectDropdown = (item: string) => {
         console.log(item);
     };
-
-    useEffect(() => {
-        console.log(searchTerm);
-    }, [searchTerm]);
 
     return (
         <>
@@ -43,7 +38,7 @@ export default function Navbar({
                 <div className="flex-1 flex justify-center">
                     <SearchBar
                         searchHint={searchHint}
-                        onSearchLaungh={setSearchTerm}
+                        onTextChange={onSearchTermChange}
                     />
                 </div>
 

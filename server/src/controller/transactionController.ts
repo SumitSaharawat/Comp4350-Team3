@@ -30,7 +30,6 @@ export const addTransactionController = async (req: Request, res: Response) => {
 };
 
 export const getAllTransactionController = async (req: Request, res: Response) => {
-    console.log('Received get request');
     const { userId } = req.params;
     console.log(`Fetching transactions for user: ${userId}`);
 

@@ -6,7 +6,6 @@ export const addUser = async (username: string, password: string): Promise<IUser
     try {
         const newUser = new User({ username, password });
         await newUser.save();
-        console.log('User added successfully:', newUser);
         return newUser;
     } 
     catch (err) {
@@ -23,7 +22,6 @@ export const addUser = async (username: string, password: string): Promise<IUser
 export const getAllUsers = async () => {
     try {
         const users = await User.find({}); // Fetch all users
-        console.log('Users retrieved:', users);
         return users;
     } 
     catch (err) {
@@ -68,7 +66,6 @@ export const editUser = async (id: string, username?: string, password?: string)
             return null;
         }
 
-        console.log('User updated successfully:', updatedUser);
         return updatedUser;
     } 
     catch (err) {

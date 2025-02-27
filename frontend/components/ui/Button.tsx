@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { Plus } from "lucide-react";
 
 interface HamburgerButtonProps {
     onClickFunc: () => void;
@@ -13,6 +14,7 @@ interface AuthButtonProps
 interface FilterButtonProps {
     filterName: string;
     filterOptions: string[];
+    onSelectOption?: (selectedOptions: string[]) => void;
 }
 
 interface DropDownButtonProps {
@@ -83,14 +85,64 @@ const HamburgerButton = ({ onClickFunc }: HamburgerButtonProps) => {
     );
 };
 
-const FilterButton = ({ filterName, filterOptions }: FilterButtonProps) => {
+interface FloatingButtonProps {
+    toggle: () => void;
+}
+
+const FloatingButton = ({ toggle }: FloatingButtonProps) => {
     return (
-        <select className="select select-bordered join-item">
-            <option>{filterName}</option>
-            {filterOptions.map((o) => {
-                return <option key={filterOptions.indexOf(o)}>{o}</option>;
-            })}
-        </select>
+        <button
+            onClick={toggle}
+            className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-all transform hover:scale-105"
+        >
+            <Plus size={24} />
+        </button>
+    );
+};
+
+const FilterButton = ({
+    filterName,
+    filterOptions,
+    onSelectOption,
+}: FilterButtonProps) => {
+    const [selectedOptions, setSelectedOptions] = React.useState<string[]>([]);
+
+    const toggleSelection = (item: string) => {
+        let updatedSelection;
+        if (selectedOptions.includes(item)) {
+            updatedSelection = selectedOptions.filter((i) => i !== item);
+        } else {
+            updatedSelection = [...selectedOptions, item];
+        }
+
+        setSelectedOptions(updatedSelection);
+        if (onSelectOption) onSelectOption(updatedSelection);
+    };
+
+    return (
+        <details className="dropdown">
+            <summary className="btn m-1">
+                {filterName}{" "}
+                {selectedOptions.length > 0
+                    ? `(${selectedOptions.length})`
+                    : ""}
+            </summary>
+            <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                {filterOptions.map((d) => (
+                    <li key={d}>
+                        <label className="flex items-center gap-2">
+                            <input
+                                type="checkbox"
+                                checked={selectedOptions.includes(d)}
+                                onChange={() => toggleSelection(d)}
+                                className="checkbox"
+                            />
+                            {d}
+                        </label>
+                    </li>
+                ))}
+            </ul>
+        </details>
     );
 };
 
@@ -126,7 +178,14 @@ const DropDownButton = ({
 
 AuthButton.displayName = "AuthButton";
 HamburgerButton.displayName = "HamburgerButton";
+FloatingButton.displayName = "FloatingButton";
 FilterButton.displayName = "FilterButton";
 DropDownButton.displayName = "DropDownButton";
 
-export { AuthButton, HamburgerButton, FilterButton, DropDownButton };
+export {
+    AuthButton,
+    HamburgerButton,
+    FloatingButton,
+    FilterButton,
+    DropDownButton,
+};

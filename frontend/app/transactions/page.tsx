@@ -9,7 +9,12 @@ import { useAuth } from "@/app/contexts/AuthContext";
 import Navbar from "@/components/ui/Navbar";
 import TransactionList from "@/components/ui/TransactionList";
 import Sidebar from "@/components/ui/Sidebar";
-import { DropDownButton } from "@/components/ui/Button";
+import {
+    FloatingButton,
+    DropDownButton,
+    FilterButton,
+} from "@/components/ui/Button";
+import TransactionFormModal from "@/components/ui/TransactionFormModal";
 import { SearchBar } from "@/components/ui/Input";
 
 export default function TransactionsPage() {
@@ -17,6 +22,7 @@ export default function TransactionsPage() {
     const { user } = useAuth();
     const [data, setData] = useState<Transaction[]>([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isFormOpen, setIsFormOpen] = useState(false);
 
     const onSearchTermChange = (searchTerm: string) => {
         const searchedData = transactions.filter((transaction) =>
@@ -25,26 +31,25 @@ export default function TransactionsPage() {
         setData(searchedData);
     };
 
-    useEffect(() => {
-        const getDataOnRender = async () => {
-            try {
-                const success = await getTransactions(
-                    user?.id || (localStorage.getItem("userid") as string)
-                );
-                if (success) {
-                    setData(transactions);
-                }
-            } catch (err) {
-                if (err instanceof Error) {
-                    console.error(err.message);
-                } else {
-                    console.error("Transactions fetch failed!");
-                }
+    const getDataOnRender = async () => {
+        try {
+            const success = await getTransactions(
+                user?.id || (localStorage.getItem("userid") as string)
+            );
+            if (success) {
+                setData(transactions);
             }
-        };
+        } catch (err) {
+            if (err instanceof Error) {
+                console.error(err.message);
+            } else {
+                console.error("Transactions fetch failed!");
+            }
+        }
+    };
 
+    useEffect(() => {
         getDataOnRender();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     useEffect(() => {
@@ -52,13 +57,18 @@ export default function TransactionsPage() {
     }, [transactions]);
 
     const searchHint = "Search Transaction";
-    const CategoryList = ["Cat 1", "Cat 3"];
-    const onSelectCategory = (item: string) => {
-        console.log(item);
-        const filtereddData = transactions.filter((transaction) =>
-            transaction.name.toLowerCase().includes(item.toLowerCase())
-        );
-        setData(filtereddData);
+    const CategoryList = ["First", "Second"];
+    const onSelectCategory = (items: string[]) => {
+        if (items.length > 0) {
+            const filtereddData = transactions.filter((transaction) =>
+                items.some((i) =>
+                    transaction.name.toLowerCase().includes(i.toLowerCase())
+                )
+            );
+            setData(filtereddData);
+        } else {
+            setData(transactions);
+        }
     };
     const middleComponent = () => {
         return (
@@ -67,10 +77,10 @@ export default function TransactionsPage() {
                     searchHint={searchHint || ""}
                     onTextChange={onSearchTermChange}
                 />
-                <DropDownButton
-                    dropDownName="Category"
-                    dropDownList={CategoryList}
-                    onSelectDropdown={onSelectCategory}
+                <FilterButton
+                    filterName="Category"
+                    filterOptions={CategoryList}
+                    onSelectOption={onSelectCategory}
                 />
             </div>
         );
@@ -117,6 +127,16 @@ export default function TransactionsPage() {
 
                 {/* Transactions List */}
                 <TransactionList transactions={data} />
+
+                {/* Floating + button */}
+                <FloatingButton toggle={() => setIsFormOpen(!isFormOpen)} />
+
+                {/* transaction window */}
+                <TransactionFormModal
+                    isOpen={isFormOpen}
+                    toggle={() => setIsFormOpen(!isFormOpen)}
+                    refreshTransactions={getDataOnRender}
+                />
             </div>
         </div>
     );

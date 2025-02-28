@@ -9,11 +9,7 @@ import { useAuth } from "@/app/contexts/AuthContext";
 import Navbar from "@/components/ui/Navbar";
 import TransactionList from "@/components/ui/TransactionList";
 import Sidebar from "@/components/ui/Sidebar";
-import {
-    FloatingButton,
-    DropDownButton,
-    FilterButton,
-} from "@/components/ui/Button";
+import { FloatingButton, FilterButton } from "@/components/ui/Button";
 import TransactionFormModal from "@/components/ui/TransactionFormModal";
 import { SearchBar } from "@/components/ui/Input";
 
@@ -24,13 +20,25 @@ export default function TransactionsPage() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editTransaction, setEditTransaction] = useState<Transaction | null>(null);
-    const currencies = ["CAD", "USD"];
+    const CategoryList = ["CAD", "USD"];
+    const searchHint = "Search Transaction";
 
     const onSearchTermChange = (searchTerm: string) => {
-        const searchedData = transactions.filter((transaction) =>
-            transaction.name.toLowerCase().includes(searchTerm.toLowerCase())
+        setData(
+            transactions.filter((transaction) =>
+                transaction.name.toLowerCase().includes(searchTerm.toLowerCase())
+            )
         );
-        setData(searchedData);
+    };
+
+    const onSelectCategory = (items: string[]) => {
+        setData(
+            items.length > 0
+                ? transactions.filter((transaction) =>
+                    items.some((i) => transaction.currency.toLowerCase().includes(i.toLowerCase()))
+                )
+                : transactions
+        );
     };
 
     const getDataOnRender = async () => {
@@ -74,21 +82,9 @@ export default function TransactionsPage() {
     const closeModal = () => {
         setIsFormOpen(false);
         setTimeout(() => setEditTransaction(null), 300);
-      
-    const searchHint = "Search Transaction";
-    const CategoryList = ["CAD", "USD"];
-    const onSelectCategory = (items: string[]) => {
-        if (items.length > 0) {
-            const filtereddData = transactions.filter((transaction) =>
-                items.some((i) =>
-                    transaction.currency.toLowerCase().includes(i.toLowerCase())
-                )
-            );
-            setData(filtereddData);
-        } else {
-            setData(transactions);
-        }
     };
+
+
     const middleComponent = () => {
         return (
             <div className="flex-1 flex justify-center">
@@ -105,27 +101,27 @@ export default function TransactionsPage() {
         );
     };
 
-    const currencyList = ["CAD", "USD"];
-    const onSelectCurrency = (item: string) => {
-        console.log(item);
-    };
 
-    const rightComponent = () => {
-        return (
-            <details className="dropdown">
-                <summary className="btn m-1">{"Currency"}</summary>
-                <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                    {currencyList.map((d) => {
-                        return (
-                            <li key={d}>
-                                <a onClick={() => onSelectCurrency(d)}>{d}</a>
-                            </li>
-                        );
-                    })}
-                </ul>
-            </details>
-        );
-    };
+    // const onSelectCurrency = (item: string) => {
+    //     console.log(item);
+    // };
+    //
+    // const rightComponent = () => {
+    //     return (
+    //         <details className="dropdown">
+    //             <summary className="btn m-1">{"Currency"}</summary>
+    //             <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+    //                 {currencyList.map((d) => {
+    //                     return (
+    //                         <li key={d}>
+    //                             <a onClick={() => onSelectCurrency(d)}>{d}</a>
+    //                         </li>
+    //                     );
+    //                 })}
+    //             </ul>
+    //         </details>
+    //     );
+    // };
 
     return (
         <div className="flex">

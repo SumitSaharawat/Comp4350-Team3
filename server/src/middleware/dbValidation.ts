@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { getUsersByUsername } from '../db/userService.js';
 import mongoose from 'mongoose';
 
 export const validateTransactionRequest = (req: Request, res: Response, next: NextFunction) => {
@@ -29,6 +30,7 @@ export const validateParams = (paramName: string) => {
     };
 };
 
+
 export const validateUserRequest = (req: Request, res: Response, next: NextFunction) => {
     const allowedFields = ['id', 'username', 'password', 'newPassword'];
     const bodyKeys = Object.keys(req.body);
@@ -43,6 +45,27 @@ export const validateUserRequest = (req: Request, res: Response, next: NextFunct
     }
 
     next(); 
+};
+
+export const validateParamsUser = async (req: Request, res: Response, next: NextFunction) => {
+    const { username } = req.params;
+
+    try {
+        // Check if the user exists in the database
+        const users = await getUsersByUsername(username);
+
+        if (users.length === 0) {
+            return res.status(404).json({
+                error: `User with username "${username}" not found.`,
+            });
+        }
+
+        // If user exists, proceed to the next middleware/controller
+        next();
+    } catch (err) {
+        console.error('Error checking username in database:', err);
+        return res.status(500).json({ error: 'Error checking username in database' });
+    }
 };
 
 export const validateTagRequest = (req: Request, res: Response, next: NextFunction) => {

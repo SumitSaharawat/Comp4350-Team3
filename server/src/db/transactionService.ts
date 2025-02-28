@@ -28,7 +28,7 @@ export const addTransaction = async (userId: string, name: string, date: string,
             date: new Date(date), 
             amount,
             currency,
-            tags: validTags
+            tags: validTags 
         });
 
         await newTransaction.save();
@@ -49,7 +49,7 @@ export const getAllTransactions = async (userId: string): Promise<ITransaction[]
             throw new Error('Invalid user ID format');
         }
 
-        const transactions = await Transaction.find({user: userId}).populate('user');
+        const transactions = await Transaction.find({user: userId}).populate('tags').populate('user');
         return transactions;
     } catch (err) {
         if (err.name === 'ValidationError') {
@@ -90,7 +90,7 @@ export const editTransaction = async (id: string, name?: string, date?: string, 
                     throw new Error('One or more tags do not exist.');
                 }
 
-                updatedTransaction.tags = validTags;
+                updatedTransaction.tags = existingTags;
             } else {
                 updatedTransaction.tags = [];
             }

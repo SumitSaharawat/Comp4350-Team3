@@ -13,7 +13,13 @@ const formatTransaction = (transaction: ITransaction) => ({
     }),
     amount: transaction.amount,
     currency: transaction.currency,
-    tags: transaction.tags?.map(tag => tag.toString()) || [] // Convert ObjectId[] to string[]
+    tags: transaction.tags?.map(tag => ({
+        id: tag._id.toString(), 
+        name: tag.name,         
+        color: tag.color        
+    })) || []  // If no tags, default to an empty array
+
+    
 });
 
 export const addTransactionController = async (req: Request, res: Response) => {
@@ -36,7 +42,9 @@ export const getAllTransactionController = async (req: Request, res: Response) =
 
     try {
         const transactions = await getAllTransactions(userId);
-        console.log('Formatted Transaction:', JSON.stringify(transactions.map(formatTransaction), null, 2));  // Pretty print
+        console.log('Raw Transactions from DB:', JSON.stringify(transactions, null, 2)); 
+
+        console.log('Formatted Transaction:', JSON.stringify(transactions.map(formatTransaction), null, 2));  
 
         console.log('All transactions received successfully:', transactions.map(formatTransaction));  // Log the formatted transaction
 

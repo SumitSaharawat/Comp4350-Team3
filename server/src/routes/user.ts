@@ -2,15 +2,15 @@
 // GET user profile page.
 
 import express from 'express';
-import{ addUserController, getSingleUserController, editUserController, deleteUserController } from '../controller/userController'
-import { authenticateToken } from '../middleware/authenticator';
-import { validateUserRequest, validateParams } from '../middleware/dbValidation';
+import{ addUserController, getSingleUserController, editUserController, deleteUserController } from '../controller/userController.js'
+import { authenticateToken } from '../middleware/authenticator.js';
+import { validateUserRequest, validateParams, validateParamsUser } from '../middleware/dbValidation.js';
 
 const router = express.Router();
 
 //http://localhost:portNum/api/user
 
-router.get('/:username', authenticateToken, validateUserRequest, getSingleUserController);
+router.get('/:username', authenticateToken, validateUserRequest, validateParamsUser, getSingleUserController);
 
 // example body for post: 
 // { 'username': 'someUser', 'password': 'somePass'}

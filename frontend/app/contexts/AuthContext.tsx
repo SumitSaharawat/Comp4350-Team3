@@ -52,7 +52,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setTimeout(() => {
                 // Give 1 sec to holding
                 window.location.href = "/transactions";
-            }, 1000);
+            }, 500);
 
             return result;
         } catch (error) {
@@ -69,7 +69,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setTimeout(() => {
                 // Give 1 sec to holding
                 window.location.href = "/auth/login";
-            }, 1000);
+            }, 500);
 
             return result;
         } catch (error) {
@@ -97,7 +97,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setTimeout(() => {
                 // Give 1 sec to holding
                 window.location.href = "/auth/login";
-            }, 1000);
+            }, 500);
 
             return result;
         } catch (error) {

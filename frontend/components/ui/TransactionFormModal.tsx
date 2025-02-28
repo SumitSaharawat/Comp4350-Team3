@@ -77,7 +77,7 @@ export default function TransactionFormModal({
                 setMessage(null);
                 toggle();
                 refreshTransactions();
-            }, 1500);
+            }, 500);
         } catch (error) {
             setMessage({ text: error instanceof Error ? error.message : "Failed to process transaction", type: "error" });
         } finally {

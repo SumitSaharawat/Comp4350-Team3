@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutGrid, RefreshCcw, LogOut, Plus } from "lucide-react";
+import { LayoutGrid, RefreshCcw, LogOut } from "lucide-react";
 import { useAuth } from "@/app/contexts/AuthContext";
 
 interface SidebarProps {
@@ -14,14 +14,13 @@ export default function Sidebar({ isOpen }: SidebarProps) {
     const menuItems = [
         {
             name: "Dashboard",
-            path: "/dashboard",
+            path: "",
             icon: <LayoutGrid className="w-5 h-5" />,
         },
         {
             name: "Transactions",
             path: "/transactions",
             icon: <RefreshCcw className="w-5 h-5" />,
-            action: <Plus className="w-5 h-5 text-blue-500" />,
         },
     ];
 
@@ -45,11 +44,6 @@ export default function Sidebar({ isOpen }: SidebarProps) {
                             {item.icon}
                             <span>{item.name}</span>
                         </Link>
-                        {item.action && (
-                            <button className="p-2 rounded-full hover:bg-gray-700">
-                                {item.action}
-                            </button>
-                        )}
                     </li>
                 ))}
             </ul>

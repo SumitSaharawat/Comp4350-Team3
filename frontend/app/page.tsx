@@ -1,16 +1,14 @@
 "use client";
 
-import Link from "next/link";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Main() {
+    const router = useRouter();
 
-    return (
-        <div>
-            <p className="text-black text-center">
-                <Link href="/auth/login" className="text-center hover:underline">
-                    Log in?
-                </Link>
-            </p>
-        </div>
-    );
+    useEffect(() => {
+        router.replace("/auth/login");
+    }, [router]);
+
+    return null;
 }

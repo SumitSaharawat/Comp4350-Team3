@@ -1,17 +1,26 @@
 "use client";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { X } from "lucide-react";
-import { addTransactionsToServer } from "@/app/api/transac";
+import { addTransactionsToServer, editTransactionsOnServer, Transaction} from "@/app/api/transac";
 
 interface TransactionFormModalProps {
     isOpen: boolean;
     toggle: () => void;
     refreshTransactions: () => void;
+    mode: "add" | "edit";
+    existingTransaction?: Transaction | null;
 }
 
-export default function TransactionFormModal({ isOpen, toggle, refreshTransactions}: TransactionFormModalProps) {
+export default function TransactionFormModal({
+                                                 isOpen,
+                                                 toggle,
+                                                 refreshTransactions,
+                                                 mode,
+                                                 existingTransaction
+}: TransactionFormModalProps) {
+
     const [name, setName] = useState<string>("");
     const [amount, setAmount] = useState<number | "">("");
     const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
@@ -19,6 +28,24 @@ export default function TransactionFormModal({ isOpen, toggle, refreshTransactio
     const currencies = ["CAD", "USD"];
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState<{ text: string; type: "error" | "success" } | null>(null);
+    const [headLine, setHeadLine] = useState<string>("");
+
+    useEffect(() => {
+        if (mode === "edit" && existingTransaction) {
+            setName(existingTransaction.name);
+            setAmount(existingTransaction.amount);
+            setSelectedDate(new Date(existingTransaction.date));
+            setCurrency(existingTransaction.currency);
+            setHeadLine("Edit Transaction");
+
+        } else {
+            setName("");
+            setAmount("");
+            setSelectedDate(new Date());
+            setCurrency("CAD");
+            setHeadLine("Add Transaction");
+        }
+    }, [mode, existingTransaction]);
 
     const handleSubmit = async () => {
         setMessage(null);
@@ -36,18 +63,23 @@ export default function TransactionFormModal({ isOpen, toggle, refreshTransactio
 
         try {
             setLoading(true);
-            // Format date to `yyyy-MM-dd`
             const formattedDate = selectedDate.toISOString().split("T")[0];
 
-            await addTransactionsToServer(userid, name, formattedDate, Number(amount), currency);
-            setMessage({ text: "Transaction added successfully!", type: "success" });
+            if (mode === "add") {
+                await addTransactionsToServer(userid, name, formattedDate, Number(amount), currency);
+                setMessage({ text: "Transaction added successfully!", type: "success" });
+            } else if (mode === "edit" && existingTransaction) {
+                await editTransactionsOnServer(existingTransaction.id, name, formattedDate, Number(amount), currency);
+                setMessage({ text: "Transaction updated successfully!", type: "success" });
+            }
 
             setTimeout(() => {
-                toggle(); // Close modal
-                refreshTransactions(); // Refresh transaction list
-            }, 1500);
+                setMessage(null);
+                toggle();
+                refreshTransactions();
+            }, 500);
         } catch (error) {
-            setMessage({ text: error instanceof Error ? error.message : "Failed to add transaction", type: "error" });
+            setMessage({ text: error instanceof Error ? error.message : "Failed to process transaction", type: "error" });
         } finally {
             setLoading(false);
         }
@@ -69,7 +101,7 @@ export default function TransactionFormModal({ isOpen, toggle, refreshTransactio
                 </button>
 
                 {/* Title */}
-                <h2 className="text-xl font-bold mb-4 text-center">Add Transaction</h2>
+                <h2 className="text-xl font-bold mb-4 text-center">{headLine}</h2>
 
                 {/* Transaction name */}
                 <input

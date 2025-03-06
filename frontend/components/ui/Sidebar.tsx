@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutGrid, RefreshCcw, LogOut } from "lucide-react";
+import { LayoutDashboard, Receipt, LogOut, Tag } from "lucide-react";
 import { useAuth } from "@/app/contexts/AuthContext";
 
 interface SidebarProps {
@@ -15,12 +15,17 @@ export default function Sidebar({ isOpen }: SidebarProps) {
         {
             name: "Dashboard",
             path: "",
-            icon: <LayoutGrid className="w-5 h-5" />,
+            icon: <LayoutDashboard className="w-5 h-5" />,
         },
         {
             name: "Transactions",
             path: "/transactions",
-            icon: <RefreshCcw className="w-5 h-5" />,
+            icon: <Receipt className="w-5 h-5" />,
+        },
+        {
+            name: "Tags",
+            path: "/tag",
+            icon: <Tag className="w-5 h-5" />,
         },
     ];
 

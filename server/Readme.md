@@ -3,16 +3,48 @@
 ## 📂 Folder Structure
 ```
 /server
-├── src                         # Express js app 
-│   ├── controller              # Application logic
-│   ├── middleware              # Middleware layer
-│   ├── routes                  # Routing layer
-│   ├── app.ts                  # Server entry point
-├── .env                        # Environment variables (ignored in version control)
-├── tsconfig.json               # Typescript configuration
-├── package.json                # Project metadata and dependencies
-├── eslint.config.mjs           # Eslint configure
-└── README.md                   # Project documentation
+├── build                      # Compiled TypeScript files (output directory)
+├── node_modules               # Node.js dependencies
+├── src                        # Source code
+│   ├── controller             # Controllers handling API requests
+│   │   ├── indexController.ts
+│   │   ├── loginController.ts
+│   │   ├── tagController.ts
+│   │   ├── transactionController.ts
+│   │   ├── userController.ts
+│   ├── db                     # Database services and models
+│   │   ├── db.ts
+│   │   ├── tagDB.ts
+│   │   ├── tagService.ts
+│   │   ├── transactionDB.ts
+│   │   ├── transactionService.ts
+│   │   ├── userDB.ts
+│   │   ├── userService.ts
+│   ├── middleware             # Middleware for authentication, validation, etc.
+│   │   ├── authenticator.ts
+│   │   ├── dbValidation.ts
+│   │   ├── errorHandler.ts
+│   │   ├── loggers.ts
+│   ├── routes                 # API route handlers
+│   │   ├── index.ts
+│   │   ├── login.ts
+│   │   ├── tag.ts
+│   │   ├── transaction.ts
+│   │   ├── user.ts
+│   ├── app.ts                 # Main entry point of the backend
+├── tests                      # Test cases
+│   ├── controller             # Unit tests for controllers
+│   │   ├── indexController.test.ts
+│   │   ├── loginController.test.ts
+│   │   ├── tagController.test.ts
+│   │   ├── transactionController.test.ts
+│   │   ├── userController.test.ts
+├── .env                       # Environment variables
+├── eslint.config.mjs          # ESLint configuration
+├── package.json               # Project metadata and dependencies
+├── package-lock.json          # Dependency lock file
+├── Readme.md                  # Project documentation
+├── tsconfig.json              # TypeScript configuration file
 ```
 
 ## 🛠 Installation & Setup

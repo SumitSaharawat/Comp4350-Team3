@@ -126,7 +126,7 @@ export default function TransactionsPage() {
     return (
         <div className="flex">
             {/* Sidebar */}
-            <Sidebar isOpen={isSidebarOpen} />
+            <Sidebar isOpen={isSidebarOpen} toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}/>
 
             <div
                 className={`flex-1 transition-all duration-300 ${

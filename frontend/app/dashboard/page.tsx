@@ -8,7 +8,7 @@ export default function DashboardPage() {
     return (
         <div className="flex">
             {/* Sidebar */}
-            <Sidebar isOpen={isSidebarOpen}/>
+            <Sidebar isOpen={isSidebarOpen} toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
         </div>
     );

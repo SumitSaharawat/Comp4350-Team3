@@ -85,5 +85,33 @@ export const validateTagRequest = (req: Request, res: Response, next: NextFuncti
 };
 
 
+export const validateGoalRequest = (req: Request, res: Response, next: NextFunction) => {
+    const allowedFields = ['userId', 'name', 'time', 'currAmount', 'goalAmount', 'category'];
+    const bodyKeys = Object.keys(req.body);
+
+    // Find unexpected fields
+    const unexpectedFields = bodyKeys.filter(key => !allowedFields.includes(key));
+
+    if (unexpectedFields.length > 0) {
+        return res.status(400).json({ 
+            error: `Unexpected field(s): ${unexpectedFields.join(', ')}` 
+        });
+    }
+
+    // Validate category field (must be one of the predefined options)
+    if (req.body.category) {
+        const validCategories = ['Saving', 'Investment', 'Debt Payment', 'Other'];
+        if (!validCategories.includes(req.body.category)) {
+            return res.status(400).json({
+                error: `Invalid category. Must be one of: ${validCategories.join(', ')}`,
+            });
+        }
+    }
+
+    next();
+};
+
+
+
 
 

@@ -10,6 +10,9 @@ RUN npm install
 # copy src codes
 COPY . .
 
+# environment variables before the project is built
+ENV NEXT_PUBLIC_API_URL=http://localhost:8000
+
 # build the project
 RUN npm run build
 
@@ -30,8 +33,7 @@ COPY --from=development /usr/src/frontend/.next ./.next
 COPY --from=development /usr/src/frontend/public ./public
 COPY --from=development /usr/src/frontend/node_modules ./node_modules
 
-# environment variables
-ENV NEXT_PUBLIC_API_URL=http://localhost:8000
+
 
 
 CMD ["npm", "run", "start"]

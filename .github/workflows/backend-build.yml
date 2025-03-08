@@ -22,6 +22,8 @@ jobs:
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
+              with:
+                  fetch-depth: 1  # Ensures we only fetch the latest commit
 
             - name: Use Node.js ${{ matrix.node-version }}
               uses: actions/setup-node@v4

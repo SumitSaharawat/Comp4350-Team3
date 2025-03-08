@@ -29,6 +29,13 @@ jobs:
                   node-version: ${{ matrix.node-version }}
                   cache: "npm"
 
+            - name: Verify project structure
+              run: |
+                  echo "Checking project files..."
+                  ls -la
+                  cd server
+                  ls -la
+
             - name: Ensure package-lock.json exists
               run: |
                   if [ ! -f package-lock.json ]; then

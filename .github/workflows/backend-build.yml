@@ -22,8 +22,6 @@ jobs:
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
-              with:
-                  fetch-depth: 1  # Ensures we only fetch the latest commit
 
             - name: Use Node.js ${{ matrix.node-version }}
               uses: actions/setup-node@v4
@@ -31,22 +29,8 @@ jobs:
                   node-version: ${{ matrix.node-version }}
                   cache: "npm"
 
-            - name: Verify project structure
-              run: |
-                  echo "Checking project files..."
-                  ls -la
-                  cd server
-                  ls -la
-
-            - name: Ensure package-lock.json exists
-              run: |
-                  if [ ! -f package-lock.json ]; then
-                      echo "package-lock.json is missing, generate one..."
-                      npm install --package-lock-only
-                  fi
-
             - name: Install dependencies
-              run: npm ci || npm install
+              run: npm ci
 
             - name: Build
               run: npm run build

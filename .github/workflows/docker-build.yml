@@ -17,4 +17,5 @@ jobs:
               run: docker push jwang17/simple-finance-frontend:latest
 
             - name: Publish backend Docker image
-              run: docker push jwang17/simple-finance-server:latest
+              run: docker login -u jwang17 -p ${{ secrets.DOCKER_HUB_TOKEN  }}
+                  docker push jwang17/simple-finance-server:latest

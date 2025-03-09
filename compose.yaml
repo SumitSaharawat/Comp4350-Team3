@@ -1,0 +1,23 @@
+services:
+  backend:
+    build: ./server
+    container_name: server
+    env_file:
+      - ./server/.env
+    networks:
+      - simple-finance
+    ports: 
+      - "8000:8000"
+    
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    networks:
+      - simple-finance
+    ports:
+      - "3000:3000"
+
+
+networks:
+  simple-finance:
+    driver: bridge

@@ -1,15 +1,11 @@
 "use client";
-import { useState } from "react";
-import Sidebar from "@/components/ui/Sidebar";
+import Layout from "@/components/ui/Layout";
 
 export default function TagPage() {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     return (
-        <div className="flex">
-            {/* Sidebar */}
-            <Sidebar isOpen={isSidebarOpen} toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}/>
-
-        </div>
+        <Layout title="Tags">
+            <p>This is the tags page content.</p>
+        </Layout>
     );
 }

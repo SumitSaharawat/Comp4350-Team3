@@ -15,6 +15,7 @@ import { devError, prodError } from './middleware/errorHandler';
 import { requestLog } from './middleware/loggers';
 import tag from './routes/tag';
 import goal from './routes/goals';
+import reminder from './routes/reminder';
 
 const debugLog = debug('server');
 const app = express();
@@ -52,6 +53,7 @@ app.use('/api/login', login);
 app.use('/api/transaction', transaction);
 app.use('/api/tag', tag);
 app.use('/api/goal', goal);
+app.use('/api/reminder', reminder);
 
 // connect to DB
 connectDB().then(() => {

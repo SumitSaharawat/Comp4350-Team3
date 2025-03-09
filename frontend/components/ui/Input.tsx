@@ -1,10 +1,11 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { Delete } from "lucide-react";
 
 interface searchBarProps {
     searchHint?: string;
     onTextChange?: (inputText: string) => void;
-    onSearchLaungh?: (inputText: string) => void;
+    onSearchLaunch?: (inputText: string) => void;
 }
 
 const AuthInput = React.forwardRef<
@@ -26,25 +27,45 @@ const AuthInput = React.forwardRef<
 });
 
 const SearchBar = ({
-    searchHint,
-    onTextChange,
-    onSearchLaungh,
-}: searchBarProps) => {
+                       searchHint,
+                       onTextChange,
+                       onSearchLaunch }: searchBarProps) => {
+    const [inputText, setInputText] = React.useState("");
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setInputText(value);
+        if (onTextChange) onTextChange(value);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (onSearchLaunch) onSearchLaunch(inputText);
+    };
+
+    const clearInput = () => {
+        setInputText("");
+        if (onTextChange) onTextChange("");
+    };
+
     return (
-        <>
-            <label className="input input-bordered flex items-center gap-2">
-                <input
-                    type="text"
-                    className="grow"
-                    placeholder={searchHint}
-                    onChange={(e) => {
-                        if (onTextChange) onTextChange(e.target.value);
-                    }}
-                    onKeyDown={(e) => {
-                        if (onSearchLaungh)
-                            onSearchLaungh(e.currentTarget.value);
-                    }}
-                />
+        <label className="input input-bordered flex items-center gap-2 px-2 py-1 rounded-md border border-gray-300">
+            <input
+                type="text"
+                className="grow px-2 py-1 bg-transparent focus:outline-none"
+                placeholder={searchHint}
+                value={inputText}
+                onChange={handleChange}
+                onKeyDown={handleKeyDown}
+            />
+
+            {inputText ? (
+                <button
+                    onClick={clearInput}
+                    className="text-gray-500 hover:text-gray-700 transition-colors"
+                >
+                    <Delete className="w-6 h-6"/>
+                </button>
+            ) : (
                 <svg
                     viewBox="0 0 16 16"
                     fill="currentColor"
@@ -56,8 +77,8 @@ const SearchBar = ({
                         clipRule="evenodd"
                     />
                 </svg>
-            </label>
-        </>
+            )}
+        </label>
     );
 };
 

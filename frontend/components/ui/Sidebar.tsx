@@ -45,7 +45,8 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
             <button
                 onClick={toggleSidebar}
                 className="absolute top-10 -right-3 transform -translate-y-1/2 bg-white text-black
-                p-1 rounded-2xl shadow-md hover:bg-gray-300 transition-all flex items-center justify-center w-8 h-8"
+                p-1 rounded-lg border border-gray-300 shadow-md hover:bg-gray-300 transition-all flex
+                items-center justify-center w-8 h-8"
             >
                 {isOpen ? <ChevronLeft className="w-6 h-6"/> : <ChevronRight className="w-6 h-6"/>}
             </button>

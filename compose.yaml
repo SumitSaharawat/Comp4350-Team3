@@ -1,5 +1,6 @@
 services:
   backend:
+    image: jwang17/simple-finance-server:latest
     build: ./server
     container_name: server
     env_file:
@@ -10,6 +11,7 @@ services:
       - "8000:8000"
     
   frontend:
+    image: jwang17/simple-finance-frontend:latest
     build: ./frontend
     container_name: frontend
     networks:

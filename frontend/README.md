@@ -57,7 +57,6 @@
 ├── eslint.config.mjs          # ESLint configuration
 └── README.md                  # Project documentation
 ```
-test
 
 ## 🛠 Installation & Setup
 ### 1️⃣ Clone the repository

@@ -2,6 +2,8 @@ name: Build and Public Docker Image
 
 on:
     workflow_dispatch:
+    push:
+        branches: jimmy-issue03-fix-docker-pipeline
 
     schedule:
         - cron: "30 14 * * 5"
@@ -18,9 +20,11 @@ jobs:
               run: docker compose build
 
             - name: Publish frontend Docker image
-              run: docker login -u jwang17 -p ${{ secrets.DOCKER_HUB_TOKEN  }}
+              run:
+                  docker login -u jwang17 -p ${{ secrets.DOCKER_HUB_TOKEN  }} &&
                   docker push jwang17/simple-finance-frontend:latest
 
             - name: Publish backend Docker image
-              run: docker login -u jwang17 -p ${{ secrets.DOCKER_HUB_TOKEN  }}
+              run:
+                  docker login -u jwang17 -p ${{ secrets.DOCKER_HUB_TOKEN  }} &&
                   docker push jwang17/simple-finance-server:latest

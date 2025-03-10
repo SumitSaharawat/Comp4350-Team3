@@ -6,9 +6,8 @@ import { Transaction } from "../api/transac";
 import { useAuth } from "@/app/contexts/AuthContext";
 
 // components
-import Navbar from "@/components/ui/Navbar";
+import Layout from "@/components/ui/Layout";
 import TransactionList from "@/components/ui/TransactionList";
-import Sidebar from "@/components/ui/Sidebar";
 import { FloatingButton, FilterButton } from "@/components/ui/Button";
 import TransactionFormModal from "@/components/ui/TransactionFormModal";
 import { SearchBar } from "@/components/ui/Input";
@@ -17,7 +16,6 @@ export default function TransactionsPage() {
     const { transactions, getTransactions } = useTransactions();
     const { user } = useAuth();
     const [data, setData] = useState<Transaction[]>([]);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editTransaction, setEditTransaction] = useState<Transaction | null>(null);
     const CategoryList = ["CAD", "USD"];
@@ -81,25 +79,24 @@ export default function TransactionsPage() {
     // **CLOSE MODAL**
     const closeModal = () => {
         setIsFormOpen(false);
-        setTimeout(() => setEditTransaction(null), 300);
+        setEditTransaction(null);
     };
 
 
-    const middleComponent = () => {
-        return (
-            <div className="flex-1 flex justify-center">
-                <SearchBar
-                    searchHint={searchHint || ""}
-                    onTextChange={onSearchTermChange}
-                />
-                <FilterButton
-                    filterName="Category"
-                    filterOptions={CategoryList}
-                    onSelectOption={onSelectCategory}
-                />
-            </div>
-        );
-    };
+    const middleComponent = (
+        <div className="flex-1 flex justify-center">
+            <SearchBar
+                searchHint={searchHint || ""}
+                onTextChange={onSearchTermChange}
+            />
+            <FilterButton
+                filterName="Category"
+                filterOptions={CategoryList}
+                onSelectOption={onSelectCategory}
+            />
+        </div>
+    );
+
 
 
     // const onSelectCurrency = (item: string) => {
@@ -124,36 +121,21 @@ export default function TransactionsPage() {
     // };
 
     return (
-        <div className="flex">
-            {/* Sidebar */}
-            <Sidebar isOpen={isSidebarOpen} />
+        <Layout title="Transactions" middleComponent={middleComponent}>
+            {/* Transactions List */}
+            <TransactionList transactions={data} onEdit={openEditModal} />
 
-            <div
-                className={`flex-1 transition-all duration-300 ${
-                    isSidebarOpen ? "ml-64" : "ml-0"
-                }`}
-            >
-                <Navbar
-                    title="Transactions"
-                    middleComponent={middleComponent()}
-                    toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-                />
+            {/* Floating + button */}
+            <FloatingButton toggle={openAddModal} />
 
-                {/* Transactions List */}
-                <TransactionList transactions={data} onEdit={openEditModal} />
-
-                {/* Floating + button */}
-                <FloatingButton toggle={openAddModal} />
-
-                {/* Transaction Form Modal (for both ADD & EDIT) */}
-                <TransactionFormModal
-                    isOpen={isFormOpen}
-                    toggle={closeModal}
-                    refreshTransactions={getDataOnRender}
-                    mode={editTransaction ? "edit" : "add"}
-                    existingTransaction={editTransaction}
-                />
-            </div>
-        </div>
+            {/* Transaction Form Modal */}
+            <TransactionFormModal
+                isOpen={isFormOpen}
+                toggle={closeModal}
+                refreshTransactions={getDataOnRender}
+                mode={editTransaction ? "edit" : "add"}
+                existingTransaction={editTransaction}
+            />
+        </Layout>
     );
-}
+};

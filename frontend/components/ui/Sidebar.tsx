@@ -1,61 +1,90 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutGrid, RefreshCcw, LogOut } from "lucide-react";
+import { LayoutDashboard, Receipt, LogOut, Tag, ChevronLeft, ChevronRight } from "lucide-react";
 import { useAuth } from "@/app/contexts/AuthContext";
+import { useState } from "react";
 
 interface SidebarProps {
     isOpen: boolean;
+    toggleSidebar: () => void;
 }
 
-export default function Sidebar({ isOpen }: SidebarProps) {
+export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
     const pathname = usePathname();
     const { logout } = useAuth();
+    const [isHovered, setIsHovered] = useState(false);
+
     const menuItems = [
         {
             name: "Dashboard",
-            path: "",
-            icon: <LayoutGrid className="w-5 h-5" />,
+            path: "/dashboard",
+            icon: <LayoutDashboard className="w-6 h-6" />,
         },
         {
             name: "Transactions",
             path: "/transactions",
-            icon: <RefreshCcw className="w-5 h-5" />,
+            icon: <Receipt className="w-6 h-6" />,
+        },
+        {
+            name: "Tags",
+            path: "/tag",
+            icon: <Tag className="w-6 h-6" />,
         },
     ];
 
     return (
         <div
-            className={`fixed top-0 left-0 h-full w-64 bg-gray-900 text-white transition-transform duration-300 ${
-                isOpen ? "translate-x-0" : "-translate-x-64"
+            className={`fixed top-0 left-0 pt-12 h-full bg-gray-900 text-white transition-all duration-300 ease-in-out ${
+                isOpen ? "w-64" : "w-16"
             }`}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
         >
-            <ul className="mt-10 space-y-4 px-4">
+            {/* Sidebar Toggle Button */}
+            <button
+                onClick={toggleSidebar}
+                className="absolute top-10 -right-3 transform -translate-y-1/2 bg-white text-black
+                p-1 rounded-lg border border-gray-300 shadow-md hover:bg-gray-300 transition-all flex
+                items-center justify-center w-8 h-8"
+            >
+                {isOpen ? <ChevronLeft className="w-6 h-6"/> : <ChevronRight className="w-6 h-6"/>}
+            </button>
+
+            {/* Menu List */}
+            <ul className="mt-6 space-y-4">
                 {menuItems.map((item) => (
-                    <li key={item.path} className="flex justify-between">
+                    <li key={item.path} className="relative">
                         <Link
                             href={item.path}
-                            className={`flex items-center gap-2 p-2 rounded w-full transition-colors ${
+                            className={`flex items-center gap-3 p-3 rounded-md w-full transition-colors ${
                                 pathname === item.path
                                     ? "bg-purple-600 text-white"
                                     : "hover:bg-gray-700"
                             }`}
                         >
                             {item.icon}
-                            <span>{item.name}</span>
+                            {isOpen && <span className="transition-all duration-200">{item.name}</span>}
                         </Link>
+
+                        {/* Tooltip when sidebar is collapsed */}
+                        {!isOpen && !isHovered && (
+                            <div className="absolute left-14 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white px-2 py-1 rounded-md text-xs shadow-md opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                                {item.name}
+                            </div>
+                        )}
                     </li>
                 ))}
             </ul>
 
-
-            <div className="absolute bottom-4 left-4 right-4">
+            {/* Logout Button */}
+            <div className="absolute bottom-4 left-0 w-full">
                 <button
                     onClick={logout}
-                    className="flex items-center gap-2 p-2 rounded text-gray-300 transition-colors hover:bg-gray-800 hover:text-white w-full"
+                    className="flex items-center gap-3 p-3 rounded-md text-gray-300 transition-colors hover:bg-gray-800 hover:text-white w-full"
                 >
-                    <LogOut className="w-5 h-5"/>
-                    <span>Sign Out</span>
+                    <LogOut className="w-6 h-6" />
+                    {isOpen && <span className="transition-all duration-200">Sign Out</span>}
                 </button>
             </div>
         </div>

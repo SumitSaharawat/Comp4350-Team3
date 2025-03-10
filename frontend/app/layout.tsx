@@ -1,5 +1,6 @@
 import { AuthProvider } from "@/app/contexts/AuthContext";
 import { TransactionsProvider } from "./contexts/TransactionsContext";
+import { TagsProvider } from "@/app/contexts/TagContext";
 import "./globals.css";
 
 export default function RootLayout({
@@ -10,9 +11,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <TransactionsProvider>
-          <AuthProvider>{children}</AuthProvider>
-        </TransactionsProvider>
+        <TagsProvider>
+            <TransactionsProvider>
+                <AuthProvider>{children}</AuthProvider>
+            </TransactionsProvider>
+        </TagsProvider>
       </body>
     </html>
   );

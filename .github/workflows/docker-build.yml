@@ -1,9 +1,10 @@
 name: Build and Public Docker Image
 
 on:
-    push:
-        branches:
-            - jimmy-issue033-update-pipeline-with-docker
+    workflow_dispatch:
+
+    schedule:
+        - cron: "30 14 * * 5"
 
 jobs:
     build_and_publish:

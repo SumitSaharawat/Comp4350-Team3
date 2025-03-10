@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { IGoal } from '../db/goalsDB';
 import { addGoal, deleteGoal, editGoal, getAllGoals } from '../db/goalsService';
+import { controlLog } from '../middleware/loggers';
 
 const formatGoal = (goal: IGoal) => ({
     id: goal._id.toString(),
@@ -39,7 +40,7 @@ export const addGoalController = async (req: Request, res: Response) => {
 
 export const getAllGoalsController = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    console.log(`Fetching goals for user: ${userId}`);
+    controlLog(`Fetching goals for user: ${userId}`);
 
     try {
         const goals = await getAllGoals(userId);

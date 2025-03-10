@@ -38,7 +38,7 @@ const SearchBar = ({
         if (onTextChange) onTextChange(value);
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyDown = () => {
         if (onSearchLaunch) onSearchLaunch(inputText);
     };
 

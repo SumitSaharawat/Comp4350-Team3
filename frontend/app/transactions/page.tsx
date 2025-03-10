@@ -6,7 +6,7 @@ import { Transaction } from "../api/transac";
 import { useAuth } from "@/app/contexts/AuthContext";
 
 // components
-import Layout from "@/components/ui/Layout"
+import Layout from "@/components/ui/Layout";
 import TransactionList from "@/components/ui/TransactionList";
 import { FloatingButton, FilterButton } from "@/components/ui/Button";
 import TransactionFormModal from "@/components/ui/TransactionFormModal";

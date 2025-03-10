@@ -3,7 +3,8 @@ name: Build and Public Docker Image
 on:
     workflow_dispatch:
     push:
-        branches: jimmy-issue03-fix-docker-pipeline
+        branches:
+            - jimmy-issue03-fix-docker-pipeline
 
     schedule:
         - cron: "30 14 * * 5"

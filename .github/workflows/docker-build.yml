@@ -1,6 +1,9 @@
 name: Build and Public Docker Image
 
-on: [workflow_dispatch]
+on:
+    push:
+        branches:
+            - jimmy-issue033-update-pipeline-with-docker
 
 jobs:
     build_and_publish:

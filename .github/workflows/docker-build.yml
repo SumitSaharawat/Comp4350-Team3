@@ -4,7 +4,7 @@ on:
     workflow_dispatch:
     push:
         branches:
-            - jimmy-issue03-fix-docker-pipeline
+            - jimmy-issue033-fix-docker-pipeline
 
     schedule:
         - cron: "30 14 * * 5"

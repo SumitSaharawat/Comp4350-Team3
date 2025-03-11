@@ -58,9 +58,9 @@ describe('Tag Controller', () => {
       const response = await request(app).get('/tags/trans123');
 
       expect(response.status).toBe(200);
-      expect(response.body.tags.length).toBe(2);
-      expect(response.body.tags[0].name).toBe('tag1');
-      expect(response.body.tags[0].color).toBe('blue');
+      expect(response.body.length).toBe(2);
+      expect(response.body[0].name).toBe('tag1');
+      expect(response.body[0].color).toBe('blue');
     });
 
     it('should return an error when retrieving tags fails', async () => {

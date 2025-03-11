@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { ITag } from '../db/tagDB';
 import { addTag, getAllTags, editTag, deleteTag } from '../db/tagService'; 
+import { controlLog } from '../middleware/loggers';
 
 const formatTag = (tag: ITag) => ({
     id: tag._id.toString(), 
@@ -14,7 +15,7 @@ export const addTagController = async (req: Request, res: Response) => {
         const tag = await addTag(name, color);
         const formattedTag = formatTag(tag);
 
-        console.log('Formatted Tag:', formattedTag);
+        controlLog('Formatted Tag:', formattedTag);
 
         res.status(201).json({ message: 'Tag created successfully', tag: formattedTag });
     } 
@@ -29,7 +30,7 @@ export const getAllTagsController = async (req: Request, res: Response) => {
         const tags = await getAllTags();
         const formattedTags = tags.map(formatTag);
 
-        console.log('Formatted Tags:', formattedTags);
+        controlLog('Formatted Tags:', formattedTags);
 
         res.status(200).json(formattedTags);
     } 
@@ -48,7 +49,7 @@ export const editTagController = async (req: Request, res: Response) => {
         if (updatedTag) {
             // Only format the tag if it exists
             const formattedTag = formatTag(updatedTag);
-            console.log('Formatted Tag:', formattedTag);
+            controlLog('Formatted Tag:', formattedTag);
             res.status(200).json({ message: 'Tag updated successfully', tag: formattedTag });
         } else {
             res.status(404).json({ message: 'Tag not found' });

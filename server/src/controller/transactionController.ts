@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { ITransaction } from '../db/transactionDB';
 import { addTransaction, deleteTransaction, editTransaction, getAllTransactions } from '../db/transactionService';
+import { controlLog } from '../middleware/loggers'
 
 const formatTransaction = (transaction: ITransaction) => ({
     id: transaction._id.toString(), // Convert _id to id
@@ -38,15 +39,15 @@ export const addTransactionController = async (req: Request, res: Response) => {
 
 export const getAllTransactionController = async (req: Request, res: Response) => {
     const { userId } = req.params;
-    console.log(`Fetching transactions for user: ${userId}`);
+    controlLog(`Fetching transactions for user: ${userId}`);
 
     try {
         const transactions = await getAllTransactions(userId);
-        console.log('Raw Transactions from DB:', JSON.stringify(transactions, null, 2)); 
+        controlLog('Raw Transactions from DB:', JSON.stringify(transactions, null, 2)); 
 
-        console.log('Formatted Transaction:', JSON.stringify(transactions.map(formatTransaction), null, 2));  
+        controlLog('Formatted Transaction:', JSON.stringify(transactions.map(formatTransaction), null, 2));  
 
-        console.log('All transactions received successfully:', transactions.map(formatTransaction));  // Log the formatted transaction
+        controlLog('All transactions received successfully:', transactions.map(formatTransaction));  // Log the formatted transaction
 
         res.status(200).json(transactions.map(formatTransaction));
     } 

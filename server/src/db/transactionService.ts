@@ -2,6 +2,7 @@ import Transaction, { ITransaction } from './transactionDB';
 import User from './userDB'
 import Tag from './tagDB'
 import mongoose from 'mongoose';
+import { dbLog } from '../middleware/loggers';
 
 export const addTransaction = async (userId: string, name: string, date: string, amount: number, currency: string, tags?: string[]) => {
     try {
@@ -69,7 +70,7 @@ export const editTransaction = async (id: string, name?: string, date?: string, 
         const updatedTransaction = await Transaction.findById(id);
 
         if (!updatedTransaction) {
-            console.log('No transaction found with the given ID.');
+            dbLog(`No transaction found with the ID ${id}`);
             return null;
         }
 
@@ -121,9 +122,9 @@ export const deleteTransaction = async (id: string) => {
         }
         const result = await Transaction.deleteOne({_id: id});
         if (result.deletedCount > 0) {
-            console.log('User deleted successfully.');
+            dbLog(`User ${id} deleted successfully.`);
         } else {
-            console.log('No user found with the given username.');
+            dbLog(`No user found with the username ${id}.`);
         }
         return result;
     } catch (err) {

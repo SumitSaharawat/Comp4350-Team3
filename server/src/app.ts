@@ -55,7 +55,7 @@ app.use('/api/goal', goal);
 
 // connect to DB
 connectDB().then(() => {
-    console.log("Database connection established. Starting app...");
+    debugLog("Database connection established. Starting app...");
 });
 
 

@@ -1,5 +1,6 @@
 import User, {IUser} from './userDB'; // Import the User model
 import mongoose from 'mongoose';
+import { dbLog } from '../middleware/loggers';
 
 // Function to add a new user
 export const addUser = async (username: string, password: string): Promise<IUser> => {
@@ -34,7 +35,7 @@ export const getUsersByUsername = async (username: string) => {
     try {
         const users = await User.find({ username });
         if (users.length === 0) {
-            console.log('no users found with username:', username);
+            dbLog('no users found with username:', username);
         }
         return users;
     }
@@ -62,7 +63,7 @@ export const editUser = async (id: string, username?: string, password?: string)
         const updatedUser = await User.findByIdAndUpdate(id, updatedFields, { new: true });
 
         if (!updatedUser) {
-            console.log('No user with the ID found.');
+            dbLog(`No user with the ID ${id} found.`);
             return null;
         }
 
@@ -86,9 +87,9 @@ export const deleteUser = async (id: string) => {
         }
         const result = await User.deleteOne({_id: id});
         if (result.deletedCount > 0) {
-            console.log('User deleted successfully.');
+            dbLog(`User ${id} deleted successfully.`);
         } else {
-            console.log('No user found.');
+            dbLog(`User ${id} not found.`);
         }
         return result;
     } 

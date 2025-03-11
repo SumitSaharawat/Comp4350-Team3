@@ -3,7 +3,7 @@ import mongoose, { Document } from 'mongoose';
 const Schema = mongoose.Schema;
 
 export interface IReminder extends Document {
-    user: mongoose.Schema.Types.ObjectId;
+    userId: mongoose.Schema.Types.ObjectId;
     name: string;
     text: string;
     time: Date;
@@ -11,7 +11,7 @@ export interface IReminder extends Document {
 
 const reminderSchema = new Schema<IReminder>(
     {
-        user: {
+        userId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true,

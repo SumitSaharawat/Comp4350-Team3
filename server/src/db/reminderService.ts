@@ -10,7 +10,7 @@ export const addReminder = async (userId: string, name: string, text: string, ti
         }
 
         const newReminder = new Reminder({
-            user: userId,
+            userId: userId,
             name,
             text,
             time: new Date(time),
@@ -33,7 +33,7 @@ export const getAllReminders = async (userId: string): Promise<IReminder[]> => {
             throw new Error('Invalid user ID format');
         }
 
-        const reminders = await Reminder.find({ user: userId }).populate('user');
+        const reminders = await Reminder.find({ userId: userId }).populate('userId');
         return reminders;
     } catch (err) {
         console.error('Error retrieving reminders:', err);

@@ -112,7 +112,7 @@ export const validateGoalRequest = (req: Request, res: Response, next: NextFunct
 };
 
 export const validateReminderRequest = (req: Request, res: Response, next: NextFunction) => {
-    const allowedFields = ['name', 'text', 'time', 'user'];
+    const allowedFields = ['userId','name', 'text', 'time', ];
     const bodyKeys = Object.keys(req.body);
 
     const unexpectedFields = bodyKeys.filter(key => !allowedFields.includes(key));
@@ -135,7 +135,7 @@ export const validateReminderRequest = (req: Request, res: Response, next: NextF
         return res.status(400).json({ error: '`time` is required and must be a valid date format (ISO 8601).' });
     }
 
-    if (!req.body.user || !mongoose.Types.ObjectId.isValid(req.body.user)) {
+    if (!req.body.userId || !mongoose.Types.ObjectId.isValid(req.body.userId)) {
         return res.status(400).json({ error: '`user` is required and must be a valid ObjectId.' });
     }
 

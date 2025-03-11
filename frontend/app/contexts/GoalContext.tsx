@@ -1,6 +1,6 @@
 "use client";
 
-import React, {createContext, useContext, useEffect, useState} from "react";
+import React, {createContext, useContext, useState} from "react";
 import { Goal, getGoalsFromServer } from "@/app/api/goal";
 
 interface GoalsContextType {
@@ -11,7 +11,7 @@ interface GoalsContextType {
 const GoalsContext = createContext<GoalsContextType>({
     goals: [],
     getGoals: async ()=> false,
-})
+});
 
 export function GoalsProvider({ children }: { children: React.ReactNode }) {
     const [goals, setGoals] = useState<Goal[]>([]);

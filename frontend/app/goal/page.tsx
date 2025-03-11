@@ -7,11 +7,6 @@ import { useAuth } from "@/app/contexts/AuthContext";
 
 // components
 import Layout from "@/components/ui/Layout";
-import TransactionList from "@/components/ui/TransactionList";
-import { FloatingButton, FilterButton } from "@/components/ui/Button";
-import TransactionFormModal from "@/components/ui/TransactionFormModal";
-import { SearchBar } from "@/components/ui/Input";
-import TagList from "@/components/ui/TagList";
 import GoalList from "@/components/ui/GoalList";
 
 export default function GoalsPage() {
@@ -47,15 +42,13 @@ export default function GoalsPage() {
 
 
     return (
-        <Layout title="Goals" >
-            {/* Page Header */}
-            <div className="flex justify-between items-center mb-6">
-                <button className="bg-black text-white px-4 py-2 rounded-md flex items-center gap-2 hover:bg-gray-800">
+        <Layout title="Goals">
+            <div className="flex items-center mb-6">
+                <button className="bg-black text-white px-4 py-2 rounded-md flex items-center gap-2 hover:bg-gray-800 ml-auto">
                     + Create Goal
                 </button>
             </div>
 
-            {/* Goals Grid */}
             <GoalList goals={data} />
         </Layout>
     );

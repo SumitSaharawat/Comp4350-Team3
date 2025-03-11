@@ -12,7 +12,7 @@ export default function GoalCard({ goal }: GoalCardProps) {
     return (
         <div className="bg-white p-4 rounded-lg shadow-md relative border border-gray-200">
             {/* Goal Title */}
-            <div className="flex justify-between items-center mb-2">
+            <div className="flex justify-between items-center mb-3">
                 <div className="flex items-center gap-2">
                     <PiggyBank className="w-8 h-8 text-gray-600 border border-gray-200 shadow" />
                     <h2 className="text-lg font-semibold">{goal.name}</h2>
@@ -21,10 +21,10 @@ export default function GoalCard({ goal }: GoalCardProps) {
             </div>
 
             {/* Goal Amounts */}
-            <p className="text-2xl font-bold mt-5">CAD {goal.goalAmount.toLocaleString()}</p>
+            <p className="text-2xl font-bold mt-6">CAD {goal.goalAmount.toLocaleString()}</p>
 
             {/* Progress Bar */}
-            <div className="w-full bg-gray-200 h-1.5 rounded-full mt-2 relative">
+            <div className="w-full bg-gray-200 h-1 rounded-full mt-2 relative">
                 <div
                     className="h-full bg-blue-600 rounded-full"
                     style={{ width: `${(goal.currAmount / goal.goalAmount) * 100}%` }}
@@ -37,7 +37,7 @@ export default function GoalCard({ goal }: GoalCardProps) {
                     CAD {goal.currAmount.toLocaleString()}
                     <span className="text-gray-400"> saved so far</span>
                 </span>
-                <span>{((goal.currAmount / goal.goalAmount) * 100).toFixed(2)}%</span>
+                <span>{((goal.currAmount / goal.goalAmount) * 100).toFixed(0)}%</span>
             </div>
 
             {/* Divider Line */}

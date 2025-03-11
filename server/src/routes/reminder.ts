@@ -10,7 +10,7 @@ import { validateReminderRequest, validateParams } from '../middleware/dbValidat
 
 const router = express.Router();
 // http://localhost:8000/api/reminder/userId
-router.get('/:userId', authenticateToken, validateParams('userId'), getAllRemindersController);
+router.get('/:userId', authenticateToken, validateReminderRequest,validateParams('userId'), getAllRemindersController);
 //example body：
 //{
 //    "user": "67c27af37862793900fc11b9", 

@@ -111,8 +111,9 @@ export const validateGoalRequest = (req: Request, res: Response, next: NextFunct
     next();
 };
 
+//Partially assisted by AI.
 export const validateReminderRequest = (req: Request, res: Response, next: NextFunction) => {
-    const allowedFields = ['userId','name', 'text', 'time', ];
+    const allowedFields = ['userId', 'name', 'text', 'time'];
     const bodyKeys = Object.keys(req.body);
 
     const unexpectedFields = bodyKeys.filter(key => !allowedFields.includes(key));
@@ -121,6 +122,13 @@ export const validateReminderRequest = (req: Request, res: Response, next: NextF
         return res.status(400).json({ 
             error: `Unexpected field(s): ${unexpectedFields.join(', ')}` 
         });
+    }
+
+    if (req.method === 'GET') {
+        if (req.query.userId && !mongoose.Types.ObjectId.isValid(req.query.userId as string)) {
+            return res.status(400).json({ error: '`userId` must be a valid ObjectId.' });
+        }
+        return next();
     }
 
     if (!req.body.name || typeof req.body.name !== 'string') {
@@ -136,7 +144,7 @@ export const validateReminderRequest = (req: Request, res: Response, next: NextF
     }
 
     if (!req.body.userId || !mongoose.Types.ObjectId.isValid(req.body.userId)) {
-        return res.status(400).json({ error: '`user` is required and must be a valid ObjectId.' });
+        return res.status(400).json({ error: '`userId` is required and must be a valid ObjectId.' });
     }
 
     next();

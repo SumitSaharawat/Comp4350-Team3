@@ -12,6 +12,7 @@ import { FloatingButton, FilterButton } from "@/components/ui/Button";
 import TransactionFormModal from "@/components/ui/TransactionFormModal";
 import { SearchBar } from "@/components/ui/Input";
 import TagList from "@/components/ui/TagList";
+import GoalList from "@/components/ui/GoalList";
 
 export default function GoalsPage() {
     const { goals, getGoals } = useGoals();
@@ -47,7 +48,15 @@ export default function GoalsPage() {
 
     return (
         <Layout title="Goals" >
-            <p>Goal page content......</p>
+            {/* Page Header */}
+            <div className="flex justify-between items-center mb-6">
+                <button className="bg-black text-white px-4 py-2 rounded-md flex items-center gap-2 hover:bg-gray-800">
+                    + Create Goal
+                </button>
+            </div>
+
+            {/* Goals Grid */}
+            <GoalList goals={data} />
         </Layout>
     );
 };

@@ -31,7 +31,7 @@ export const getAllTagsController = async (req: Request, res: Response) => {
 
         console.log('Formatted Tags:', formattedTags);
 
-        res.status(200).json({ tags: formattedTags });
+        res.status(200).json(formattedTags);
     } 
     catch (err) {
         console.error('Error retrieving tags:', err.message || err); 

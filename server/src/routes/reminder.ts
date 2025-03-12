@@ -11,6 +11,7 @@ import { validateReminderRequest, validateParams } from '../middleware/dbValidat
 const router = express.Router();
 
 // http://localhost:8000/api/reminder/userId
+// Do not include body
 router.get('/:userId', authenticateToken, validateReminderRequest,validateParams('userId'), getAllRemindersController);
 
 //example body：
@@ -22,16 +23,17 @@ router.get('/:userId', authenticateToken, validateReminderRequest,validateParams
 //  }
 router.post('/', authenticateToken, validateReminderRequest, addReminderController);
 
-// http://localhost:8000/api/reminder/reminderId
+// http://localhost:8000/api/reminder/id
 //example body：
 //{
-//    "user": "67c27af37862793900fc11b9", 
 //    "name": "Change Payment", 
 //    "text": "You have to pay at 1 PM", 
 //    "time": "2025-03-10T15:00:00Z"
 //  }
 router.put('/:id', authenticateToken, validateReminderRequest, validateParams('id'), editReminderController);
-// http://localhost:8000/api/reminder/reminderId
+
+// http://localhost:8000/api/reminder/id
+// Do not include body
 router.delete('/:id', authenticateToken, validateReminderRequest, validateParams('id'), deleteReminderController);
 
 export default router;

@@ -1,7 +1,16 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Receipt, LogOut, Tag, ChevronLeft, ChevronRight, Trophy } from "lucide-react";
+import {
+    LayoutDashboard,
+    Receipt,
+    LogOut,
+    Tag,
+    ChevronLeft,
+    ChevronRight,
+    Trophy,
+    AlarmClock,
+} from "lucide-react";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { useState } from "react";
 
@@ -36,6 +45,11 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
             path: "/goal",
             icon: <Trophy className="w-6 h-6" />,
         },
+        {
+            name: "Reminders",
+            path: "/reminder",
+            icon: <AlarmClock className="w-6 h-6" />,
+        },
     ];
 
     return (
@@ -53,7 +67,11 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
                 p-1 rounded-lg border border-gray-300 shadow-md hover:bg-gray-300 transition-all flex
                 items-center justify-center w-8 h-8"
             >
-                {isOpen ? <ChevronLeft className="w-6 h-6"/> : <ChevronRight className="w-6 h-6"/>}
+                {isOpen ? (
+                    <ChevronLeft className="w-6 h-6" />
+                ) : (
+                    <ChevronRight className="w-6 h-6" />
+                )}
             </button>
 
             {/* Menu List */}
@@ -69,7 +87,11 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
                             }`}
                         >
                             {item.icon}
-                            {isOpen && <span className="transition-all duration-200">{item.name}</span>}
+                            {isOpen && (
+                                <span className="transition-all duration-200">
+                                    {item.name}
+                                </span>
+                            )}
                         </Link>
 
                         {/* Tooltip when sidebar is collapsed */}
@@ -89,7 +111,11 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
                     className="flex items-center gap-3 p-3 rounded-md text-gray-300 transition-colors hover:bg-gray-800 hover:text-white w-full"
                 >
                     <LogOut className="w-6 h-6" />
-                    {isOpen && <span className="transition-all duration-200">Sign Out</span>}
+                    {isOpen && (
+                        <span className="transition-all duration-200">
+                            Sign Out
+                        </span>
+                    )}
                 </button>
             </div>
         </div>

@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Receipt, LogOut, Tag, ChevronLeft, ChevronRight } from "lucide-react";
+import { LayoutDashboard, Receipt, LogOut, Tag, ChevronLeft, ChevronRight, Trophy } from "lucide-react";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { useState } from "react";
 
@@ -30,6 +30,11 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
             name: "Tags",
             path: "/tag",
             icon: <Tag className="w-6 h-6" />,
+        },
+        {
+            name: "Goals",
+            path: "/goal",
+            icon: <Trophy className="w-6 h-6" />,
         },
     ];
 

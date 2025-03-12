@@ -111,7 +111,15 @@ export const validateGoalRequest = (req: Request, res: Response, next: NextFunct
     next();
 };
 
+export const validateReminderRequest = (req: Request, res: Response, next: NextFunction) => {
+    const allowedFields = ['userId', 'name', 'text', 'time'];
+    const bodyKeys = Object.keys(req.body);
+    const unexpectedFields = bodyKeys.filter(key => !allowedFields.includes(key));
 
-
-
-
+    if (unexpectedFields.length > 0) {
+        return res.status(400).json({ 
+            error: `Unexpected field(s): ${unexpectedFields.join(', ')}` 
+        });
+    }
+    next();
+};

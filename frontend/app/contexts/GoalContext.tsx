@@ -1,17 +1,20 @@
 "use client";
 
 import React, {createContext, useContext, useState} from "react";
-import { Goal, getGoalsFromServer } from "@/app/api/goal";
+import { Goal, getGoalsFromServer, addGoalToServer } from "@/app/api/goal";
 
 interface GoalsContextType {
     goals: Goal[];
     getGoals: (userId: string) => Promise<boolean>;
+    addGoal: (userId: string,
+              name: string,
+              time: string,
+              currAmount: number,
+              goalAmount: number,
+              category: string) => Promise<{message: string}>;
 }
 
-const GoalsContext = createContext<GoalsContextType>({
-    goals: [],
-    getGoals: async ()=> false,
-});
+const GoalsContext = createContext<GoalsContextType | undefined>(undefined);
 
 export function GoalsProvider({ children }: { children: React.ReactNode }) {
     const [goals, setGoals] = useState<Goal[]>([]);
@@ -25,11 +28,30 @@ export function GoalsProvider({ children }: { children: React.ReactNode }) {
         return false;
     };
 
+    const handleAddGoal = async (
+        userId: string,
+        name: string,
+        time: string,
+        currAmount: number,
+        goalAmount: number,
+        category: string) => {
+
+        try {
+            return await addGoalToServer(userId, name, time, currAmount, goalAmount, category);
+        } catch (error) {
+            console.error("add new Goal", error);
+            throw new Error(
+                error instanceof Error ? error.message : "Add goal failed"
+            );
+        }
+    };
+
     return (
         <GoalsContext.Provider
             value={{
                 goals,
                 getGoals: handleGetGoals,
+                addGoal: handleAddGoal,
             }}
         >
             {children}

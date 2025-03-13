@@ -11,12 +11,13 @@ import { controlLog } from "../middleware/loggers";
 const formatUser = (user: IUser) => ({
     id: user._id.toString(), 
     username: user.username, 
+    balance: user.balance
 });
 
 export const addUserController = async (req: Request, res: Response) => {
-    const { username, password } = req.body;
+    const { username, password, balance } = req.body;
     try {
-        const user = await addUser(username, password);
+        const user = await addUser(username, password, balance);
         res.status(201).json({
             message: "User created successfully",
             user: formatUser(user),
@@ -49,10 +50,10 @@ export const getSingleUserController = async (req: Request, res: Response) => {
 
 export const editUserController = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { username, password } = req.body;
+    const { username, password, balance } = req.body;
 
     try {
-        const updatedUser = await editUser(id, username, password);
+        const updatedUser = await editUser(id, username, password, balance);
         if (updatedUser) {
             res.status(200).json({
                 message: "User updated successfully",

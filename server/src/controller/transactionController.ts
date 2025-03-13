@@ -43,12 +43,6 @@ export const getAllTransactionController = async (req: Request, res: Response) =
 
     try {
         const transactions = await getAllTransactions(userId);
-        controlLog('Raw Transactions from DB:', JSON.stringify(transactions, null, 2)); 
-
-        controlLog('Formatted Transaction:', JSON.stringify(transactions.map(formatTransaction), null, 2));  
-
-        controlLog('All transactions received successfully:', transactions.map(formatTransaction));  // Log the formatted transaction
-
         res.status(200).json(transactions.map(formatTransaction));
     } 
     catch (err) {

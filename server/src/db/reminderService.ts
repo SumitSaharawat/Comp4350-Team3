@@ -14,6 +14,7 @@ export const addReminder = async (userId: string, name: string, text: string, ti
             name,
             text,
             time: new Date(time),
+            viewed: false
         });
 
         await newReminder.save();
@@ -41,7 +42,7 @@ export const getAllReminders = async (userId: string): Promise<IReminder[]> => {
     }
 };
 
-export const editReminder = async (id: string, name?: string, text?: string, time?: string): Promise<IReminder | null> => {
+export const editReminder = async (id: string, name?: string, text?: string, time?: string, viewed?: boolean): Promise<IReminder | null> => {
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) {
             throw new Error('Invalid reminder ID format');
@@ -56,6 +57,7 @@ export const editReminder = async (id: string, name?: string, text?: string, tim
         if (name) updatedReminder.name = name;
         if (text) updatedReminder.text = text;
         if (time) updatedReminder.time = new Date(time);
+        if (viewed) updatedReminder.viewed = viewed;
 
         await updatedReminder.save();
         return updatedReminder;

@@ -44,7 +44,6 @@ export const getAllGoals = async (userId: string): Promise<IGoal[]> => {
         }
 
         const goals = await Goal.find({ user: userId }).populate('user');
-        console.log(goals);
         return goals;
     } catch (err) {
         console.error('Error retrieving goals:', err);

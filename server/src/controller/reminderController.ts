@@ -7,6 +7,7 @@ const formatReminder = (reminder: IReminder) => ({
     name: reminder.name,
     text: reminder.text,
     time: new Date(reminder.time).toISOString(),
+    viewed: reminder.viewed
 });
 
 export const addReminderController = async (req: Request, res: Response) => {
@@ -35,10 +36,10 @@ export const getAllRemindersController = async (req: Request, res: Response) => 
 
 export const editReminderController = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { name, text, time } = req.body;
+    const { name, text, time, viewed } = req.body;
 
     try {
-        const updatedReminder = await editReminder(id, name, text, time);
+        const updatedReminder = await editReminder(id, name, text, time, viewed);
         if (updatedReminder) {
             res.status(200).json({ message: 'Reminder updated successfully', reminder: formatReminder(updatedReminder) });
         } else {

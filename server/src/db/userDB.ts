@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 export interface IUser extends Document {
     username: string;
     password: string;
+    balance: number;
 }
 
 const userSchema = new Schema({
@@ -15,6 +16,10 @@ const userSchema = new Schema({
     },
     password: {
         type: String,
+        required: true
+    },
+    balance: {
+        type: Number,
         required: true
     }
 });

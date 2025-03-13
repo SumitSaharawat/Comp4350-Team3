@@ -7,6 +7,7 @@ export interface IReminder extends Document {
     name: string;
     text: string;
     time: Date;
+    viewed: boolean;
 }
 
 const reminderSchema = new Schema<IReminder>(
@@ -36,6 +37,10 @@ const reminderSchema = new Schema<IReminder>(
                 message: 'Invalid date format',
             },
         },
+        viewed: {
+            type: Boolean,
+            default: false
+        }
     },
     { strict: 'throw' }
 );

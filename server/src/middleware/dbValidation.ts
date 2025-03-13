@@ -32,7 +32,7 @@ export const validateParams = (paramName: string) => {
 
 
 export const validateUserRequest = (req: Request, res: Response, next: NextFunction) => {
-    const allowedFields = ['id', 'username', 'password', 'newPassword'];
+    const allowedFields = ['id', 'username', 'password', 'newPassword', 'balance'];
     const bodyKeys = Object.keys(req.body);
 
     // Find unexpected fields
@@ -112,7 +112,7 @@ export const validateGoalRequest = (req: Request, res: Response, next: NextFunct
 };
 
 export const validateReminderRequest = (req: Request, res: Response, next: NextFunction) => {
-    const allowedFields = ['userId', 'name', 'text', 'time'];
+    const allowedFields = ['userId', 'name', 'text', 'time', 'viewed'];
     const bodyKeys = Object.keys(req.body);
     const unexpectedFields = bodyKeys.filter(key => !allowedFields.includes(key));
 

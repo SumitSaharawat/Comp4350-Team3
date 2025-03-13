@@ -1,32 +1,32 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useGoals } from "@/app/contexts/GoalContext";
-import { Goal } from "../api/goal";
+import { useReminders } from "../contexts/ReminderContext";
+import { Reminder } from "../api/reminder";
 import { useAuth } from "@/app/contexts/AuthContext";
 
 // components
 import Layout from "@/components/ui/Layout";
-import GoalList from "@/components/ui/GoalList";
+import ReminderList from "@/components/ui/ReminderList";
 
-export default function GoalsPage() {
-    const { goals, getGoals } = useGoals();
+export default function ReminderPage() {
+    const { reminders, getReminders } = useReminders();
     const { user } = useAuth();
-    const [data, setData] = useState<Goal[]>([]);
+    const [data, setData] = useState<Reminder[]>([]);
 
     const getDataOnRender = async () => {
         try {
-            const success = await getGoals(
+            const success = await getReminders(
                 user?.id || (localStorage.getItem("userid") as string)
             );
             if (success) {
-                setData(goals);
+                setData(reminders);
             }
         } catch (err) {
             if (err instanceof Error) {
                 console.error(err.message);
             } else {
-                console.error("Goals fetch failed!");
+                console.error("Reminders fetch failed!");
             }
         }
     };
@@ -37,18 +37,18 @@ export default function GoalsPage() {
     }, [user]);
 
     useEffect(() => {
-        setData(goals);
-    }, [goals]);
+        setData(reminders);
+    }, [reminders]);
 
     return (
-        <Layout title="Goals">
+        <Layout title="Reminders">
             <div className="flex items-center mb-6">
                 <button className="bg-black text-white px-4 py-2 rounded-md flex items-center gap-2 hover:bg-gray-800 ml-auto">
-                    + Create Goal
+                    + Create Reminder
                 </button>
             </div>
 
-            <GoalList goals={data} />
+            <ReminderList reminders={data} />
         </Layout>
     );
 }

@@ -10,7 +10,6 @@ export default function TagPage() {
     const { tags, getAllTags } = useTags();
     const [data, setData] = useState<Tag[]>([]);
 
-
     const getDataOnRender = async () => {
         try {
             const success = await getAllTags();
@@ -28,6 +27,7 @@ export default function TagPage() {
 
     useEffect(() => {
         getDataOnRender();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {

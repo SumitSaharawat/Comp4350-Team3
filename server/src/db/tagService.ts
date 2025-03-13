@@ -47,7 +47,7 @@ export const editTag = async (id: string, name?: string, color?: string): Promis
             return null;
         }
 
-        console.log(`Tag ${updatedTag.name} updated successfully`);
+        dbLog(`Tag ${updatedTag.name} updated successfully`);
         return updatedTag;
     } 
     catch (err) {

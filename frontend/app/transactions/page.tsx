@@ -17,14 +17,18 @@ export default function TransactionsPage() {
     const { user } = useAuth();
     const [data, setData] = useState<Transaction[]>([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
-    const [editTransaction, setEditTransaction] = useState<Transaction | null>(null);
+    const [editTransaction, setEditTransaction] = useState<Transaction | null>(
+        null
+    );
     const CategoryList = ["CAD", "USD"];
     const searchHint = "Search Transaction";
 
     const onSearchTermChange = (searchTerm: string) => {
         setData(
             transactions.filter((transaction) =>
-                transaction.name.toLowerCase().includes(searchTerm.toLowerCase())
+                transaction.name
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase())
             )
         );
     };
@@ -33,8 +37,12 @@ export default function TransactionsPage() {
         setData(
             items.length > 0
                 ? transactions.filter((transaction) =>
-                    items.some((i) => transaction.currency.toLowerCase().includes(i.toLowerCase()))
-                )
+                      items.some((i) =>
+                          transaction.currency
+                              .toLowerCase()
+                              .includes(i.toLowerCase())
+                      )
+                  )
                 : transactions
         );
     };
@@ -58,6 +66,7 @@ export default function TransactionsPage() {
 
     useEffect(() => {
         getDataOnRender();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     useEffect(() => {
@@ -82,7 +91,6 @@ export default function TransactionsPage() {
         setEditTransaction(null);
     };
 
-
     const middleComponent = (
         <div className="flex-1 flex justify-center">
             <SearchBar
@@ -96,8 +104,6 @@ export default function TransactionsPage() {
             />
         </div>
     );
-
-
 
     // const onSelectCurrency = (item: string) => {
     //     console.log(item);
@@ -138,4 +144,4 @@ export default function TransactionsPage() {
             />
         </Layout>
     );
-};
+}

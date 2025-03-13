@@ -15,10 +15,10 @@ export default function GoalEditModal({ goal, onClose, triggerRect }: {
     const categories = ["Saving", "Investment"];
     const [message, setMessage]
         = useState<{ text: string; type: "error" | "success" } | null>(null);
+    const [isClosing, setIsClosing] = useState(false);
 
     const window_w = 400;
     const window_h = 400;
-
 
     useEffect(() => {
         if (!triggerRect || !contentRef.current) return;
@@ -63,6 +63,44 @@ export default function GoalEditModal({ goal, onClose, triggerRect }: {
         };
 
     }, [triggerRect]);
+
+    const handleClose = () => {
+        if (!contentRef.current || !triggerRect) {
+            onClose();
+            return;
+        }
+
+        setIsClosing(true);
+        const content = contentRef.current;
+        const finalX = (window.innerWidth - window_w) / 2;
+        const finalY = (window.innerHeight - window_h) / 2;
+
+        const animation = content.animate([
+            {
+                transform: `translate(${finalX}px, ${finalY}px) scale(1)`,
+                width: `${window_w}px`,
+                height: `${window_h}px`,
+                opacity: "1"
+            },
+            {
+                transform: `translate(${triggerRect.left}px, ${triggerRect.top}px) scale(0.5)`,
+                width: `${triggerRect.width}px`,
+                height: `${triggerRect.height}px`,
+                opacity: "0"
+            }
+        ], {
+            duration: 450,
+            easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+        });
+
+        animation.onfinish = () => {
+            content.style.visibility = "hidden";
+            setTimeout(() => {
+                setIsClosing(false);
+                onClose();
+            }, 50);
+        };
+    };
 
     return createPortal(
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50">
@@ -140,10 +178,11 @@ export default function GoalEditModal({ goal, onClose, triggerRect }: {
                     {/* Buttons */}
                     <div className="flex justify-end mt-4 gap-2">
                         <button
-                            onClick={onClose}
+                            onClick={handleClose}
                             className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-200"
+                            disabled={isClosing}
                         >
-                            Cancel
+                            {isClosing ? "Closing..." : "Cancel"}
                         </button>
                         {/*<button*/}
                         {/*    onClick={handleSubmit}*/}

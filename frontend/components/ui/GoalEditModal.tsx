@@ -3,7 +3,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import { createPortal } from "react-dom";
 import { Goal } from "@/app/api/goal";
-import {X} from "lucide-react";
 import DatePicker from "react-datepicker";
 
 export default function GoalEditModal({ goal, onClose, triggerRect }: {
@@ -17,6 +16,8 @@ export default function GoalEditModal({ goal, onClose, triggerRect }: {
     const [message, setMessage]
         = useState<{ text: string; type: "error" | "success" } | null>(null);
 
+    const window_w = 400;
+    const window_h = 400;
 
 
     useEffect(() => {
@@ -24,40 +25,41 @@ export default function GoalEditModal({ goal, onClose, triggerRect }: {
 
         const content = contentRef.current;
         content.style.visibility = "hidden";
-        const contentRect = content.getBoundingClientRect();
 
-        // calc destination position
-        const finalX = (window.innerWidth - contentRect.width) / 2;
-        const finalY = (window.innerHeight - contentRect.height) / 2;
+        // calculate destination position
+        const finalX = (window.innerWidth - window_w) / 2;
+        const finalY = (window.innerHeight - window_h) / 2;
 
-        // reset start position
-        content.style.transform = `translate(${triggerRect.left}px, ${triggerRect.top}px)`;
+        // initial status
+        content.style.transform = `translate(${triggerRect.left}px, ${triggerRect.top}px) scale(0.5)`;
         content.style.width = `${triggerRect.width}px`;
         content.style.height = `${triggerRect.height}px`;
+        content.style.opacity = "0";
         content.style.visibility = "visible";
 
         const animation = content.animate([
             {
-                transform: `translate(${triggerRect.left}px, ${triggerRect.top}px)`,
+                transform: `translate(${triggerRect.left}px, ${triggerRect.top}px) scale(0.5)`,
                 width: `${triggerRect.width}px`,
-                height: `${triggerRect.height}px`
+                height: `${triggerRect.height}px`,
+                opacity: "0"
             },
             {
                 transform: `translate(${finalX}px, ${finalY}px)`,
-                width: `${contentRect.width}px`,
-                height: `${contentRect.height}px`
+                width: `${window_w}px`,
+                height: `${window_h}px`,
+                opacity: "1"
             }
         ], {
-            duration: 300,
+            duration: 450,
             easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
         });
 
         animation.onfinish = () => {
-            content.style.transform = "translate(-50%, -50%)";
-            content.style.left = "50%";
-            content.style.top = "50%";
-            content.style.width = "";
-            content.style.height = "";
+            content.style.transform = `translate(${finalX}px, ${finalY}px)`;
+            content.style.width = `${window_w}px`;
+            content.style.height = `${window_h}px`;
+            content.style.opacity = "1";
         };
 
     }, [triggerRect]);
@@ -66,7 +68,11 @@ export default function GoalEditModal({ goal, onClose, triggerRect }: {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50">
             <div
                 ref={contentRef}
-                className="bg-white p-4 rounded-lg shadow-md absolute max-w-[400px] max-h-[400px] origin-center"
+                className={`bg-white p-4 rounded-lg shadow-md absolute 
+                max-w-[${window_w}px] 
+                max-h-[${window_h}px] 
+                origin-center`}
+
                 style={{
                     width: triggerRect?.width + 'px',
                     height: triggerRect?.height + 'px'

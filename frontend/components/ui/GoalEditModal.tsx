@@ -52,7 +52,7 @@ export default function GoalEditModal({ goal, onClose, triggerRect }: {
             }
         ], {
             duration: 450,
-            easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+            easing: "cubic-bezier(0.4, 0, 0.2, 1)"
         });
 
         animation.onfinish = () => {
@@ -90,7 +90,7 @@ export default function GoalEditModal({ goal, onClose, triggerRect }: {
             }
         ], {
             duration: 450,
-            easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+            easing: "cubic-bezier(0.4, 0, 0.2, 1)"
         });
 
         animation.onfinish = () => {
@@ -112,8 +112,8 @@ export default function GoalEditModal({ goal, onClose, triggerRect }: {
                 origin-center`}
 
                 style={{
-                    width: triggerRect?.width + 'px',
-                    height: triggerRect?.height + 'px'
+                    width: triggerRect?.width + "px",
+                    height: triggerRect?.height + "px"
                 }}
             >
                 <div className="p-2 w-full">

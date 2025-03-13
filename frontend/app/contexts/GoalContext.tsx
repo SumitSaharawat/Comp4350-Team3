@@ -67,7 +67,7 @@ export function GoalsProvider({ children }: { children: React.ReactNode }) {
                 error instanceof Error ? error.message : "edit goal failed"
             );
         }
-    }
+    };
 
     const handleDeleteGoal = async (goalId: string) => {
         try {
@@ -77,7 +77,7 @@ export function GoalsProvider({ children }: { children: React.ReactNode }) {
                 error instanceof Error ? error.message : "delete goal failed"
             );
         }
-    }
+    };
 
     return (
         <GoalsContext.Provider

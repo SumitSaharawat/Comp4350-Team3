@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Goal } from "@/app/api/goal";
 import {Edit, MoreHorizontal, PiggyBank, Trash2} from "lucide-react";
 import {useGoals} from "@/app/contexts/GoalContext";

@@ -49,7 +49,10 @@ export default function GoalsPage() {
             {isAdding && <NewGoalForm
                 toggle={toggleForm}
                 refreshGoals={fetchGoals}/> }
-            <GoalList goals={data} />
+
+            <GoalList
+                goals={data}
+                refreshGoals={fetchGoals}/>
         </Layout>
     );
 }

@@ -6,7 +6,6 @@ import debug from 'debug';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 
-import { serverLog } from './middleware/loggers';
 import connectDB from './db/db';
 import index from './routes/index';
 import user from './routes/user';
@@ -19,6 +18,7 @@ import goal from './routes/goals';
 import reminder from './routes/reminder';
 
 const app = express();
+const appLog = debug('server');
 
 // we might want to do things differently for dev and prod
 const environment = process.env.NODE_ENV;
@@ -57,7 +57,7 @@ app.use('/api/reminder', reminder);
 
 // connect to DB
 connectDB().then(() => {
-    serverLog("Database connection established. Starting app...");
+    appLog("Database connection established. Starting app...");
 });
 
 
@@ -85,5 +85,5 @@ app.use(prodError);
 app.set('port', process.env.SERVER_PORT || 3000);
 
 const server = app.listen(app.get('port'), function () {
-    serverLog(`Express server listening on port ${(server.address() as AddressInfo).port}`);
+    appLog(`Express server listening on port ${(server.address() as AddressInfo).port}`);
 });

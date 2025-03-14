@@ -1,6 +1,6 @@
 import User, {IUser} from './userDB'; // Import the User model
 import mongoose from 'mongoose';
-import { dbLog } from '../middleware/loggers';
+import { dbLog } from './dbLog';
 
 // Function to add a new user
 export const addUser = async (username: string, password: string, balance: number): Promise<IUser> => {

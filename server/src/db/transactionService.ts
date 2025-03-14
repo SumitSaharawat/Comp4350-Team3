@@ -2,7 +2,7 @@ import Transaction, { ITransaction } from './transactionDB';
 import User from './userDB'
 import Tag from './tagDB'
 import mongoose from 'mongoose';
-import { dbLog } from '../middleware/loggers';
+import { dbLog } from './dbLog';
 
 export const addTransaction = async (userId: string, name: string, date: string, amount: number, currency: string, tags?: string[]) => {
     try {

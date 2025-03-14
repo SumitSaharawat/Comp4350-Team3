@@ -8,12 +8,16 @@ interface ReminderListProps {
     reminders: Reminder[];
 }
 
-export default function ReminderList({ reminders }: ReminderListProps) {
+export function ReminderList({ reminders }: ReminderListProps) {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {reminders.length > 0 ? (
                 reminders.map((reminder) => (
-                    <ReminderCard key={reminder.id} reminder={reminder} />
+                    <ReminderCard
+                        key={reminder.id}
+                        reminder={reminder}
+                        mini={false}
+                    />
                 ))
             ) : (
                 <p className="col-span-full text-center text-gray-500">
@@ -21,5 +25,23 @@ export default function ReminderList({ reminders }: ReminderListProps) {
                 </p>
             )}
         </div>
+    );
+}
+
+export function MiniReminderList({ reminders }: ReminderListProps) {
+    return (
+        <>
+            {reminders.length > 0 && (
+                <div className="list">
+                    {reminders.map((reminder) => (
+                        <ReminderCard
+                            key={reminder.id}
+                            reminder={reminder}
+                            mini={true}
+                        />
+                    ))}
+                </div>
+            )}
+        </>
     );
 }

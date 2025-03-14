@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { dbLog } from '../middleware/loggers';
+import { dbLog } from './dbLog';
 
 
 

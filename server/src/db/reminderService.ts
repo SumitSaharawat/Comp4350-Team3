@@ -57,7 +57,7 @@ export const editReminder = async (id: string, name?: string, text?: string, tim
         if (name) updatedReminder.name = name;
         if (text) updatedReminder.text = text;
         if (time) updatedReminder.time = new Date(time);
-        if (viewed) updatedReminder.viewed = viewed;
+        if (typeof viewed !== 'undefined') updatedReminder.viewed = viewed;
 
         await updatedReminder.save();
         return updatedReminder;

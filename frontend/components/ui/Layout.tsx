@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
+import NotificationList from "./NotificationList";
 
 interface LayoutProps {
     title: string;
@@ -36,6 +37,9 @@ export default function Layout({
                 <Navbar title={title} middleComponent={middleComponent} />
                 <main className="p-4">{children}</main>
             </div>
+
+            {/**Notification List */}
+            <NotificationList />
         </div>
     );
 }

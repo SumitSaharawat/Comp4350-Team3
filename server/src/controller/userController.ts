@@ -6,7 +6,7 @@ import {
     editUser,
     deleteUser,
 } from "../db/userService";
-import { controlLog } from "../middleware/loggers";
+import { controlLog } from "./controlLog";
 
 const formatUser = (user: IUser) => ({
     id: user._id.toString(), 

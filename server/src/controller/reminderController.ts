@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { addReminder, getAllReminders, editReminder, deleteReminder } from '../db/reminderService';
 import { IReminder } from '../db/reminderDB';
+import { controlLog } from './controlLog';
 
 const formatReminder = (reminder: IReminder) => ({
     id: reminder._id.toString(),
@@ -37,9 +38,10 @@ export const getAllRemindersController = async (req: Request, res: Response) => 
 export const editReminderController = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { name, text, time, viewed } = req.body;
-
+    controlLog(`${viewed}`);
     try {
         const updatedReminder = await editReminder(id, name, text, time, viewed);
+        controlLog(JSON.stringify(formatReminder(updatedReminder)));
         if (updatedReminder) {
             res.status(200).json({ message: 'Reminder updated successfully', reminder: formatReminder(updatedReminder) });
         } else {

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { IGoal } from '../db/goalsDB';
 import { addGoal, deleteGoal, editGoal, getAllGoals } from '../db/goalsService';
-import { controlLog } from '../middleware/loggers';
+import { controlLog } from './controlLog';
 
 const formatGoal = (goal: IGoal) => ({
     id: goal._id.toString(),

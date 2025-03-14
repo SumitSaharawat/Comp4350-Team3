@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { ITag } from '../db/tagDB';
 import { addTag, getAllTags, editTag, deleteTag } from '../db/tagService'; 
-import { controlLog } from '../middleware/loggers';
+import { controlLog } from './controlLog';
 
 const formatTag = (tag: ITag) => ({
     id: tag._id.toString(), 
@@ -29,8 +29,6 @@ export const getAllTagsController = async (req: Request, res: Response) => {
     try {
         const tags = await getAllTags();
         const formattedTags = tags.map(formatTag);
-
-        controlLog('Formatted Tags:', formattedTags);
 
         res.status(200).json(formattedTags);
     } 

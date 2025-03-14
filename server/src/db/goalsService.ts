@@ -1,7 +1,7 @@
 import Goal, { IGoal } from './goalsDB';
 import User from './userDB';
 import mongoose from 'mongoose';
-import { dbLog } from '../middleware/loggers';
+import { dbLog } from './dbLog';
 
 export const addGoal = async (userId: string, name: string, time: string, currAmount: number, goalAmount: number, category: string) => {
     try {

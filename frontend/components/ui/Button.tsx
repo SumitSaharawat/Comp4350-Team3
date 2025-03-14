@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { Plus } from "lucide-react";
+import { Plus, CheckCheck, Check, Bell, BellDot } from "lucide-react";
 
 interface HamburgerButtonProps {
     onClickFunc: () => void;
@@ -21,6 +21,16 @@ interface DropDownButtonProps {
     dropDownName: string;
     dropDownList?: string[];
     onSelectDropdown?: (item: string) => void;
+}
+
+interface CheckButtonProps {
+    onClickFunc: () => void;
+    checked?: boolean;
+}
+
+interface notificationButtonProps {
+    onClickFunc: () => void;
+    empty: boolean;
 }
 
 const AuthButton = React.forwardRef<HTMLButtonElement, AuthButtonProps>(
@@ -176,11 +186,36 @@ const DropDownButton = ({
     );
 };
 
+const CheckButton = ({ checked, onClickFunc }: CheckButtonProps) => {
+    return (
+        <button className="btn btn-sm btn-square" onClick={onClickFunc}>
+            {checked ? (
+                <CheckCheck className="w-8 h-8 text-gray-600 border border-gray-200 shadow" />
+            ) : (
+                <Check className="w-8 h-8 text-gray-600 border border-gray-200 shadow" />
+            )}
+        </button>
+    );
+};
+
+const NotificationButton = ({
+    onClickFunc,
+    empty,
+}: notificationButtonProps) => {
+    return (
+        <button className="btn btn-sm btn-square" onClick={onClickFunc}>
+            {empty ? <Bell /> : <BellDot />}
+        </button>
+    );
+};
+
 AuthButton.displayName = "AuthButton";
 HamburgerButton.displayName = "HamburgerButton";
 FloatingButton.displayName = "FloatingButton";
 FilterButton.displayName = "FilterButton";
 DropDownButton.displayName = "DropDownButton";
+CheckButton.displayName = "CheckButton";
+NotificationButton.displayName = "NotificationButton";
 
 export {
     AuthButton,
@@ -188,4 +223,6 @@ export {
     FloatingButton,
     FilterButton,
     DropDownButton,
+    CheckButton,
+    NotificationButton,
 };

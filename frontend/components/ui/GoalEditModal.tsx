@@ -4,18 +4,30 @@ import React, {useEffect, useRef, useState} from "react";
 import { createPortal } from "react-dom";
 import { Goal } from "@/app/api/goal";
 import DatePicker from "react-datepicker";
+import {useGoals} from "@/app/contexts/GoalContext";
 
 export default function GoalEditModal({ goal, onClose, triggerRect }: {
     goal: Goal;
     onClose: () => void;
     triggerRect: DOMRect | null;
+    editGoal: ()
 }) {
     const contentRef = useRef<HTMLDivElement>(null);
-    const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+    const [isClosing, setIsClosing] = useState(false);
+
+
+
+
+    const [name, setName] = useState(goal?.name || "");
+    const [currAmount, setCurrAmount] = useState(goal.currAmount);
+    const [goalAmount, setGoalAmount] = useState(goal.goalAmount);
     const categories = ["Saving", "Investment"];
+    const [category, setCategory] = useState(goal?.category || categories[0]);
+    const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
     const [message, setMessage]
         = useState<{ text: string; type: "error" | "success" } | null>(null);
-    const [isClosing, setIsClosing] = useState(false);
+
+    const { editGoal } = useGoals();
 
     const window_w = 400;
     const window_h = 400;
@@ -63,6 +75,36 @@ export default function GoalEditModal({ goal, onClose, triggerRect }: {
         };
 
     }, [triggerRect]);
+
+    const handleSubmit = async () => {
+        if (!name || goalAmount <= 0) {
+            setMessage({ text: "Goal name and amount are required!", type: "error" });
+            return;
+        }
+
+        setMessage(null);
+        setIsClosing(true);
+
+        try {
+            await editGoal(
+                goal.id,
+                name,
+                selectedDate?.toISOString().split("T")[0] || "",
+                currAmount,
+                goalAmount,
+                category );
+
+            setMessage({ text: "Goal saved successfully!", type: "success" });
+
+            setTimeout(() => {
+                setIsClosing(false);
+                onClose(); // Close modal after successful save
+            }, 500);
+        } catch (error) {
+            setMessage({ text: "Failed to save goal!", type: "error" });
+            setIsClosing(false);
+        }
+    };
 
     const handleClose = () => {
         if (!contentRef.current || !triggerRect) {
@@ -123,8 +165,8 @@ export default function GoalEditModal({ goal, onClose, triggerRect }: {
                     <input
                         type="text"
                         placeholder="Goal Name"
-                        // value={name}
-                        // onChange={(e) => setName(e.target.value)}
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         className="w-full border border-gray-300 p-2 rounded mb-2"
                     />
 
@@ -132,8 +174,8 @@ export default function GoalEditModal({ goal, onClose, triggerRect }: {
                     <input
                         type="number"
                         placeholder="Current Amount"
-                        // value={currAmount}
-                        // onChange={(e) => setCurrAmount(e.target.value ? Number(e.target.value) : "")}
+                        value={currAmount}
+                        onChange={(e) => setCurrAmount(Number(e.target.value))}
                         className="w-full border border-gray-300 p-2 rounded mb-2"
                     />
 
@@ -141,15 +183,15 @@ export default function GoalEditModal({ goal, onClose, triggerRect }: {
                     <input
                         type="number"
                         placeholder="Goal Amount"
-                        // value={goalAmount}
-                        // onChange={(e) => setGoalAmount(e.target.value ? Number(e.target.value) : "")}
+                        value={goalAmount}
+                        onChange={(e) => setGoalAmount(Number(e.target.value))}
                         className="w-full border border-gray-300 p-2 rounded mb-2"
                     />
 
                     {/* Category Dropdown */}
                     <select
-                        // value={category}
-                        // onChange={(e) => setCategory(e.target.value)}
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value)}
                         className="w-full border border-gray-300 p-2 rounded mb-4 bg-white"
                     >
                         {categories.map((cur) => (
@@ -184,22 +226,16 @@ export default function GoalEditModal({ goal, onClose, triggerRect }: {
                         >
                             {isClosing ? "Closing..." : "Cancel"}
                         </button>
-                        {/*<button*/}
-                        {/*    onClick={handleSubmit}*/}
-                        {/*    disabled={loading}*/}
-                        {/*    className={`px-4 py-2 rounded-md text-white ${*/}
-                        {/*        loading ? "bg-gray-500 cursor-not-allowed" : "bg-black hover:bg-gray-800"*/}
-                        {/*    }`}*/}
-                        {/*>*/}
-                        {/*    {loading ? "Creating..." : "Create"}*/}
-                        {/*</button>*/}
+                        <button
+                            onClick={handleSubmit}
+                            disabled={isClosing}
+                            className={`px-4 py-2 rounded-md text-white ${
+                                isClosing ? "bg-gray-500 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+                            }`}
+                        >
+                            {isClosing ? "Saving..." : "Save"}
+                        </button>
                     </div>
-                    {/*<button*/}
-                    {/*    onClick={onClose}*/}
-                    {/*    className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"*/}
-                    {/*>*/}
-                    {/*    Close*/}
-                    {/*</button>*/}
                 </div>
             </div>
         </div>,

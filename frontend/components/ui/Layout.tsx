@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
+import NotificationList from "./NotificationList";
 
 interface LayoutProps {
     title: string;
@@ -10,14 +11,25 @@ interface LayoutProps {
     middleComponent?: React.ReactNode;
 }
 
-export default function Layout({ title, children, middleComponent }: LayoutProps) {
+export default function Layout({
+    title,
+    children,
+    middleComponent,
+}: LayoutProps) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     return (
         <div className="flex h-screen">
             {/* Sidebar */}
-            <div className={`bg-gray-900 transition-all duration-300 ${isSidebarOpen ? "w-64" : "w-16"}`}>
-                <Sidebar isOpen={isSidebarOpen} toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+            <div
+                className={`bg-gray-900 transition-all duration-300 ${
+                    isSidebarOpen ? "w-64" : "w-16"
+                }`}
+            >
+                <Sidebar
+                    isOpen={isSidebarOpen}
+                    toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+                />
             </div>
 
             {/* Main content */}
@@ -25,6 +37,9 @@ export default function Layout({ title, children, middleComponent }: LayoutProps
                 <Navbar title={title} middleComponent={middleComponent} />
                 <main className="p-4">{children}</main>
             </div>
+
+            {/**Notification List */}
+            <NotificationList />
         </div>
     );
 }

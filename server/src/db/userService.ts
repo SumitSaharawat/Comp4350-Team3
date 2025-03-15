@@ -1,10 +1,16 @@
 import User, {IUser} from './userDB'; // Import the User model
 import mongoose from 'mongoose';
+import { dbLog } from './dbLog';
 
 // Function to add a new user
-export const addUser = async (username: string, password: string): Promise<IUser> => {
+export const addUser = async (username: string, password: string, balance: number): Promise<IUser> => {
     try {
-        const newUser = new User({ username, password });
+
+        if (balance === undefined) {
+            throw new Error('Balance is required');
+        }
+
+        const newUser = new User({ username, password, balance });
         await newUser.save();
         return newUser;
     } 
@@ -34,7 +40,7 @@ export const getUsersByUsername = async (username: string) => {
     try {
         const users = await User.find({ username });
         if (users.length === 0) {
-            console.log('no users found with username:', username);
+            dbLog('no users found with username:', username);
         }
         return users;
     }
@@ -47,7 +53,7 @@ export const getUsersByUsername = async (username: string) => {
 
 
 // Function to edit a user
-export const editUser = async (id: string, username?: string, password?: string): Promise<IUser | null> => {
+export const editUser = async (id: string, username?: string, password?: string, balance?: number): Promise<IUser | null> => {
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) {
             throw new Error('Invalid user ID format');
@@ -58,11 +64,12 @@ export const editUser = async (id: string, username?: string, password?: string)
         //Ensures only username and password are updated, not some other field
         if (username) updatedFields.username = username;
         if (password) updatedFields.password = password;
+        if (balance) updatedFields.balance = balance;
 
         const updatedUser = await User.findByIdAndUpdate(id, updatedFields, { new: true });
 
         if (!updatedUser) {
-            console.log('No user with the ID found.');
+            dbLog(`No user with the ID ${id} found.`);
             return null;
         }
 
@@ -86,9 +93,9 @@ export const deleteUser = async (id: string) => {
         }
         const result = await User.deleteOne({_id: id});
         if (result.deletedCount > 0) {
-            console.log('User deleted successfully.');
+            dbLog(`User ${id} deleted successfully.`);
         } else {
-            console.log('No user found.');
+            dbLog(`User ${id} not found.`);
         }
         return result;
     } 

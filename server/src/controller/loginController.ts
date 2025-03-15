@@ -57,7 +57,7 @@ export const loginController = async (req: Request, res: Response, next) => {
 
 // logic to create account
 export const createAccountController = async (req: Request, res: Response) => {
-    const {username, password} = req.body;
+    const {username, password, balance} = req.body;
     try {
 
         const existingUser = await getUsersByUsername(username);
@@ -68,7 +68,7 @@ export const createAccountController = async (req: Request, res: Response) => {
         // otherwise, create the account and return a successful message
         // will be replaced by mongodb integration once its set up 
         else {
-            await addUser(username, bcrypt.hashSync(password, 10));
+            await addUser(username, bcrypt.hashSync(password, 10), balance);
             res.status(200).json({message: "Account created successfully!"});
         }
         

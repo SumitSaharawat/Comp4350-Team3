@@ -1,6 +1,7 @@
 import Goal, { IGoal } from './goalsDB';
 import User from './userDB';
 import mongoose from 'mongoose';
+import { dbLog } from './dbLog';
 
 export const addGoal = async (userId: string, name: string, time: string, currAmount: number, goalAmount: number, category: string) => {
     try {
@@ -43,7 +44,6 @@ export const getAllGoals = async (userId: string): Promise<IGoal[]> => {
         }
 
         const goals = await Goal.find({ user: userId }).populate('user');
-        console.log(goals);
         return goals;
     } catch (err) {
         console.error('Error retrieving goals:', err);
@@ -59,14 +59,13 @@ export const editGoal = async (id: string, name?: string, time?: string, currAmo
         
         const updatedGoal = await Goal.findById(id);
         if (!updatedGoal) {
-            console.log('No goal found with the given ID.');
+            dbLog('No goal found with the given ID.');
             return null;
         }
         const numCurrAmount = parseFloat(currAmount as unknown as string);
         const numGoalAmount = parseFloat(goalAmount as unknown as string);
 
         if (numCurrAmount > numGoalAmount) {
-            console.log("here");
             currAmount = goalAmount;
         }
 
@@ -98,9 +97,9 @@ export const deleteGoal = async (id: string) => {
         
         const result = await Goal.deleteOne({ _id: id });
         if (result.deletedCount > 0) {
-            console.log('Goal deleted successfully.');
+            dbLog('Goal deleted successfully.');
         } else {
-            console.log('No goal found.');
+            dbLog('No goal found.');
         }
         return result;
     } catch (err) {

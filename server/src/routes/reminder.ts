@@ -16,7 +16,7 @@ router.get('/:userId', authenticateToken, validateReminderRequest,validateParams
 
 //example body：
 //{
-//    "user": "67c27af37862793900fc11b9", 
+//    "userId": "67c27af37862793900fc11b9", 
 //    "name": "Pay Reminder", 
 //    "text": "You have to pay at 3 PM", 
 //    "time": "2025-03-10T15:00:00Z"

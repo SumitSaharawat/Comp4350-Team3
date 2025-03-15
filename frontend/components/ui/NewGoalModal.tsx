@@ -6,6 +6,7 @@ import { useAuth } from "@/app/contexts/AuthContext";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { X } from "lucide-react";
+const categories = ["Saving", "Investment"];
 
 interface NewGoalFormProps {
     toggle: () => void;
@@ -15,21 +16,35 @@ interface NewGoalFormProps {
 export default function NewGoalForm({ toggle, refreshGoals }: NewGoalFormProps) {
     const { addGoal } = useGoals();
     const { user } = useAuth();
+    const [goalData, setGoalData] = useState({
+        name: "",
+        currAmount: null as number | null,
+        goalAmount: null as number | null,
+        category: "Saving",
+        selectedDate: new Date() as Date | null,
+    });
 
-    const [name, setName] = useState("");
-    const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-    const [currAmount, setCurrAmount] = useState<number | "">("");
-    const [goalAmount, setGoalAmount] = useState<number | "">("");
-    const [category, setCategory] = useState("Saving");
-    const categories = ["Saving", "Investment"];
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState<{ text: string; type: "error" | "success" } | null>(null);
+    const [message, setMessage] =
+        useState<{ text: string; type: "error" | "success" } | null>(null);
+
+    const handleChange = (field: keyof typeof goalData, value: string | number | Date | null) => {
+        setGoalData((prev) => ({
+            ...prev,
+            [field]: value === "" ? null : value,
+        }));
+    };
 
     const handleSubmit = async () => {
         setMessage(null);
 
-        if (!name || !selectedDate || currAmount === "" || goalAmount === "") {
+        if (!goalData.name || !goalData.selectedDate || goalData.currAmount === null || goalData.goalAmount === null) {
             setMessage({ text: "All fields are required.", type: "error" });
+            return;
+        }
+
+        if (goalData.currAmount > goalData.goalAmount) {
+            setMessage({ text: "Goal is less than saving!", type: "error" });
             return;
         }
 
@@ -41,9 +56,9 @@ export default function NewGoalForm({ toggle, refreshGoals }: NewGoalFormProps) 
 
         try {
             setLoading(true);
-            const formattedDate = selectedDate.toISOString().split("T")[0];
+            const formattedDate = goalData.selectedDate.toISOString().split("T")[0];
 
-            await addGoal(userId, name, formattedDate, Number(currAmount), Number(goalAmount), category);
+            await addGoal(userId, goalData.name, formattedDate, goalData.currAmount, goalData.goalAmount, goalData.category);
             setMessage({ text: "Goal added successfully!", type: "success" });
 
             setTimeout(() => {
@@ -76,8 +91,8 @@ export default function NewGoalForm({ toggle, refreshGoals }: NewGoalFormProps) 
             <input
                 type="text"
                 placeholder="Goal Name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={goalData.name}
+                onChange={(e) => handleChange("name", e.target.value)}
                 className="w-full border border-gray-300 p-2 rounded mb-2"
             />
 
@@ -85,8 +100,9 @@ export default function NewGoalForm({ toggle, refreshGoals }: NewGoalFormProps) 
             <input
                 type="number"
                 placeholder="Current Amount"
-                value={currAmount}
-                onChange={(e) => setCurrAmount(e.target.value ? Number(e.target.value) : "")}
+                value={goalData.currAmount ?? ""}
+                onChange={(e) =>
+                    handleChange("currAmount", e.target.value === "" ? null : Number(e.target.value))}
                 className="w-full border border-gray-300 p-2 rounded mb-2"
             />
 
@@ -94,15 +110,16 @@ export default function NewGoalForm({ toggle, refreshGoals }: NewGoalFormProps) 
             <input
                 type="number"
                 placeholder="Goal Amount"
-                value={goalAmount}
-                onChange={(e) => setGoalAmount(e.target.value ? Number(e.target.value) : "")}
+                value={goalData.goalAmount ?? ""}
+                onChange={(e) =>
+                    handleChange("goalAmount", e.target.value === "" ? null : Number(e.target.value))}
                 className="w-full border border-gray-300 p-2 rounded mb-2"
             />
 
             {/* Category Dropdown */}
             <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                value={goalData.category}
+                onChange={(e) => handleChange("category", e.target.value)}
                 className="w-full border border-gray-300 p-2 rounded mb-4 bg-white"
             >
                 {categories.map((cur) => (
@@ -112,10 +129,11 @@ export default function NewGoalForm({ toggle, refreshGoals }: NewGoalFormProps) 
                 ))}
             </select>
 
+
             {/* Date Picker */}
             <DatePicker
-                selected={selectedDate}
-                onChange={(date: Date | null) => setSelectedDate(date)}
+                selected={goalData.selectedDate}
+                onChange={(date: Date | null) => handleChange("selectedDate", date || new Date())}
                 dateFormat="yyyy-MM-dd"
                 className="w-full border border-gray-300 p-2 rounded mb-2"
                 showPopperArrow={false}

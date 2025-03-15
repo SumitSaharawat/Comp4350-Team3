@@ -53,7 +53,7 @@ export async function editGoalToServer(
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/goal/${goalId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ goalId, name, time, currAmount, goalAmount, category}),
+        body: JSON.stringify({name, time, currAmount, goalAmount, category}),
         credentials: "include"
     });
 

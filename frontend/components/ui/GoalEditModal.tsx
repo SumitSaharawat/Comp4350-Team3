@@ -1,36 +1,39 @@
 "use client";
 
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 import { createPortal } from "react-dom";
 import { Goal } from "@/app/api/goal";
 import DatePicker from "react-datepicker";
-import {useGoals} from "@/app/contexts/GoalContext";
+import {editGoalToServer} from "@/app/api/goal";
+const categories = ["Saving", "Investment"];
 
-export default function GoalEditModal({ goal, onClose, triggerRect }: {
+export default function GoalEditModal({ goal, onClose, triggerRect, refreshGoals }: {
     goal: Goal;
     onClose: () => void;
     triggerRect: DOMRect | null;
-    editGoal: ()
+    refreshGoals: () => void;
 }) {
     const contentRef = useRef<HTMLDivElement>(null);
-    const [isClosing, setIsClosing] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [goalData, setGoalData] = useState({
+        name: goal?.name || "",
+        currAmount: goal?.currAmount || 0,
+        goalAmount: goal?.goalAmount || 0,
+        category: goal?.category || categories[0],
+        date: goal?.date ? new Date(goal.date) : new Date(),
+    });
 
-
-
-
-    const [name, setName] = useState(goal?.name || "");
-    const [currAmount, setCurrAmount] = useState(goal.currAmount);
-    const [goalAmount, setGoalAmount] = useState(goal.goalAmount);
-    const categories = ["Saving", "Investment"];
-    const [category, setCategory] = useState(goal?.category || categories[0]);
-    const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
     const [message, setMessage]
         = useState<{ text: string; type: "error" | "success" } | null>(null);
-
-    const { editGoal } = useGoals();
+    const formattedDate = useMemo(() =>
+        goalData.date.toISOString().split("T")[0], [goalData.date]);
 
     const window_w = 400;
     const window_h = 400;
+
+    const handleChange = (field: keyof typeof goalData, value: string | number | Date) => {
+        setGoalData((prev) => ({ ...prev, [field]: value }));
+    };
 
     useEffect(() => {
         if (!triggerRect || !contentRef.current) return;
@@ -77,32 +80,43 @@ export default function GoalEditModal({ goal, onClose, triggerRect }: {
     }, [triggerRect]);
 
     const handleSubmit = async () => {
-        if (!name || goalAmount <= 0) {
-            setMessage({ text: "Goal name and amount are required!", type: "error" });
+        if (!goalData.name || !goalData.currAmount || !goalData.goalAmount) {
+            let message = "All fields are required.";
+            if(goalData.currAmount === 0 || goalData.goalAmount === 0) {
+                message = "Goal or Saved cannot be 0";
+            }
+            setMessage({ text: message, type: "error" });
             return;
         }
 
+        if (goalData.currAmount > goalData.goalAmount) {
+            setMessage({ text: "Goal is less than saving!", type: "error" });
+            return;
+        }
         setMessage(null);
-        setIsClosing(true);
+        setLoading(true);
 
         try {
-            await editGoal(
+            await editGoalToServer(
                 goal.id,
-                name,
-                selectedDate?.toISOString().split("T")[0] || "",
-                currAmount,
-                goalAmount,
-                category );
+                goalData.name,
+                formattedDate,
+                Number(goalData.currAmount),
+                Number(goalData.goalAmount),
+                goalData.category
+            );
 
             setMessage({ text: "Goal saved successfully!", type: "success" });
 
             setTimeout(() => {
-                setIsClosing(false);
-                onClose(); // Close modal after successful save
+                setLoading(false);
+                refreshGoals();
+                onClose();
             }, 500);
+
         } catch (error) {
-            setMessage({ text: "Failed to save goal!", type: "error" });
-            setIsClosing(false);
+            setMessage({ text: error instanceof Error ? error.message : "Failed to edit goal", type: "error" });
+            setLoading(false);
         }
     };
 
@@ -112,7 +126,7 @@ export default function GoalEditModal({ goal, onClose, triggerRect }: {
             return;
         }
 
-        setIsClosing(true);
+        setLoading(true);
         const content = contentRef.current;
         const finalX = (window.innerWidth - window_w) / 2;
         const finalY = (window.innerHeight - window_h) / 2;
@@ -138,7 +152,7 @@ export default function GoalEditModal({ goal, onClose, triggerRect }: {
         animation.onfinish = () => {
             content.style.visibility = "hidden";
             setTimeout(() => {
-                setIsClosing(false);
+                setLoading(false);
                 onClose();
             }, 50);
         };
@@ -159,14 +173,14 @@ export default function GoalEditModal({ goal, onClose, triggerRect }: {
                 }}
             >
                 <div className="p-2 w-full">
-                    <h2 className="text-xl font-bold mb-2 text-center pt-1">Edit Goal</h2>
+                    <h2 className="text-xl font-bold text-center pt-1">Edit Goal</h2>
 
                     {/* Goal Name */}
                     <input
                         type="text"
                         placeholder="Goal Name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        value={goalData.name}
+                        onChange={(e) => handleChange("name", e.target.value)}
                         className="w-full border border-gray-300 p-2 rounded mb-2"
                     />
 
@@ -174,8 +188,9 @@ export default function GoalEditModal({ goal, onClose, triggerRect }: {
                     <input
                         type="number"
                         placeholder="Current Amount"
-                        value={currAmount}
-                        onChange={(e) => setCurrAmount(Number(e.target.value))}
+                        value={goalData.currAmount}
+                        onChange={(e) =>
+                            handleChange("currAmount", e.target.value ? Number(e.target.value) : "")}
                         className="w-full border border-gray-300 p-2 rounded mb-2"
                     />
 
@@ -183,15 +198,17 @@ export default function GoalEditModal({ goal, onClose, triggerRect }: {
                     <input
                         type="number"
                         placeholder="Goal Amount"
-                        value={goalAmount}
-                        onChange={(e) => setGoalAmount(Number(e.target.value))}
+                        value={goalData.goalAmount}
+                        onChange={(e) =>
+                            handleChange("goalAmount", e.target.value ? Number(e.target.value) : "")}
                         className="w-full border border-gray-300 p-2 rounded mb-2"
                     />
 
                     {/* Category Dropdown */}
                     <select
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
+                        value={goalData.category}
+                        onChange={(e) =>
+                            handleChange("category", e.target.value)}
                         className="w-full border border-gray-300 p-2 rounded mb-4 bg-white"
                     >
                         {categories.map((cur) => (
@@ -203,39 +220,39 @@ export default function GoalEditModal({ goal, onClose, triggerRect }: {
 
                     {/* Date Picker */}
                     <DatePicker
-                        selected={selectedDate}
-                        onChange={(date: Date | null) => setSelectedDate(date)}
+                        selected={goalData.date}
+                        onChange={(date: Date | null) => handleChange("date", date || new Date())}
                         dateFormat="yyyy-MM-dd"
                         className="w-full border border-gray-300 p-2 rounded mb-2"
                         showPopperArrow={false}
                     />
 
-                    {/* Message Display */}
-                    {message && (
-                        <p className={`text-sm text-center mt-2 ${message.type === "error" ? "text-red-600" : "text-green-600"}`}>
-                            {message.text}
-                        </p>
-                    )}
-
                     {/* Buttons */}
                     <div className="flex justify-end mt-4 gap-2">
                         <button
                             onClick={handleClose}
+                            disabled={loading}
                             className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-200"
-                            disabled={isClosing}
                         >
-                            {isClosing ? "Closing..." : "Cancel"}
+                            {loading ? "Closing..." : "Cancel"}
                         </button>
                         <button
                             onClick={handleSubmit}
-                            disabled={isClosing}
+                            disabled={loading}
                             className={`px-4 py-2 rounded-md text-white ${
-                                isClosing ? "bg-gray-500 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+                                loading ? "bg-gray-500 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
                             }`}
                         >
-                            {isClosing ? "Saving..." : "Save"}
+                            {loading ? "Saving..." : "Save"}
                         </button>
                     </div>
+
+                    {/* Message Display */}
+                    {message && (
+                        <p className={`text-sm text-center mt-1 ${message.type === "error" ? "text-red-600" : "text-green-600"}`}>
+                            {message.text}
+                        </p>
+                    )}
                 </div>
             </div>
         </div>,

@@ -15,7 +15,7 @@ export default function GoalCard({ goal, refreshGoals }: GoalCardProps) {
     const [showMenu, setShowMenu] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
-    const { deleteGoal, editGoal } = useGoals();
+    const { deleteGoal } = useGoals();
     const [triggerRect, setTriggerRect] = useState<DOMRect | null>(null);
     const [isEditing, setIsEditing] = useState(false);
     const cardRef = useRef<HTMLDivElement>(null);
@@ -102,7 +102,7 @@ export default function GoalCard({ goal, refreshGoals }: GoalCardProps) {
                         goal={goal}
                         onClose={() => setIsEditing(false)}
                         triggerRect={triggerRect}
-                        editGoal={editGoal}
+                        refreshGoals={refreshGoals}
                     />
                 )}
             </div>

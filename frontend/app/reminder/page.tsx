@@ -8,13 +8,15 @@ import { useAuth } from "@/app/contexts/AuthContext";
 // components
 import Layout from "@/components/ui/Layout";
 import { ReminderList } from "@/components/ui/ReminderList";
+import NewReminderForm from "@/components/ui/NewReminderModal";
 
 export default function ReminderPage() {
     const { reminders, getReminders } = useReminders();
     const { user } = useAuth();
     const [data, setData] = useState<Reminder[]>([]);
+    const [isAdding, setIsAdding] = useState(false);
 
-    const getDataOnRender = async () => {
+    const fetchReminders = async () => {
         try {
             const success = await getReminders(
                 user?.id || (localStorage.getItem("userid") as string)
@@ -32,7 +34,7 @@ export default function ReminderPage() {
     };
 
     useEffect(() => {
-        getDataOnRender();
+        fetchReminders();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
@@ -40,13 +42,27 @@ export default function ReminderPage() {
         setData(reminders);
     }, [reminders]);
 
+    const toggleForm = () => {
+        setIsAdding((prev) => !prev);
+    };
+
     return (
         <Layout title="Reminders">
             <div className="flex items-center mb-6">
-                <button className="bg-black text-white px-4 py-2 rounded-md flex items-center gap-2 hover:bg-gray-800 ml-auto">
+                <button
+                    className="bg-black text-white px-4 py-2 rounded-md flex items-center gap-2 hover:bg-gray-800 ml-auto"
+                    onClick={toggleForm}
+                >
                     + Create Reminder
                 </button>
             </div>
+
+            {isAdding && (
+                <NewReminderForm
+                    toggle={toggleForm}
+                    refreshReminders={fetchReminders}
+                />
+            )}
 
             <ReminderList reminders={data} />
         </Layout>

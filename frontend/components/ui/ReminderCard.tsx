@@ -57,6 +57,8 @@ export default function ReminderCard({ reminder, mini }: ReminderCardProps) {
                             {new Date(reminder.time).toLocaleTimeString(
                                 "en-US",
                                 {
+                                    minute: "2-digit",
+                                    hour: "2-digit",
                                     day: "numeric",
                                     month: "short",
                                     year: "numeric",

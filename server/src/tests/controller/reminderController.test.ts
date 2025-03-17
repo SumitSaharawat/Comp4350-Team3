@@ -167,7 +167,7 @@ describe('Reminder Controller', () => {
         const deleteReminderMock = deleteReminder as jest.Mock;
 
         it('should delete a reminder successfully', async () => {
-            deleteReminderMock.mockResolvedValue(true);
+            deleteReminderMock.mockResolvedValue({ deletedCount: 1 });
 
             const response = await request(app).delete('/api/reminder/reminder123');
 
@@ -176,7 +176,7 @@ describe('Reminder Controller', () => {
         });
 
         it('should return 404 if reminder not found', async () => {
-            deleteReminderMock.mockResolvedValue(false);
+            deleteReminderMock.mockResolvedValue({ deletedCount: 0 });
 
             const response = await request(app).delete('/api/reminder/reminder123');
 

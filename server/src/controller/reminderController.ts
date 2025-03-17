@@ -38,10 +38,9 @@ export const getAllRemindersController = async (req: Request, res: Response) => 
 export const editReminderController = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { name, text, time, viewed } = req.body;
-    controlLog(`${viewed}`);
+
     try {
         const updatedReminder = await editReminder(id, name, text, time, viewed);
-        controlLog(JSON.stringify(formatReminder(updatedReminder)));
         if (updatedReminder) {
             res.status(200).json({ message: 'Reminder updated successfully', reminder: formatReminder(updatedReminder) });
         } else {
@@ -58,7 +57,7 @@ export const deleteReminderController = async (req: Request, res: Response) => {
 
     try {
         const result = await deleteReminder(id);
-        if (result) {
+        if (result.deletedCount > 0) {
             res.status(200).json({ message: 'Reminder deleted successfully' });
         } else {
             res.status(404).json({ message: 'Reminder not found' });

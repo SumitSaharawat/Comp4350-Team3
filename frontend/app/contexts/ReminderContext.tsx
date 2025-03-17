@@ -6,6 +6,7 @@ import {
     getRemindersFromServer,
     addReminderFromServer,
     editReminderFromServer,
+    deleteReminderToServer,
 } from "@/app/api/reminder";
 
 class ReminderClass implements Reminder {
@@ -48,6 +49,7 @@ interface RemindersContextType {
         time: string,
         text: string
     ) => Promise<{ message: string }>;
+    deleteReminder: (reminderId: string) => Promise<{ message: string }>;
 }
 
 const RemindersContext = createContext<RemindersContextType>({
@@ -69,6 +71,9 @@ const RemindersContext = createContext<RemindersContextType>({
         text: string
     ) => ({
         message: `not initialized with paras ${id}, ${name}, ${time}, ${text}`,
+    }),
+    deleteReminder: async (reminderId: string) => ({
+        message: `Failed to delete reminder ${reminderId}`,
     }),
 });
 
@@ -123,6 +128,16 @@ export function RemindersProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
+    const handleDeleteReminder = async (reminderId: string) => {
+        try {
+            return await deleteReminderToServer(reminderId);
+        } catch (error) {
+            throw new Error(
+                error instanceof Error ? error.message : "delete goal failed"
+            );
+        }
+    };
+
     return (
         <RemindersContext.Provider
             value={{
@@ -130,6 +145,7 @@ export function RemindersProvider({ children }: { children: React.ReactNode }) {
                 getReminders: handleGetReminders,
                 addReminder: handleAddReminder,
                 editReminder: handleEditReminder,
+                deleteReminder: handleDeleteReminder,
             }}
         >
             {children}

@@ -64,7 +64,7 @@ export default function ReminderPage() {
                 />
             )}
 
-            <ReminderList reminders={data} />
+            <ReminderList reminders={data} refreshReminders={fetchReminders} />
         </Layout>
     );
 }

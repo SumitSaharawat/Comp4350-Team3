@@ -55,7 +55,13 @@ export default function NotificationList() {
             />
             {open && data.length > 0 ? (
                 <div className="absolute top-12 right-0 bg-white border border-gray-200 rounded-lg shadow-lg w-64 p-4">
-                    {<MiniReminderList reminders={data} />}
+                    {
+                        <MiniReminderList
+                            reminders={data}
+                            // eslint-disable-next-line @typescript-eslint/no-empty-function
+                            refreshReminders={() => {}}
+                        />
+                    }
                 </div>
             ) : null}
         </div>

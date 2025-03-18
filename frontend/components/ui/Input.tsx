@@ -50,8 +50,8 @@ const SearchBar = ({
 
     return (
         <label
-            className={`relative input input-bordered flex items-center gap-2 px-2 h-11 rounded-xl border border-gray-300 
-    transition-all duration-300 ${isFocused ? "w-64" : "w-32"}`}
+            className={`relative bg-gray-100 input input-bordered flex items-center gap-2 px-2 h-11 rounded-xl 
+            border border-gray-500 transition-all duration-300 ${isFocused ? "w-64" : "w-32"}`}
         >
             <input
                 type="text"

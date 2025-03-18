@@ -1,7 +1,7 @@
 # SimpleFinance Frontend Next.js Project
 
 ## 📂 Folder Structure
-``` 
+```
 /frontend
 ├── public                      # Static assets (images, favicons, etc.)
 ├── app                         # Next.js app (routing system)

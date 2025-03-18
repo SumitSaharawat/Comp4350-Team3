@@ -8,7 +8,7 @@
     "clean": "tsc --build --clean",
     "start": "node --env-file=.env ./build/app",
     "dev": "set DEBUG=server && node --env-file=.env ./build/app",
-    "debug": "set DEBUG=server* && node --env-file=.env ./build/app",
+    "debug": "cross-env DEBUG=server* node --env-file=.env ./build/app",
     "lint": "npx eslint .",
     "test": "jest",
     "test:watch": "jest --watch"
@@ -42,6 +42,7 @@
     "@types/serve-static": "^1.7.32",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
+    "cross-env": "^7.0.3",
     "eslint": "^8.57.1",
     "eslint-config-google": "^0.14.0",
     "globals": "^15.14.0",

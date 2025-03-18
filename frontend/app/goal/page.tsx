@@ -29,6 +29,7 @@ export default function GoalsPage() {
 
     useEffect(() => {
         fetchGoals();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     useEffect(() => {

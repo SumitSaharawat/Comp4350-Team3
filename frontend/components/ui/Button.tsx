@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { Plus, CheckCheck, Check, Bell, BellDot } from "lucide-react";
+import { CheckCheck, Check, Bell, BellDot } from "lucide-react";
 
 interface HamburgerButtonProps {
     onClickFunc: () => void;
@@ -103,9 +103,10 @@ const FloatingButton = ({ toggle }: FloatingButtonProps) => {
     return (
         <button
             onClick={toggle}
-            className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-all transform hover:scale-105"
+            className="fixed bottom-6 right-6 bg-black text-white p-4 rounded-full shadow-lg
+            hover:bg-blue-700 transition-all transform hover:scale-105"
         >
-            <Plus size={24} />
+            + New
         </button>
     );
 };
@@ -116,6 +117,7 @@ const FilterButton = ({
     onSelectOption,
 }: FilterButtonProps) => {
     const [selectedOptions, setSelectedOptions] = React.useState<string[]>([]);
+    const [isOpen, setIsOpen] = React.useState(false);
 
     const toggleSelection = (item: string) => {
         let updatedSelection;
@@ -130,29 +132,36 @@ const FilterButton = ({
     };
 
     return (
-        <details className="dropdown">
-            <summary className="btn m-1">
+        <div className="relative ml-10">
+            <button
+                className="flex items-center gap-1 text-black font-bold focus:outline-none"
+                onClick={() => setIsOpen(!isOpen)}
+            >
                 {filterName}{" "}
-                {selectedOptions.length > 0
-                    ? `(${selectedOptions.length})`
-                    : ""}
-            </summary>
-            <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                {filterOptions.map((d) => (
-                    <li key={d}>
-                        <label className="flex items-center gap-2">
-                            <input
-                                type="checkbox"
-                                checked={selectedOptions.includes(d)}
-                                onChange={() => toggleSelection(d)}
-                                className="checkbox"
-                            />
-                            {d}
-                        </label>
-                    </li>
-                ))}
-            </ul>
-        </details>
+                <span className={`transition-transform ${isOpen ? "rotate-180" : ""}`}>
+                    ⌄
+                </span>
+            </button>
+
+            {/* Dropdown menu */}
+            {isOpen && (
+                <ul className="absolute left-0 mt-3 w-52 bg-white rounded-lg shadow-md p-2 z-10">
+                    {filterOptions.map((d) => (
+                        <li key={d} className="py-1">
+                            <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={selectedOptions.includes(d)}
+                                    onChange={() => toggleSelection(d)}
+                                    className="checkbox"
+                                />
+                                {d}
+                            </label>
+                        </li>
+                    ))}
+                </ul>
+            )}
+        </div>
     );
 };
 

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { Plus, CheckCheck, Check, Bell, BellDot } from "lucide-react";
+import { CheckCheck, Check, Bell, BellDot } from "lucide-react";
 
 interface HamburgerButtonProps {
     onClickFunc: () => void;

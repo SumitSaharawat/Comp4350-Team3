@@ -31,6 +31,7 @@ const SearchBar = ({
                        onTextChange,
                        onSearchLaunch }: searchBarProps) => {
     const [inputText, setInputText] = React.useState("");
+    const [isFocused, setIsFocused] = React.useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -48,28 +49,33 @@ const SearchBar = ({
     };
 
     return (
-        <label className="input input-bordered flex items-center gap-2 px-2 py-1 rounded-md border border-gray-300">
+        <label
+            className={`relative input input-bordered flex items-center gap-2 px-2 h-10 rounded-xl border border-gray-300 
+    transition-all duration-300 ${isFocused ? "w-64" : "w-32"}`}
+        >
             <input
                 type="text"
-                className="grow px-2 py-1 bg-transparent focus:outline-none"
-                placeholder={searchHint}
+                className="grow px-2 py-0.5 pr-8 bg-transparent focus:outline-none"
+                placeholder={isFocused ? searchHint : "Search"}
                 value={inputText}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
             />
 
             {inputText ? (
                 <button
                     onClick={clearInput}
-                    className="text-gray-500 hover:text-gray-700 transition-colors"
+                    className="absolute right-2 text-gray-500 hover:text-gray-700 transition-colors"
                 >
-                    <Delete className="w-6 h-6"/>
+                    <Delete className="w-5 h-5"/>
                 </button>
             ) : (
                 <svg
                     viewBox="0 0 16 16"
                     fill="currentColor"
-                    className="h-4 w-4 opacity-70"
+                    className="absolute right-2 h-4 w-4 opacity-70"
                 >
                     <path
                         fillRule="evenodd"
@@ -85,4 +91,4 @@ const SearchBar = ({
 AuthInput.displayName = "AuthInput";
 SearchBar.displayName = "SearchBar";
 
-export { AuthInput, SearchBar };
+export {AuthInput, SearchBar};

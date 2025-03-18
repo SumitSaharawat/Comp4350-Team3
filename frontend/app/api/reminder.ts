@@ -57,3 +57,16 @@ export async function addReminderFromServer(
 
     return { message: "Create reminder success!"};
 }
+
+export async function deleteReminderToServer(id: string): Promise<{message: string}> {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reminder/${id}`, {
+        method: "DELETE",
+        credentials: "include"
+    });
+
+    if (!res.ok) {
+        throw new Error((await res.json()).message || "Failed to delete reminder");
+    }
+
+    return { message: "Delete reminder success!"};
+}

@@ -8,7 +8,7 @@
     "clean": "tsc --build --clean",
     "start": "node --env-file=.env ./build/app",
     "dev": "cross-env DEBUG=server* node --env-file=.env ./build/app",
-    "debug": "cross-env DEBUG=server* node --env-file=.env ./build/app",
+    "debug": "set DEBUG=server* && node --env-file=.env ./build/app",
     "lint": "npx eslint .",
     "test": "jest",
     "test:watch": "jest --watch"

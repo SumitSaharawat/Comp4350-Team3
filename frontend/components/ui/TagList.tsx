@@ -2,6 +2,8 @@
 import React from "react";
 import { Tag } from "@/app/api/tag";
 import { Edit2, Trash2 } from "lucide-react";
+import {useTags} from "@/app/contexts/TagContext";
+
 
 interface TagListProps {
     tags: Tag[];
@@ -10,6 +12,14 @@ interface TagListProps {
 }
 
 export default function TagList({ tags }: TagListProps) {
+    const {deleteTag} = useTags();
+
+    const handleDelete = async (tagId: string)=> {
+        if (confirm("Are you sure you want to delete this tag?")) {
+            await deleteTag(tagId);
+        }
+    }
+
     return (
         <div className="w-full max-h-96 overflow-y-auto border border-gray-300 rounded-lg shadow-sm">
             <table className="w-full border-collapse">
@@ -52,7 +62,7 @@ export default function TagList({ tags }: TagListProps) {
                                     <Edit2 size={18} />
                                 </button>
                                 <button
-                                    // onClick={() => onDelete(tx.id)}
+                                    onClick={() => handleDelete(tx.id)}
                                     className="text-red-600 hover:text-red-800 mx-1"
                                 >
                                     <Trash2 size={18} />

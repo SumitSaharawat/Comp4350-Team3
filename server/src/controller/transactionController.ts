@@ -14,20 +14,21 @@ const formatTransaction = (transaction: ITransaction) => ({
   }),
   amount: transaction.amount,
   currency: transaction.currency,
+  type: transaction.type,
   tags: transaction.tags?.map((tag) => ({
     id: tag._id.toString(),
     name: tag.name,
     color: tag.color,
-  })) || [], // If no tags, default to an empty array
+  })) || [] // If no tags, default to an empty array
 
 
 });
 
 export const addTransactionController = async (req: Request, res: Response) => {
-  const {userId, name, date, amount, currency, tags}= req.body;
+  const {userId, name, date, amount, currency, type, tags}= req.body;
 
   try {
-    const transaction = await addTransaction(userId, name, date, amount, currency, tags);
+    const transaction = await addTransaction(userId, name, date, amount, currency, type, tags);
     res.status(201).json({message: "Transaction added successfully", transaction: formatTransaction(transaction)});
   } catch (err) {
     console.error("Error creating transaction:", err.message || err); // Log to terminal
@@ -50,10 +51,10 @@ export const getAllTransactionController = async (req: Request, res: Response) =
 
 export const editTransactionController = async (req: Request, res: Response) => {
   const {id} = req.params;
-  const {name, date, amount, currency, tags} = req.body;
+  const {name, date, amount, currency, tags, type} = req.body;
 
   try {
-    const updatedTransaction = await editTransaction(id, name, date, amount, currency, tags);
+    const updatedTransaction = await editTransaction(id, name, date, amount, currency, type, tags);
     if (updatedTransaction) {
       res.status(200).json({message: "Transaction updated successfully", transaction: formatTransaction(updatedTransaction)});
     } else {

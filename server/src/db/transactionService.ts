@@ -4,7 +4,7 @@ import Tag from './tagDB'
 import mongoose from 'mongoose';
 import { dbLog } from './dbLog';
 
-export const addTransaction = async (userId: string, name: string, date: string, amount: number, currency: string, tags?: string[]) => {
+export const addTransaction = async (userId: string, name: string, date: string, amount: number, currency: string, type: string, tags?: string[]) => {
     try {
 
         // 🔹 Validate if user exists before proceeding
@@ -16,11 +16,33 @@ export const addTransaction = async (userId: string, name: string, date: string,
          // 🔹 Validate and filter out invalid tag IDs
          const validTags = tags?.filter(tagId => mongoose.Types.ObjectId.isValid(tagId)) || [];
 
+        if (type) {
+            const validType = ['Saving', 'Spending'];
+            if (!validType.includes(type)) {
+                throw new Error(`Invalid type. Must be one of: ${validType.join(', ')}`);
+            }
+        }
+
          // 🔹 Ensure all provided tags exist in the database
         const existingTags = await Tag.find({ _id: { $in: validTags } });
 
         if (existingTags.length !== validTags.length) {
             throw new Error('One or more tags do not exist.');
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            throw new Error('User does not exist');
+        }
+
+        // Adjust balance based on transaction type
+        if (type === "Spending") {
+            if (user.balance < amount) {
+                throw new Error('Insufficient balance for spending.');
+            }
+            user.balance -= amount;
+        } else if (type === "Saving") {
+            user.balance += amount;
         }
 
         const newTransaction = new Transaction({
@@ -29,10 +51,12 @@ export const addTransaction = async (userId: string, name: string, date: string,
             date: new Date(date), 
             amount,
             currency,
-            tags: validTags 
+            type,
+            tags: validTags
         });
 
         await newTransaction.save();
+        await user.save();
         return newTransaction;
     } catch (err) {
         if (err.name === 'ValidationError') {
@@ -62,7 +86,7 @@ export const getAllTransactions = async (userId: string): Promise<ITransaction[]
 };
 
 //To edit, need to enter in the body, all the fields again, even ones that you didn't intend to replace. If you don't enter tag, it deletes it and sets it to default.
-export const editTransaction = async (id: string, name?: string, date?: string, amount?: number, currency?: string, tags?: string[]): Promise<ITransaction | null> => {
+export const editTransaction = async (id: string, name?: string, date?: string, amount?: number, currency?: string, type?: string, tags?: string[]): Promise<ITransaction | null> => {
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) {
             throw new Error('Invalid transaction ID format');
@@ -74,10 +98,29 @@ export const editTransaction = async (id: string, name?: string, date?: string, 
             return null;
         }
 
+        const user = await User.findById(updatedTransaction.user);
+        if (!user) {
+            throw new Error('User does not exist.');
+        }
+
+        // Reverse the effect of the old transaction on the balance
+        if (updatedTransaction.type === "Spending") {
+            user.balance += updatedTransaction.amount; // Refund spending
+        } else if (updatedTransaction.type === "Saving") {
+            user.balance -= updatedTransaction.amount; // Remove saved amount
+        }
+
         if (date) updatedTransaction.date = new Date(date); 
         if (name) updatedTransaction.name = name;
         if (amount) updatedTransaction.amount = amount;
         if (currency) updatedTransaction.currency = currency;
+        if (type) {
+            const validType = ['Saving', 'Spending'];
+            if (!validType.includes(type)) {
+                throw new Error(`Invalid type. Must be one of: ${validType.join(', ')}`);
+            }
+            updatedTransaction.type = type;
+        }
 
          if (tags !== undefined) {
             if (tags.length > 0) {
@@ -97,7 +140,18 @@ export const editTransaction = async (id: string, name?: string, date?: string, 
             }
         }
 
+        // Apply the new transaction effect on balance
+        if (updatedTransaction.type === "Spending") {
+            if (user.balance < updatedTransaction.amount) {
+                throw new Error('Insufficient balance for spending.');
+            }
+            user.balance -= updatedTransaction.amount;
+        } else if (updatedTransaction.type === "Saving") {
+            user.balance += updatedTransaction.amount;
+        }
+
         await updatedTransaction.save();
+        await user.save();
 
         return updatedTransaction;
     } 
@@ -120,6 +174,27 @@ export const deleteTransaction = async (id: string) => {
         if (!mongoose.Types.ObjectId.isValid(id)) {
             throw new Error('Invalid user ID format');
         }
+
+        // Retrieve the transaction before deleting
+        const transaction = await Transaction.findById(id);
+        if (!transaction) {
+            throw new Error(`No transaction found with ID ${id}`);
+        }
+
+        // Retrieve the user
+        const user = await User.findById(transaction.user);
+        if (!user) {
+            throw new Error("User not found.");
+        }
+
+        if (transaction.type === "Spending") {
+            user.balance += transaction.amount; 
+        } else if (transaction.type === "Saving") {
+            user.balance -= transaction.amount; 
+        }
+
+        await user.save();
+        
         const result = await Transaction.deleteOne({_id: id});
         if (result.deletedCount > 0) {
             dbLog(`User ${id} deleted successfully.`);

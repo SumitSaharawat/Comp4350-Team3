@@ -1,7 +1,11 @@
 "use client";
 
 import React, { createContext, useContext, useState } from "react";
-import { Transaction, getTransactionsFromServer, deleteTransactionFromServer } from "@/app/api/transac";
+import {
+    Transaction,
+    getTransactionsFromServer,
+    deleteTransactionFromServer,
+} from "@/app/api/transac";
 
 interface TransactionsContextType {
     transactions: Transaction[];
@@ -15,7 +19,11 @@ const TransactionsContext = createContext<TransactionsContextType>({
     deleteTransaction: async () => false,
 });
 
-export function TransactionsProvider({ children }: { children: React.ReactNode }) {
+export function TransactionsProvider({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
     const [transactions, setTransactions] = useState<Transaction[]>([]);
 
     const handleGetTransactions = async (userId: string) => {
@@ -32,7 +40,9 @@ export function TransactionsProvider({ children }: { children: React.ReactNode }
         try {
             await deleteTransactionFromServer(transactionId);
             setTransactions((prevTransactions) =>
-                prevTransactions.filter((transaction) => transaction.id !== transactionId)
+                prevTransactions.filter(
+                    (transaction) => transaction.id !== transactionId
+                )
             );
             return true;
         } catch (error) {
@@ -57,7 +67,9 @@ export function TransactionsProvider({ children }: { children: React.ReactNode }
 export function useTransactions() {
     const context = useContext(TransactionsContext);
     if (!context) {
-        throw new Error("useTransactions must be used within a TransactionsProvider");
+        throw new Error(
+            "useTransactions must be used within a TransactionsProvider"
+        );
     }
     return context;
 }

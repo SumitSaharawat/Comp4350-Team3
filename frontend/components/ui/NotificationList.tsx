@@ -12,6 +12,7 @@ export default function NotificationList() {
     const { user } = useAuth();
     const [open, setOpen] = useState(false);
     const [data, setData] = useState<Reminder[]>([]);
+    const [dataFetched, setDataFetched] = useState(false);
 
     const selectUpcomingReminders = (rawReminders: Reminder[]) => {
         const now = new Date();
@@ -23,13 +24,13 @@ export default function NotificationList() {
     };
 
     const getDataOnRender = async () => {
-        console.log("get data run");
         try {
             const success = await getReminders(
                 user?.id || (localStorage.getItem("userid") as string)
             );
 
             if (success) {
+                setDataFetched(true);
                 setData(selectUpcomingReminders(reminders));
             }
         } catch (err) {
@@ -42,8 +43,9 @@ export default function NotificationList() {
     };
 
     useEffect(() => {
-        if (reminders.length <= 0) getDataOnRender();
+        if (reminders.length <= 0 && !dataFetched) getDataOnRender();
         else setData(selectUpcomingReminders(reminders));
+        setDataFetched(true);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [reminders]);
 

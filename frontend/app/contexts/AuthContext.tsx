@@ -15,7 +15,8 @@ interface AuthContextType {
     login: (username: string, password: string) => Promise<{ message: string }>;
     signup: (
         username: string,
-        password: string
+        password: string,
+        balance: string
     ) => Promise<{ message: string }>;
     logout: () => Promise<void>;
     resetPassword: (
@@ -63,9 +64,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    const handleSignup = async (username: string, password: string) => {
+    const handleSignup = async (
+        username: string,
+        password: string,
+        balance: string
+    ) => {
         try {
-            const result = await signup(username, password);
+            const result = await signup(username, password, Number(balance));
             setTimeout(() => {
                 // Give 1 sec to holding
                 window.location.href = "/auth/login";

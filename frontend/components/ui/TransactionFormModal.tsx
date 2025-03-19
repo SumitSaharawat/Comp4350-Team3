@@ -41,8 +41,8 @@ export default function TransactionFormModal({
         transacData.name = "";
         transacData.amount = null;
         transacData.time = new Date();
-        transacData.currency = "CAD"
-    }
+        transacData.currency = "CAD";
+    };
 
     const handleChange = (field: keyof typeof transacData, value: string | number | Date | null) => {
         setTransacData((prev) => ({

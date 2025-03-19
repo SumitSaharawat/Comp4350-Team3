@@ -4,6 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { X } from "lucide-react";
 import { addTransactionsToServer, editTransactionsOnServer, Transaction} from "@/app/api/transac";
+const currencies = ["CAD", "USD"];
 
 interface TransactionFormModalProps {
     isOpen: boolean;
@@ -21,28 +22,42 @@ export default function TransactionFormModal({
                                                  existingTransaction
 }: TransactionFormModalProps) {
 
-    const [name, setName] = useState<string>("");
-    const [amount, setAmount] = useState<number | "">("");
-    const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-    const [currency, setCurrency] = useState<string>("CAD"); // Default CAD
-    const currencies = ["CAD", "USD"];
+    const [transacData, setTransacData] = useState({
+        name: "",
+        amount: null as number | null,
+        time: new Date(),
+        currency: "CAD",
+    });
+
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState<{ text: string; type: "error" | "success" } | null>(null);
+    const [message, setMessage] = useState<{
+        text: string;
+        type: "error" | "success"
+    } | null>(null);
+
     const [headLine, setHeadLine] = useState<string>("");
+
+
+    const handleChange = (field: keyof typeof transacData, value: string | number | Date | null) => {
+        setTransacData((prev) => ({
+            ...prev,
+            [field]: value === "" ? null : value,
+        }));
+    };
 
     useEffect(() => {
         if (mode === "edit" && existingTransaction) {
-            setName(existingTransaction.name);
-            setAmount(existingTransaction.amount);
-            setSelectedDate(new Date(existingTransaction.date));
-            setCurrency(existingTransaction.currency);
+            transacData.name = existingTransaction.name;
+            transacData.amount = existingTransaction.amount;
+            transacData.time = new Date(existingTransaction.date);
+            transacData.currency = existingTransaction.currency;
             setHeadLine("Edit Transaction");
 
         } else {
-            setName("");
-            setAmount("");
-            setSelectedDate(new Date());
-            setCurrency("CAD");
+            transacData.name = "";
+            transacData.amount = null;
+            transacData.time = new Date();
+            transacData.currency = "CAD"
             setHeadLine("Add Transaction");
         }
     }, [mode, existingTransaction]);
@@ -50,7 +65,7 @@ export default function TransactionFormModal({
     const handleSubmit = async () => {
         setMessage(null);
 
-        if (!name || !amount || !currency || !selectedDate) {
+        if (!transacData.name || !transacData.amount || !transacData.currency) {
             setMessage({ text: "All fields are required.", type: "error" });
             return;
         }
@@ -63,13 +78,33 @@ export default function TransactionFormModal({
 
         try {
             setLoading(true);
-            const formattedDate = selectedDate.toISOString().split("T")[0];
+            const formattedDate = transacData.time.toLocaleDateString(
+                "en-US",
+                {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                }
+            );
 
             if (mode === "add") {
-                await addTransactionsToServer(userid, name, formattedDate, Number(amount), currency);
+                await addTransactionsToServer(
+                    userid,
+                    transacData.name,
+                    formattedDate,
+                    transacData.amount,
+                    transacData.currency
+                );
                 setMessage({ text: "Transaction added successfully!", type: "success" });
+
             } else if (mode === "edit" && existingTransaction) {
-                await editTransactionsOnServer(existingTransaction.id, name, formattedDate, Number(amount), currency);
+                await editTransactionsOnServer(
+                    existingTransaction.id,
+                    transacData.name,
+                    formattedDate,
+                    transacData.amount,
+                    transacData.currency
+                );
                 setMessage({ text: "Transaction updated successfully!", type: "success" });
             }
 
@@ -107,8 +142,8 @@ export default function TransactionFormModal({
                 <input
                     type="text"
                     placeholder="Transaction Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={transacData.name}
+                    onChange={(e) => handleChange("name", e.target.value)}
                     className="w-full border border-gray-300 p-2 rounded mb-2"
                 />
 
@@ -116,15 +151,17 @@ export default function TransactionFormModal({
                 <input
                     type="number"
                     placeholder="Amount"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : "")}
+                    value={transacData.amount ?? ""}
+                    onChange={(e) =>
+                        handleChange("amount", e.target.value === "" ? null : Number(e.target.value))}
                     className="w-full border border-gray-300 p-2 rounded mb-2"
                 />
 
                 {/* Currency Dropdown */}
                 <select
-                    value={currency}
-                    onChange={(e) => setCurrency(e.target.value)}
+                    value={transacData.currency}
+                    onChange={(e) =>
+                        handleChange("currency", e.target.value)}
                     className="w-full border border-gray-300 p-2 rounded mb-4 bg-white"
                 >
                     {currencies.map((cur) => (
@@ -136,8 +173,9 @@ export default function TransactionFormModal({
 
                 {/* Date Picker */}
                 <DatePicker
-                    selected={selectedDate}
-                    onChange={(date: Date | null) => setSelectedDate(date)}
+                    selected={transacData.time}
+                    onChange={(date: Date | null) =>
+                        handleChange("time", date || new Date())}
                     dateFormat="yyyy-MM-dd"
                     className="w-full border border-gray-300 p-2 rounded mb-2"
                     showPopperArrow={false}

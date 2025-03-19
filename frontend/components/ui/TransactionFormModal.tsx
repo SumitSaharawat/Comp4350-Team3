@@ -37,6 +37,12 @@ export default function TransactionFormModal({
 
     const [headLine, setHeadLine] = useState<string>("");
 
+    const cleanTransacData = ()=>{
+        transacData.name = "";
+        transacData.amount = null;
+        transacData.time = new Date();
+        transacData.currency = "CAD"
+    }
 
     const handleChange = (field: keyof typeof transacData, value: string | number | Date | null) => {
         setTransacData((prev) => ({
@@ -54,10 +60,7 @@ export default function TransactionFormModal({
             setHeadLine("Edit Transaction");
 
         } else {
-            transacData.name = "";
-            transacData.amount = null;
-            transacData.time = new Date();
-            transacData.currency = "CAD"
+            cleanTransacData();
             setHeadLine("Add Transaction");
         }
     }, [mode, existingTransaction]);
@@ -111,8 +114,10 @@ export default function TransactionFormModal({
             setTimeout(() => {
                 setMessage(null);
                 toggle();
+                cleanTransacData();
                 refreshTransactions();
             }, 500);
+
         } catch (error) {
             setMessage({ text: error instanceof Error ? error.message : "Failed to process transaction", type: "error" });
         } finally {

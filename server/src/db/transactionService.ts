@@ -172,7 +172,7 @@ export const editTransaction = async (id: string, name?: string, date?: string, 
 export const deleteTransaction = async (id: string) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            throw new Error('Invalid user ID format');
+            throw new Error('Invalid transaction ID format');
         }
 
         // Retrieve the transaction before deleting

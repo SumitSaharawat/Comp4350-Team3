@@ -135,7 +135,14 @@ export default function GoalCard({ goal, refreshGoals }: GoalCardProps) {
                 <div className="flex justify-between">
                     <span>Target</span>
                     <span className="font-medium text-black">
-                        {new Date(goal.date).toLocaleDateString("en-US", {month: "short", year: "numeric"})}
+                        {new Date(goal.time).toLocaleDateString(
+                            "en-US",
+                            {
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric",
+                            }
+                        )}
                     </span>
                 </div>
                 <div className="flex justify-between mt-2">

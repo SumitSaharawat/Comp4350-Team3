@@ -21,7 +21,7 @@ export default function ReminderEditModal({
     const [loading, setLoading] = useState(false);
     const [reminderData, setRreminderData] = useState({
         name: reminder?.name || "",
-        time: reminder?.time || new Date(),
+        time: reminder?.time ? new Date(reminder.time) : new Date(),
         text: reminder?.text || "",
         viewed: reminder?.viewed || false,
     });
@@ -33,7 +33,7 @@ export default function ReminderEditModal({
     } | null>(null);
 
     const window_w = 400;
-    const window_h = 400;
+    const window_h = 300;
 
     const handleChange = (
         field: keyof typeof reminderData,

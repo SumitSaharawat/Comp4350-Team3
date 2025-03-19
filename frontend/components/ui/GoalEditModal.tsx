@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useEffect, useMemo, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import { createPortal } from "react-dom";
 import { Goal } from "@/app/api/goal";
 import DatePicker from "react-datepicker";
@@ -20,13 +20,13 @@ export default function GoalEditModal({ goal, onClose, triggerRect, refreshGoals
         currAmount: goal?.currAmount || 0,
         goalAmount: goal?.goalAmount || 0,
         category: goal?.category || categories[0],
-        date: goal?.date ? new Date(goal.date) : new Date(),
+        time: goal?.time || new Date(),
     });
 
-    const [message, setMessage]
-        = useState<{ text: string; type: "error" | "success" } | null>(null);
-    const formattedDate = useMemo(() =>
-        goalData.date.toISOString().split("T")[0], [goalData.date]);
+    const [message, setMessage] = useState<{
+        text: string;
+        type: "error" | "success"
+    } | null>(null);
 
     const window_w = 400;
     const window_h = 400;
@@ -95,6 +95,15 @@ export default function GoalEditModal({ goal, onClose, triggerRect, refreshGoals
         }
         setMessage(null);
         setLoading(true);
+
+        const formattedDate = goalData.time.toLocaleDateString(
+            "en-US",
+            {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+            }
+        );
 
         try {
             await editGoalToServer(
@@ -220,8 +229,8 @@ export default function GoalEditModal({ goal, onClose, triggerRect, refreshGoals
 
                     {/* Date Picker */}
                     <DatePicker
-                        selected={goalData.date}
-                        onChange={(date: Date | null) => handleChange("date", date || new Date())}
+                        selected={goalData.time}
+                        onChange={(date: Date | null) => handleChange("time", date || new Date())}
                         dateFormat="yyyy-MM-dd"
                         className="w-full border border-gray-300 p-2 rounded mb-2"
                         showPopperArrow={false}

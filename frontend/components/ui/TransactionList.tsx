@@ -25,7 +25,7 @@ export default function TransactionList({ transactions, onEdit }: TransactionLis
     };
 
     return (
-        <div className="w-full max-h-96 overflow-y-auto border border-gray-300 rounded-lg shadow-sm">
+        <div className="w-full h-full overflow-y-auto border border-gray-300 rounded-lg shadow-sm">
             <table className="w-full border-collapse">
                 <thead className="sticky top-0 bg-gray-100 text-black">
                 <tr>

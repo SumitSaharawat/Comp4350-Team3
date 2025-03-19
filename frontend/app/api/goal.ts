@@ -2,7 +2,7 @@
 export interface Goal {
     id: string,
     name: string,
-    date: Date,
+    time: Date,
     currAmount: number,
     goalAmount: number,
     category: string

@@ -35,11 +35,17 @@ export const getSingleUserController = async (req: Request, res: Response) => {
     const {username} = req.params;
     controlLog(`get user: ${username}`);
     const users = await getUsersByUsername(username);
+    console.log("Retrieved Users from DB:", users); // 🔍 Debug log
+
     if (users.length === 0) {
       res.status(404).json({message: "User not found"});
     } else {
       res.status(200).json(users.map(formatUser)[0]);
     }
+
+    const formattedUser = formatUser(users[0]);
+
+    console.log("Formatted User Response:", formattedUser); // 🔍 Debug log
   } catch (err) {
     console.error("Error retrieving user:", err.message || err); // Log to terminal
     return res

@@ -3,7 +3,7 @@ import { getUsersByUsername } from '../db/userService.js';
 import mongoose from 'mongoose';
 
 export const validateTransactionRequest = (req: Request, res: Response, next: NextFunction) => {
-    const allowedFields = ['userId', 'name', 'date', 'amount', 'currency', 'tags'];
+    const allowedFields = ['userId', 'name', 'date', 'amount', 'currency', 'type', 'tags'];
     const bodyKeys = Object.keys(req.body);
 
     // Find unexpected fields

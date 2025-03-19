@@ -21,7 +21,7 @@ export default function NewGoalForm({ toggle, refreshGoals }: NewGoalFormProps) 
         currAmount: null as number | null,
         goalAmount: null as number | null,
         category: "Saving",
-        selectedDate: new Date() as Date | null,
+        time: new Date(),
     });
 
     const [loading, setLoading] = useState(false);
@@ -38,7 +38,7 @@ export default function NewGoalForm({ toggle, refreshGoals }: NewGoalFormProps) 
     const handleSubmit = async () => {
         setMessage(null);
 
-        if (!goalData.name || !goalData.selectedDate || goalData.currAmount === null || goalData.goalAmount === null) {
+        if (!goalData.name || !goalData.time || goalData.currAmount === null || goalData.goalAmount === null) {
             setMessage({ text: "All fields are required.", type: "error" });
             return;
         }
@@ -56,7 +56,15 @@ export default function NewGoalForm({ toggle, refreshGoals }: NewGoalFormProps) 
 
         try {
             setLoading(true);
-            const formattedDate = goalData.selectedDate.toISOString().split("T")[0];
+
+            const formattedDate = goalData.time.toLocaleDateString(
+                "en-US",
+                {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                }
+            );
 
             await addGoal(userId, goalData.name, formattedDate, goalData.currAmount, goalData.goalAmount, goalData.category);
             setMessage({ text: "Goal added successfully!", type: "success" });
@@ -132,8 +140,10 @@ export default function NewGoalForm({ toggle, refreshGoals }: NewGoalFormProps) 
 
             {/* Date Picker */}
             <DatePicker
-                selected={goalData.selectedDate}
-                onChange={(date: Date | null) => handleChange("selectedDate", date || new Date())}
+                selected={goalData.time}
+                onChange={(date: Date | null) =>
+                    handleChange("time", date || new Date())
+                }
                 dateFormat="yyyy-MM-dd"
                 className="w-full border border-gray-300 p-2 rounded mb-2"
                 showPopperArrow={false}

@@ -4,6 +4,7 @@ export interface Transaction {
     date: Date,
     amount: number,
     currency: string,
+    type: string,
     name: string,
 }
 
@@ -27,12 +28,13 @@ export async function addTransactionsToServer(
     name: string,
     date: string,
     amount: number,
+    type: string,
     currency: string): Promise< {message:string}> {
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transaction/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, name, date, amount, currency}),
+        body: JSON.stringify({ userId, name, date, amount, type, currency}),
         credentials: "include"
     });
 
@@ -47,12 +49,13 @@ export async function editTransactionsOnServer(
     name: string,
     date: string,
     amount: number,
+    type: string,
     currency: string): Promise< {message:string}> {
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${transactionId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({name, date, amount, currency}),
+        body: JSON.stringify({name, date, amount, type, currency}),
         credentials: "include"
     });
 

@@ -6,9 +6,13 @@ import { Reminder } from "@/app/api/reminder";
 
 interface ReminderListProps {
     reminders: Reminder[];
+    refreshReminders: () => void;
 }
 
-export function ReminderList({ reminders }: ReminderListProps) {
+export function ReminderList({
+    reminders,
+    refreshReminders,
+}: ReminderListProps) {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {reminders.length > 0 ? (
@@ -17,6 +21,7 @@ export function ReminderList({ reminders }: ReminderListProps) {
                         key={reminder.id}
                         reminder={reminder}
                         mini={false}
+                        refreshReminders={refreshReminders}
                     />
                 ))
             ) : (
@@ -38,6 +43,8 @@ export function MiniReminderList({ reminders }: ReminderListProps) {
                             key={reminder.id}
                             reminder={reminder}
                             mini={true}
+                            // eslint-disable-next-line @typescript-eslint/no-empty-function
+                            refreshReminders={() => {}}
                         />
                     ))}
                 </div>

@@ -1,6 +1,7 @@
 export interface User {
     id: string;
     username: string;
+    balance: number;
 }
 
 export async function login(username: string, password: string): Promise<{ user: User, message: string }> {
@@ -35,11 +36,11 @@ export async function logout(): Promise<void> {
     });
 }
 
-export async function signup(username: string, password: string): Promise<{ message: string }> {
+export async function signup(username: string, password: string, balance: number): Promise<{ message: string }> {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/login/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, balance }),
     });
 
     if (!res.ok) {

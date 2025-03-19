@@ -9,20 +9,27 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function SignupPage() {
-    const {signup} = useAuth();
+    const { signup } = useAuth();
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [username, setUserName] = useState("");
+    const [balance, setBalance] = useState("");
     const [agreed, setAgreed] = useState(false);
-    const [message, setMessage] = useState<{ text: string; type: "error" | "success" } | null>(null);
+    const [message, setMessage] = useState<{
+        text: string;
+        type: "error" | "success";
+    } | null>(null);
     const [loading, setLoading] = useState(false);
 
     const handleSignup = async () => {
         if (!agreed) {
-            setMessage({text: "You must agree to the Terms & Conditions.", type: "error"});
+            setMessage({
+                text: "You must agree to the Terms & Conditions.",
+                type: "error",
+            });
             return;
         }
-        if (!username || !password || !confirmPassword) {
+        if (!username || !password || !confirmPassword || balance === null) {
             setMessage({ text: "All fields are required.", type: "error" });
             return;
         }
@@ -32,18 +39,24 @@ export default function SignupPage() {
             return;
         }
 
+        if (Number(balance) < 0) {
+            setMessage({
+                text: "Start balance must be positive",
+                type: "error",
+            });
+            return;
+        }
+
         try {
             setLoading(true);
-            const response = await signup(username, password);
+            const response = await signup(username, password, balance);
             setMessage({ text: response.message, type: "success" });
-
         } catch (err: unknown) {
             if (err instanceof Error) {
                 setMessage({ text: err.message, type: "error" });
             } else {
                 setMessage({ text: "Failed to sign up", type: "error" });
             }
-
         } finally {
             setLoading(false);
         }
@@ -90,6 +103,12 @@ export default function SignupPage() {
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                         />
+                        <AuthInput
+                            type="balance"
+                            placeholder="Starting Balance"
+                            value={balance}
+                            onChange={(e) => setBalance(e.target.value)}
+                        />
                     </div>
 
                     {/* Terms Checkbox */}
@@ -116,14 +135,23 @@ export default function SignupPage() {
                     {/* Already have an account */}
                     <p className="text-sm text-gray-500 text-center">
                         Already have an account?{" "}
-                        <Link href="/auth/login" className="text-gray-900 hover:underline">
+                        <Link
+                            href="/auth/login"
+                            className="text-gray-900 hover:underline"
+                        >
                             Log in
                         </Link>
                     </p>
 
                     {/* Message Block */}
                     {message && (
-                        <p className={`text-sm text-center ${message.type === "error" ? "text-red-600" : "text-green-600"}`}>
+                        <p
+                            className={`text-sm text-center ${
+                                message.type === "error"
+                                    ? "text-red-600"
+                                    : "text-green-600"
+                            }`}
+                        >
                             {message.text}
                         </p>
                     )}

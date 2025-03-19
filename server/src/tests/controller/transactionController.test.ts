@@ -45,6 +45,7 @@ describe('Transaction Controller', () => {
                     date: '2025-02-26',
                     amount: 100,
                     currency: 'USD',
+                    type: 'Saving',
                     tags: [
                         { _id: 'tag1', name: 'food', color: '#FF0000' },
                         { _id: 'tag2', name: 'xxx', color: '#00FF00' },
@@ -57,7 +58,7 @@ describe('Transaction Controller', () => {
             (addTransaction as jest.Mock).mockResolvedValue(mockTransaction);
             await addTransactionController(mockReq as Request, mockRes as Response);
             expect(addTransaction).toHaveBeenCalledWith(
-                '123', 'Test', '2025-02-26', 100, 'USD', mockReq.body.tags
+                '123', 'Test', '2025-02-26', 100, 'USD', 'Saving', mockReq.body.tags
             );
 
             expect(statusMock).toHaveBeenCalledWith(201);
@@ -74,6 +75,7 @@ describe('Transaction Controller', () => {
                     }),
                     amount: 100,
                     currency: 'USD',
+                    type: 'Saving',
                     tags: [
                         { id: 'tag1', name: 'food', color: '#FF0000' },
                         { id: 'tag2', name: 'xxx', color: '#00FF00' },
@@ -91,6 +93,7 @@ describe('Transaction Controller', () => {
                     date: '2025-02-26',
                     amount: 100,
                     currency: 'USD',
+                    type: 'Saving',
                     tags: [{ _id: 'tag1', name: 'food', color: '#FF0000' }]
                 }
             };
@@ -128,6 +131,7 @@ describe('Transaction Controller', () => {
                     date: '2025-02-26T00:00:00.000Z',
                     amount: 100,
                     currency: 'USD',
+                    type: 'Saving',
                     tags: [
                         { _id: 'tag1', name: 'food', color: '#FF0000' },
                         { _id: 'tag2', name: 'xxx', color: '#00FF00' },
@@ -198,6 +202,7 @@ describe('Transaction Controller', () => {
                     date: '2025-02-26',
                     amount: 100,
                     currency: 'USD',
+                    type: 'Saving',
                     tags: [{ _id: 'tag1', name: 'food', color: '#FF0000' }]
                 }
             };
@@ -208,6 +213,7 @@ describe('Transaction Controller', () => {
                 date: '2025-02-26',
                 amount: 100,
                 currency: 'USD',
+                type: 'Saving',
                 tags: [{ _id: 'tag1', name: 'food', color: '#FF0000' }]
             };
 
@@ -216,7 +222,7 @@ describe('Transaction Controller', () => {
             await editTransactionController(mockReq as Request, mockRes as Response);
 
             expect(editTransaction).toHaveBeenCalledWith(
-                '1', 'Updated Test', '2025-02-26', 100, 'USD', [{ _id: 'tag1', name: 'food', color: '#FF0000' }]
+                '1', 'Updated Test', '2025-02-26', 100, 'USD', 'Saving', [{ _id: 'tag1', name: 'food', color: '#FF0000' }]
             );
 
             expect(statusMock).toHaveBeenCalledWith(200);
@@ -233,6 +239,7 @@ describe('Transaction Controller', () => {
                     }),
                     amount: 100,
                     currency: 'USD',
+                    type: 'Saving',
                     tags: [{ id: 'tag1', name: 'food', color: '#FF0000' }]
                 }),
             });

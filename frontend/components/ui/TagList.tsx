@@ -14,7 +14,7 @@ export default function TagList({ tags }: TagListProps) {
         <div className="w-full max-h-96 overflow-y-auto border border-gray-300 rounded-lg shadow-sm">
             <table className="w-full border-collapse">
                 {/* Table Header */}
-                <thead className="sticky top-0 bg-gray-200 text-black">
+                <thead className="sticky top-0 bg-gray-100 text-black">
                 <tr className="h-12">
                     <th className="border-b border-gray-400 px-2 py-2 font-bold text-left">
                         {tags.length} Labels

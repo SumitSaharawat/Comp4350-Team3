@@ -16,15 +16,20 @@ export default function GoalsPage() {
 
     const fetchGoals = async () => {
         try {
-            const success = await getGoals(user?.id || (localStorage.getItem("userid") as string));
+            const success = await getGoals(
+                user?.id || (localStorage.getItem("userid") as string)
+            );
             if (success) setData(goals);
         } catch (err) {
-            console.error(err instanceof Error ? err.message : "Goals fetch failed!");
+            console.error(
+                err instanceof Error ? err.message : "Goals fetch failed!"
+            );
         }
     };
 
     useEffect(() => {
         fetchGoals();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     useEffect(() => {
@@ -46,13 +51,11 @@ export default function GoalsPage() {
                 </button>
             </div>
 
-            {isAdding && <NewGoalForm
-                toggle={toggleForm}
-                refreshGoals={fetchGoals}/> }
+            {isAdding && (
+                <NewGoalForm toggle={toggleForm} refreshGoals={fetchGoals} />
+            )}
 
-            <GoalList
-                goals={data}
-                refreshGoals={fetchGoals}/>
+            <GoalList goals={data} refreshGoals={fetchGoals} />
         </Layout>
     );
 }

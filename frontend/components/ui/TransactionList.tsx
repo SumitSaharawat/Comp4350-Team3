@@ -29,7 +29,7 @@ export default function TransactionList({
 
     return (
         <div className="w-full h-full overflow-y-auto border border-gray-300 rounded-lg shadow-sm">
-            <table className="w-full border-collapse">
+            <table className="w-full border-collapse table-fixed">
                 <thead className="sticky top-0 bg-gray-100 text-black">
                     <tr>
                         <th className="border-b border-gray-400 px-2 py-2 font-bold text-left">
@@ -89,7 +89,7 @@ export default function TransactionList({
                                 {expandedRow === tx.id && (
                                     <tr>
                                         <td
-                                            colSpan={5}
+                                            colSpan={6}
                                             className="border-b border-gray-400 p-2 text-center"
                                         >
                                             <div className="flex justify-center gap-4">
@@ -118,7 +118,7 @@ export default function TransactionList({
                     ) : (
                         <tr>
                             <td
-                                colSpan={5}
+                                colSpan={6}
                                 className="text-center text-gray-500 py-4"
                             >
                                 No transactions found.

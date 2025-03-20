@@ -1,14 +1,22 @@
 import mongoose, { Document } from 'mongoose';
 const Schema = mongoose.Schema;
 
+// Define the interface for the Tags
 export interface ITag extends Document {
-    name: string;
+    user: mongoose.Schema.Types.ObjectId; //ID of the user 
+    name: string; // name of the tag
     color: string; //hex code
 }
 
-// Define the schema for tags
+/**
+ * Mongoose schema for tags
+ */
 const tagSchema = new Schema<ITag>({
-
+    user: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User', // Reference to the User model
+        required: true 
+    },
     name: { 
             type: String, 
             required: [true, "Tag is required"]

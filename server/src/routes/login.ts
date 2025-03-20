@@ -10,14 +10,32 @@ import { validateUserRequest } from '../middleware/dbValidation';
 
 
 const router = express.Router();
-
+//http://localhost:3000/api/login
+//Used for login
+// example body
+// {
+//     "username": "ned",
+//     "password": "kelly"
+// }
 router.post('/', validateUserRequest, loginController);
+//http://localhost:3000/api/login/signup
+//example body for signup
+// {
+//     "username": "comment",
+//     "password": "a",
+//     "balance": "1"
+// }
 router.post('/signup', validateUserRequest, createAccountController);
-//For testing the login and signup you need username and password
+//http://localhost:3000/api/login/reset-password
+//example body for reset-password
+// {
+//     "username": "comment",
+//     "newPassword": "b"
+// }
 router.put('/reset-password', validateUserRequest, resetPasswordController);
-//For testing the reset-password you need id, username and newPassword as the body
+//http://localhost:3000/api/login/logout
+//no body required for logout
 router.post('/logout', logoutController);
-
 export default router;
 
 

@@ -3,6 +3,7 @@ import {ITransaction} from "../db/transactionDB";
 import {addTransaction, deleteTransaction, editTransaction, getAllTransactions} from "../db/transactionService";
 import {controlLog} from "./controlLog";
 
+//Format transactions into a neater structure
 const formatTransaction = (transaction: ITransaction) => ({
   id: transaction._id.toString(), // Convert _id to id
   name: transaction.name,
@@ -24,6 +25,7 @@ const formatTransaction = (transaction: ITransaction) => ({
 
 });
 
+//Controller to add a new transaction
 export const addTransactionController = async (req: Request, res: Response) => {
   const {userId, name, date, amount, currency, type, tags}= req.body;
 
@@ -36,6 +38,7 @@ export const addTransactionController = async (req: Request, res: Response) => {
   }
 };
 
+//Controller to retrieve all transactions for a user
 export const getAllTransactionController = async (req: Request, res: Response) => {
   const {userId} = req.params;
   controlLog(`Fetching transactions for user: ${userId}`);
@@ -49,6 +52,7 @@ export const getAllTransactionController = async (req: Request, res: Response) =
   }
 };
 
+//Controller to update an existing transaction
 export const editTransactionController = async (req: Request, res: Response) => {
   const {id} = req.params;
   const {name, date, amount, currency, tags, type} = req.body;
@@ -66,6 +70,7 @@ export const editTransactionController = async (req: Request, res: Response) => 
   }
 };
 
+//Controller to delete an existing transaction
 export const deleteTransactionController = async (req: Request, res: Response) => {
   const {id} = req.params;
   try {

@@ -1,15 +1,20 @@
 import mongoose, { Document } from 'mongoose';
 const Schema = mongoose.Schema;
 
+// Define the interface for the Goals
 export interface IGoal extends Document {
-    user: mongoose.Schema.Types.ObjectId;
-    name: string;
-    time: Date;
-    currAmount: number;
-    goalAmount: number;
-    category: string;
+    user: mongoose.Schema.Types.ObjectId; //ID of user creating the goal
+    name: string; //name of the goal
+    time: Date; //Target date for achiving the goal
+    currAmount: number; //current amount saved toward the goal
+    goalAmount: number; //target amount for the goal
+    category: string; //category for the goal (Saving, Investment, Debt Payment, Other)
 }
 
+/**
+ * Mongoose schema for goals
+ * message = error message for invalid formatting
+ */
 const goalSchema = new Schema<IGoal>({
     user: { 
         type: mongoose.Schema.Types.ObjectId, 

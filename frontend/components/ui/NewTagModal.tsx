@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { RefreshCw } from "lucide-react";
-import {addTagToServer} from "@/app/api/tag"
+import {addTagToServer} from "@/app/api/tag";
 import {useAuth} from "@/app/contexts/AuthContext";
 
 interface NewTagModalProps {
@@ -25,12 +25,17 @@ export default function NewTagModal({toggle, refreshList}: NewTagModalProps) {
 
     const handleSubmit = async () => {
         if (!name.trim()) return;
-
+        const userId = user?.id || localStorage.getItem("userid");
+        if (!userId) {
+            console.log("User ID not found. Please log in again.");
+            return;
+        }
         try{
-            await addTagToServer(name, color);
+            await addTagToServer(userId, name, color);
             refreshList();
         }
         catch (error) {
+            console.error(error);
         } finally {
             toggle();
         }

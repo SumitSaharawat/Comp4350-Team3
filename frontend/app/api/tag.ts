@@ -5,9 +5,9 @@ export interface Tag {
     message: string,
 }
 
-export async function getAllTagsFromServer(): Promise<Tag[]> {
+export async function getTagsFromServer(userId: string): Promise<Tag[]> {
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tag`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tag/${userId}`, {
         method: "GET",
         credentials: "include"
     });
@@ -21,13 +21,14 @@ export async function getAllTagsFromServer(): Promise<Tag[]> {
 }
 
 export async function addTagToServer(
+    userId:string,
     name: string,
     color: string ): Promise<{message: string}> {
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tag/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({name, color}),
+        body: JSON.stringify({userId, name, color}),
         credentials: "include"
     });
 

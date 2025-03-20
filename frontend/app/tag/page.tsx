@@ -6,15 +6,23 @@ import { useEffect, useState } from "react";
 import { Tag } from "@/app/api/tag";
 import TagList from "@/components/ui/TagList";
 import NewTagModal from "@/components/ui/NewTagModal";
+import {useAuth} from "@/app/contexts/AuthContext";
 
 export default function TagPage() {
-    const { tags, getAllTags } = useTags();
+    const { tags, getTags } = useTags();
     const [data, setData] = useState<Tag[]>([]);
     const [isAdding, setIsAdding] = useState(false);
+    const { user } = useAuth();
 
     const fetchTags = async () => {
+        const userId = user?.id || localStorage.getItem("userid");
+        if (!userId) {
+            console.log("User ID not found. Please log in again.");
+            return;
+        }
+
         try {
-            const success = await getAllTags();
+            const success = await getTags(userId);
             if (success) {
                 setData(tags);
             }

@@ -18,7 +18,7 @@ export default function TagList({ tags }: TagListProps) {
         if (confirm("Are you sure you want to delete this tag?")) {
             await deleteTag(tagId);
         }
-    }
+    };
 
     return (
         <div className="w-full max-h-96 overflow-y-auto border border-gray-300 rounded-lg shadow-sm">

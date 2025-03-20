@@ -8,13 +8,14 @@ const formatTag = (tag: ITag) => ({
   id: tag._id.toString(),
   name: tag.name,
   color: tag.color,
+  message: tag.message || ""
 });
 
 //Controller to create a new tag
 export const addTagController = async (req: Request, res: Response) => {
-  const {userId, name, color} = req.body;
+  const {userId, name, color, message} = req.body;
   try {
-    const tag = await addTag(userId, name, color);
+    const tag = await addTag(userId, name, color, message);
     const formattedTag = formatTag(tag);
 
     controlLog("Formatted Tag:", formattedTag);
@@ -44,10 +45,10 @@ export const getAllTagsController = async (req: Request, res: Response) => {
 //Controller to handle updating an existing tag
 export const editTagController = async (req: Request, res: Response) => {
   const {id} = req.params;
-  const {name, color} = req.body;
+  const {name, color, message} = req.body;
 
   try {
-    const updatedTag = await editTag(id, name, color);
+    const updatedTag = await editTag(id, name, color, message);
     if (updatedTag) {
       const formattedTag = formatTag(updatedTag);
       controlLog("Formatted Tag:", formattedTag);

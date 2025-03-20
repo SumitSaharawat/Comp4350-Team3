@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * Signup page
+ *
+ * The page user sees when they click sign up on login page
+ */
 import { useState } from "react";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { AuthInput } from "@/components/ui/Input";
@@ -29,6 +34,8 @@ export default function SignupPage() {
             });
             return;
         }
+
+        // all fields are required by the backend server
         if (!username || !password || !confirmPassword || balance === null) {
             setMessage({ text: "All fields are required.", type: "error" });
             return;

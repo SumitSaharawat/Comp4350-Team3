@@ -2,6 +2,11 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Delete } from "lucide-react";
 
+/**
+ * Input
+ *
+ * Search bar, login page text box
+ */
 interface searchBarProps {
     searchHint?: string;
     onTextChange?: (inputText: string) => void;
@@ -27,18 +32,21 @@ const AuthInput = React.forwardRef<
 });
 
 const SearchBar = ({
-                       searchHint,
-                       onTextChange,
-                       onSearchLaunch }: searchBarProps) => {
+    searchHint,
+    onTextChange,
+    onSearchLaunch,
+}: searchBarProps) => {
     const [inputText, setInputText] = React.useState("");
     const [isFocused, setIsFocused] = React.useState(false);
 
+    // actions on the fly when text is being entered in
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setInputText(value);
         if (onTextChange) onTextChange(value);
     };
 
+    // function to call when the user hit enter
     const handleKeyDown = () => {
         if (onSearchLaunch) onSearchLaunch(inputText);
     };
@@ -51,7 +59,9 @@ const SearchBar = ({
     return (
         <label
             className={`relative bg-gray-100 input input-bordered flex items-center gap-2 px-2 h-11 rounded-xl 
-            border border-gray-500 transition-all duration-300 ${isFocused ? "w-64" : "w-32"}`}
+            border border-gray-500 transition-all duration-300 ${
+                isFocused ? "w-64" : "w-32"
+            }`}
         >
             <input
                 type="text"
@@ -69,7 +79,7 @@ const SearchBar = ({
                     onClick={clearInput}
                     className="absolute right-2 text-gray-500 hover:text-gray-700 transition-colors"
                 >
-                    <Delete className="w-5 h-5"/>
+                    <Delete className="w-5 h-5" />
                 </button>
             ) : (
                 <svg
@@ -91,4 +101,4 @@ const SearchBar = ({
 AuthInput.displayName = "AuthInput";
 SearchBar.displayName = "SearchBar";
 
-export {AuthInput, SearchBar};
+export { AuthInput, SearchBar };

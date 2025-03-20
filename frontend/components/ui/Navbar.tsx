@@ -1,5 +1,8 @@
 import { ReactNode } from "react";
 
+/**
+ * Navigation bar
+ */
 interface NavbarProps {
     title: string;
     middleComponent?: ReactNode;

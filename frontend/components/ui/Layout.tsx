@@ -5,6 +5,9 @@ import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 import NotificationList from "./NotificationList";
 
+/**
+ * Layout for other pages
+ */
 interface LayoutProps {
     title: string;
     children: React.ReactNode;

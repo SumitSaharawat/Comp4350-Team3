@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * New Goal Modal window
+ *
+ * window to display when the user create a new goal
+ */
 import React, { useState } from "react";
 import { useGoals } from "@/app/contexts/GoalContext";
 import { useAuth } from "@/app/contexts/AuthContext";
@@ -13,7 +18,10 @@ interface NewGoalFormProps {
     refreshGoals: () => void;
 }
 
-export default function NewGoalForm({ toggle, refreshGoals }: NewGoalFormProps) {
+export default function NewGoalForm({
+    toggle,
+    refreshGoals,
+}: NewGoalFormProps) {
     const { addGoal } = useGoals();
     const { user } = useAuth();
     const [goalData, setGoalData] = useState({
@@ -25,10 +33,16 @@ export default function NewGoalForm({ toggle, refreshGoals }: NewGoalFormProps) 
     });
 
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] =
-        useState<{ text: string; type: "error" | "success" } | null>(null);
+    const [message, setMessage] = useState<{
+        text: string;
+        type: "error" | "success";
+    } | null>(null);
 
-    const handleChange = (field: keyof typeof goalData, value: string | number | Date | null) => {
+    // set the data for submission
+    const handleChange = (
+        field: keyof typeof goalData,
+        value: string | number | Date | null
+    ) => {
         setGoalData((prev) => ({
             ...prev,
             [field]: value === "" ? null : value,
@@ -38,7 +52,12 @@ export default function NewGoalForm({ toggle, refreshGoals }: NewGoalFormProps) 
     const handleSubmit = async () => {
         setMessage(null);
 
-        if (!goalData.name || !goalData.time || goalData.currAmount === null || goalData.goalAmount === null) {
+        if (
+            !goalData.name ||
+            !goalData.time ||
+            goalData.currAmount === null ||
+            goalData.goalAmount === null
+        ) {
             setMessage({ text: "All fields are required.", type: "error" });
             return;
         }
@@ -50,23 +69,30 @@ export default function NewGoalForm({ toggle, refreshGoals }: NewGoalFormProps) 
 
         const userId = user?.id || localStorage.getItem("userid");
         if (!userId) {
-            setMessage({ text: "User ID not found. Please log in again.", type: "error" });
+            setMessage({
+                text: "User ID not found. Please log in again.",
+                type: "error",
+            });
             return;
         }
 
         try {
             setLoading(true);
 
-            const formattedDate = goalData.time.toLocaleDateString(
-                "en-US",
-                {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                }
-            );
+            const formattedDate = goalData.time.toLocaleDateString("en-US", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+            });
 
-            await addGoal(userId, goalData.name, formattedDate, goalData.currAmount, goalData.goalAmount, goalData.category);
+            await addGoal(
+                userId,
+                goalData.name,
+                formattedDate,
+                goalData.currAmount,
+                goalData.goalAmount,
+                goalData.category
+            );
             setMessage({ text: "Goal added successfully!", type: "success" });
 
             setTimeout(() => {
@@ -75,25 +101,34 @@ export default function NewGoalForm({ toggle, refreshGoals }: NewGoalFormProps) 
                 refreshGoals();
             }, 500);
         } catch (error) {
-            setMessage({ text: error instanceof Error ? error.message : "Failed to add goal", type: "error" });
+            setMessage({
+                text:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to add goal",
+                type: "error",
+            });
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="fixed right-4 top-4 bg-white p-4 rounded-lg shadow-lg
-        border border-gray-300 w-96 z-50 pop-in-animation">
-
+        <div
+            className="fixed right-4 top-4 bg-white p-4 rounded-lg shadow-lg
+        border border-gray-300 w-96 z-50 pop-in-animation"
+        >
             <button
                 onClick={toggle}
                 className="absolute -right-2 -top-2 text-gray-600 hover:text-black bg-white
                 rounded-full p-1 shadow-sm border border-gray-200 hover:border-gray-300 z-10"
             >
-                <X size={20}/>
+                <X size={20} />
             </button>
 
-            <h2 className="text-xl font-bold mb-4 text-center pt-1">Create New Goal</h2>
+            <h2 className="text-xl font-bold mb-4 text-center pt-1">
+                Create New Goal
+            </h2>
 
             {/* Goal Name */}
             <input
@@ -110,7 +145,11 @@ export default function NewGoalForm({ toggle, refreshGoals }: NewGoalFormProps) 
                 placeholder="Current Amount"
                 value={goalData.currAmount ?? ""}
                 onChange={(e) =>
-                    handleChange("currAmount", e.target.value === "" ? null : Number(e.target.value))}
+                    handleChange(
+                        "currAmount",
+                        e.target.value === "" ? null : Number(e.target.value)
+                    )
+                }
                 className="w-full border border-gray-300 p-2 rounded mb-2"
             />
 
@@ -120,7 +159,11 @@ export default function NewGoalForm({ toggle, refreshGoals }: NewGoalFormProps) 
                 placeholder="Goal Amount"
                 value={goalData.goalAmount ?? ""}
                 onChange={(e) =>
-                    handleChange("goalAmount", e.target.value === "" ? null : Number(e.target.value))}
+                    handleChange(
+                        "goalAmount",
+                        e.target.value === "" ? null : Number(e.target.value)
+                    )
+                }
                 className="w-full border border-gray-300 p-2 rounded mb-2"
             />
 
@@ -137,7 +180,6 @@ export default function NewGoalForm({ toggle, refreshGoals }: NewGoalFormProps) 
                 ))}
             </select>
 
-
             {/* Date Picker */}
             <DatePicker
                 selected={goalData.time}
@@ -151,7 +193,13 @@ export default function NewGoalForm({ toggle, refreshGoals }: NewGoalFormProps) 
 
             {/* Message Display */}
             {message && (
-                <p className={`text-sm text-center mt-2 ${message.type === "error" ? "text-red-600" : "text-green-600"}`}>
+                <p
+                    className={`text-sm text-center mt-2 ${
+                        message.type === "error"
+                            ? "text-red-600"
+                            : "text-green-600"
+                    }`}
+                >
                     {message.text}
                 </p>
             )}
@@ -168,7 +216,9 @@ export default function NewGoalForm({ toggle, refreshGoals }: NewGoalFormProps) 
                     onClick={handleSubmit}
                     disabled={loading}
                     className={`px-4 py-2 rounded-md text-white ${
-                        loading ? "bg-gray-500 cursor-not-allowed" : "bg-black hover:bg-gray-800"
+                        loading
+                            ? "bg-gray-500 cursor-not-allowed"
+                            : "bg-black hover:bg-gray-800"
                     }`}
                 >
                     {loading ? "Creating..." : "Create"}

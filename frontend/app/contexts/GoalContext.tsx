@@ -1,5 +1,11 @@
 "use client";
 
+/**
+ * Goal Context
+ *
+ * Context for all goal related data
+ * Toolbox for get goals, refresh goal data, edit goals, add goals and delete goals
+ */
 import React, { createContext, useContext, useState } from "react";
 import {
     Goal,

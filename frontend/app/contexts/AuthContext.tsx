@@ -1,5 +1,11 @@
 "use client";
 
+/**
+ * AuthContext
+ *
+ * Context for all user related data
+ * Toolbox for login, sign up, reset password, get user data, refresh user data
+ */
 import React, { createContext, useContext, useState } from "react";
 import {
     login,
@@ -47,6 +53,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const handleLogin = async (username: string, password: string) => {
         try {
             const result = await login(username, password);
+            // set local storage for backup
             localStorage.setItem("username", result.user.username);
             localStorage.setItem("userid", result.user.id);
             setUser(result.user);
@@ -88,6 +95,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const handleLogout = async () => {
         try {
             await logout();
+            // remove the local storage user information
             localStorage.clear();
             setUser(null);
             window.location.href = "/auth/login";

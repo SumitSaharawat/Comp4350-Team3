@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * Reset password page
+ *
+ * Allows the user to reset the password, no secondary authentication needed
+ */
 import { useState } from "react";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { AuthInput } from "@/components/ui/Input";
@@ -12,7 +17,10 @@ export default function ResetPasswordPage() {
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [message, setMessage] = useState<{ text: string; type: "error" | "success" } | null>(null);
+    const [message, setMessage] = useState<{
+        text: string;
+        type: "error" | "success";
+    } | null>(null);
     const [loading, setLoading] = useState(false);
 
     const handleResetPassword = async () => {
@@ -32,12 +40,14 @@ export default function ResetPasswordPage() {
             setLoading(true);
             const response = await resetPassword(username, password);
             setMessage({ text: response.message, type: "success" });
-
         } catch (err: unknown) {
             if (err instanceof Error) {
                 setMessage({ text: err.message, type: "error" });
             } else {
-                setMessage({ text: "Failed to reset new password.", type: "error" });
+                setMessage({
+                    text: "Failed to reset new password.",
+                    type: "error",
+                });
             }
         } finally {
             setLoading(false);
@@ -95,14 +105,23 @@ export default function ResetPasswordPage() {
                     {/* Already have an account */}
                     <p className="text-sm text-gray-500 text-center">
                         Go to login?{" "}
-                        <Link href="/auth/login" className="text-gray-900 hover:underline">
+                        <Link
+                            href="/auth/login"
+                            className="text-gray-900 hover:underline"
+                        >
                             Log in
                         </Link>
                     </p>
 
                     {/* Message Block */}
                     {message && (
-                        <p className={`text-sm text-center ${message.type === "error" ? "text-red-600" : "text-green-600"}`}>
+                        <p
+                            className={`text-sm text-center ${
+                                message.type === "error"
+                                    ? "text-red-600"
+                                    : "text-green-600"
+                            }`}
+                        >
                             {message.text}
                         </p>
                     )}

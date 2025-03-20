@@ -1,3 +1,8 @@
+/**
+ * Notification List
+ *
+ * Essentially a list of mini reminder cards
+ */
 import { Reminder } from "@/app/api/reminder";
 import { MiniReminderList } from "./ReminderList";
 import { useReminders } from "@/app/contexts/ReminderContext";
@@ -5,6 +10,7 @@ import { useAuth } from "@/app/contexts/AuthContext";
 import { useState, useEffect } from "react";
 import { NotificationButton } from "./Button";
 
+// display the difference
 const SEC_PER_DAY = 86400;
 
 export default function NotificationList() {
@@ -14,6 +20,7 @@ export default function NotificationList() {
     const [data, setData] = useState<Reminder[]>([]);
     const [dataFetched, setDataFetched] = useState(false);
 
+    // only display the reminders that are not viewed and are +/- 2 days from now
     const selectUpcomingReminders = (rawReminders: Reminder[]) => {
         const now = new Date();
         return rawReminders.filter(
@@ -43,6 +50,7 @@ export default function NotificationList() {
     };
 
     useEffect(() => {
+        // avoid repeatedly getting the data
         if (reminders.length <= 0 && !dataFetched) getDataOnRender();
         else setData(selectUpcomingReminders(reminders));
         setDataFetched(true);

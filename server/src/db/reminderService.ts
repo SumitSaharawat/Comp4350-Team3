@@ -58,7 +58,7 @@ export const editReminder = async (id: string, name?: string, text?: string, tim
         //retrieve the specific reminder that needs editing
         const updatedReminder = await Reminder.findById(id);
         if (!updatedReminder) {
-            console.log('No reminder found with the given ID.');
+            //console.log('No reminder found with the given ID.');
             return null;
         }
 
@@ -86,9 +86,9 @@ export const deleteReminder = async (id: string) => {
 
         const result = await Reminder.deleteOne({ _id: id });
         if (result.deletedCount > 0) {
-            console.log('Reminder deleted successfully.');
+            //console.log('Reminder deleted successfully.');
         } else {
-            console.log('No reminder found.');
+            //console.log('No reminder found.');
         }
         return result;
     } catch (err) {

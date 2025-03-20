@@ -13,16 +13,19 @@ const router = express.Router();
 router.get('/:userId', authenticateToken, validateTransactionRequest, validateParams('userId'), getAllTransactionController);
 
 //Example body for addTransaction
-// {"userId": "67ae9db31873ddf7e7e06a8d",
-//   "name": "xxxx"
-//   "date": "2025-02-17T12:00:00Z",
-//   "amount": 100.50,
-//   "currency": "USD",
-//   }
+// {
+//     "name": "Bush Ranger",
+//     "date": "Wed, Feb 26, 2025",
+//     "amount": 225.33,
+//     "currency": "USD",
+//     "type": "Saving",
+//     "tags": ["67db62353b97cd313c187c44", "67db57be0f728ceeaa64f4f0"] 
+// }
+//Tags are optional
 router.post('/', authenticateToken, validateTransactionRequest, addTransactionController);
 
 // http://localhost:3000/api/transaction/id
-// Same as post body except no userId
+// Same as addTransaction body except no userId
 router.put('/:id', authenticateToken, validateTransactionRequest, validateParams("id"), editTransactionController);
 
 // http://localhost:3000/api/transaction/id

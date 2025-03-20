@@ -4,6 +4,7 @@ import Tag from './tagDB'
 import mongoose from 'mongoose';
 import { dbLog } from './dbLog';
 
+//add a new transaction to the database
 export const addTransaction = async (userId: string, name: string, date: string, amount: number, currency: string, type: string, tags?: string[]) => {
     try {
 
@@ -14,7 +15,7 @@ export const addTransaction = async (userId: string, name: string, date: string,
         }
 
          // 🔹 Validate and filter out invalid tag IDs
-         const validTags = tags?.filter(tagId => mongoose.Types.ObjectId.isValid(tagId)) || [];
+        const validTags = tags?.filter(tagId => mongoose.Types.ObjectId.isValid(tagId)) || [];
 
         if (type) {
             const validType = ['Saving', 'Spending'];
@@ -23,16 +24,24 @@ export const addTransaction = async (userId: string, name: string, date: string,
             }
         }
 
-         // 🔹 Ensure all provided tags exist in the database
-        const existingTags = await Tag.find({ _id: { $in: validTags } });
-
-        if (existingTags.length !== validTags.length) {
-            throw new Error('One or more tags do not exist.');
-        }
-
+        //check if user exists or not
         const user = await User.findById(userId);
         if (!user) {
             throw new Error('User does not exist');
+        }
+
+        // 🔹Ensure all provided tags exist in the database
+        const existingTags = await Tag.find({ _id: { $in: validTags } });
+
+        // 🔹 Check if each tag has the same userId as the given userId
+        for (const tag of existingTags) {
+            if (!tag.user || tag.user.toString() !== user._id.toString()) {
+                throw new Error(`Tag "${tag.name}" does not belong to the user with ID ${userId}`);
+            }
+        }
+        
+        if (existingTags.length !== validTags.length) {
+            throw new Error('One or more tags do not exist.');
         }
 
         // Adjust balance based on transaction type
@@ -70,6 +79,7 @@ export const addTransaction = async (userId: string, name: string, date: string,
 // get all transactions for a user
 export const getAllTransactions = async (userId: string): Promise<ITransaction[]> => {
     try {
+        //Validate userID is in the correct format
         if (!mongoose.Types.ObjectId.isValid(userId)) {
             throw new Error('Invalid user ID format');
         }
@@ -85,19 +95,22 @@ export const getAllTransactions = async (userId: string): Promise<ITransaction[]
     }
 };
 
-//To edit, need to enter in the body, all the fields again, even ones that you didn't intend to replace. If you don't enter tag, it deletes it and sets it to default.
+//To edit, need to enter in the body, all the fields again, even ones that you didn't intend to replace. If you don't select a tag, it removes existing tags and sets it to default.
 export const editTransaction = async (id: string, name?: string, date?: string, amount?: number, currency?: string, type?: string, tags?: string[]): Promise<ITransaction | null> => {
     try {
+        //validate transactionID is in correct format
         if (!mongoose.Types.ObjectId.isValid(id)) {
             throw new Error('Invalid transaction ID format');
         }
         const updatedTransaction = await Transaction.findById(id);
 
+        //find the existing transaction
         if (!updatedTransaction) {
             dbLog(`No transaction found with the ID ${id}`);
             return null;
         }
 
+        //find associated user
         const user = await User.findById(updatedTransaction.user);
         if (!user) {
             throw new Error('User does not exist.');
@@ -110,6 +123,7 @@ export const editTransaction = async (id: string, name?: string, date?: string, 
             user.balance -= updatedTransaction.amount; // Remove saved amount
         }
 
+        //update fields if new values are provided
         if (date) updatedTransaction.date = new Date(date); 
         if (name) updatedTransaction.name = name;
         if (amount) updatedTransaction.amount = amount;
@@ -121,14 +135,21 @@ export const editTransaction = async (id: string, name?: string, date?: string, 
             }
             updatedTransaction.type = type;
         }
-
-         if (tags !== undefined) {
+        //update tags if provided
+        if (tags !== undefined) {
             if (tags.length > 0) {
                 const validTags = tags
                     .filter(tagId => mongoose.Types.ObjectId.isValid(tagId))
                     .map(tagId => new mongoose.Types.ObjectId(tagId));
 
                 const existingTags = await Tag.find({ _id: { $in: validTags } });
+
+                // Check if the tags belong to the same user
+                for (const tag of existingTags) {
+                    if (!tag.user || tag.user.toString() !== user._id.toString()) {
+                        throw new Error(`Tag "${tag.name}" does not belong to the user with ID ${user._id}`);
+                    }
+                }
 
                 if (existingTags.length !== validTags.length) {
                     throw new Error('One or more tags do not exist.');
@@ -172,7 +193,7 @@ export const editTransaction = async (id: string, name?: string, date?: string, 
 export const deleteTransaction = async (id: string) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            throw new Error('Invalid user ID format');
+            throw new Error('Invalid transaction ID format');
         }
 
         // Retrieve the transaction before deleting
@@ -186,7 +207,7 @@ export const deleteTransaction = async (id: string) => {
         if (!user) {
             throw new Error("User not found.");
         }
-
+        //reverse transaction effect on user balance
         if (transaction.type === "Spending") {
             user.balance += transaction.amount; 
         } else if (transaction.type === "Saving") {

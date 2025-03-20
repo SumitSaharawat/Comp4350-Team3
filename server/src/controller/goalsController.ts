@@ -3,6 +3,7 @@ import {IGoal} from "../db/goalsDB";
 import {addGoal, deleteGoal, editGoal, getAllGoals} from "../db/goalsService";
 import {controlLog} from "./controlLog";
 
+//format the goal data in a neater way
 const formatGoal = (goal: IGoal) => ({
   id: goal._id.toString(),
   name: goal.name,
@@ -17,9 +18,11 @@ const formatGoal = (goal: IGoal) => ({
   category: goal.category,
 });
 
+//Controller to handle adding new goal
 export const addGoalController = async (req: Request, res: Response) => {
   const {userId, name, time, currAmount, goalAmount, category} = req.body;
 
+  //ensure current amount is not greater than goal amount
   const numCurrAmount = parseFloat(currAmount);
   const numGoalAmount = parseFloat(goalAmount);
   if (numCurrAmount > numGoalAmount) {
@@ -37,6 +40,7 @@ export const addGoalController = async (req: Request, res: Response) => {
   }
 };
 
+//Controller to retrieve all goals for a specific user
 export const getAllGoalsController = async (req: Request, res: Response) => {
   const {userId} = req.params;
   controlLog(`Fetching goals for user: ${userId}`);
@@ -50,6 +54,7 @@ export const getAllGoalsController = async (req: Request, res: Response) => {
   }
 };
 
+//controller to edit an existing goal
 export const editGoalController = async (req: Request, res: Response) => {
   const {id} = req.params;
   const {name, time, currAmount, goalAmount, category} = req.body;
@@ -67,6 +72,7 @@ export const editGoalController = async (req: Request, res: Response) => {
   }
 };
 
+//controller to delete a goal
 export const deleteGoalController = async (req: Request, res: Response) => {
   const {id} = req.params;
 

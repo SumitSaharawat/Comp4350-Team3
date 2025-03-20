@@ -2,14 +2,19 @@ import mongoose, { Document } from 'mongoose';
 
 const Schema = mongoose.Schema;
 
+// Define the interface for the Reminder
 export interface IReminder extends Document {
-    userId: mongoose.Schema.Types.ObjectId;
-    name: string;
-    text: string;
-    time: Date;
-    viewed: boolean;
+    userId: mongoose.Schema.Types.ObjectId; //ID of the user setting the reminder
+    name: string; //name of the reminder
+    text: string; //reminder description
+    time: Date; //scheduled time for the reminder
+    viewed: boolean; //whether the reminder has been viewed by the user or not
 }
 
+/**
+ * Mongoose schema for reminders
+ * message = error message for invalid formatting
+ */
 const reminderSchema = new Schema<IReminder>(
     {
         userId: {

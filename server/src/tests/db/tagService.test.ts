@@ -2,9 +2,11 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import Tag from '../../db/tagDB';
 import { addTag, getAllTags, editTag, deleteTag } from '../../db/tagService';
+import '../../db/userDB'
 
 describe('Tag Service Tests', () => {
     let mongoServer: MongoMemoryServer;
+    let userId: string;
 
     beforeAll(async () => {
         mongoServer = await MongoMemoryServer.create();
@@ -19,38 +21,44 @@ describe('Tag Service Tests', () => {
 
     beforeEach(async () => {
         await Tag.deleteMany({});
+        userId = new mongoose.Types.ObjectId().toString();
     });
 
     test('should add a valid tag', async () => {
-        const tag = await addTag('Tag1', '#FF5733');
+        const tag = await addTag(userId, 'Tag1', '#FF5733');
         expect(tag.name).toBe('Tag1');
         expect(tag.color).toBe('#FF5733');
+        expect(tag.user.toString()).toBe(userId);
     });
 
     test('should not add a tag without a name', async () => {
-        await expect(addTag('', '#FF5733')).rejects.toThrow('Tag validation failed: name: Tag is required');
+        await expect(addTag(userId, '', '#FF5733')).rejects.toThrow('Tag validation failed: name: Tag is required');
     });
 
     test('should not add a tag with an invalid color', async () => {
-        await expect(addTag('Invalid Tag', 'invalid-color')).rejects.toThrow('Tag validation failed: color: Path `color` is invalid (invalid-color).');
+        await expect(addTag(userId, 'Invalid Tag', 'invalid-color')).rejects.toThrow('Tag validation failed: color: Path `color` is invalid (invalid-color).');
     });
 
     test('should not add a tag with a short hex color', async () => {
-        await expect(addTag('Tag Short Hex', '#FFF')).rejects.toThrow();
+        await expect(addTag(userId, 'Tag Short Hex', '#FFF')).rejects.toThrow();
     });
 
-    test('should get all tags', async () => {
-        await addTag('Tag1', '#FF5733');
-        await addTag('Tag2', '#33FF57');
+    test('should get all tags for a user', async () => {
+        await addTag(userId, 'Tag1', '#FF5733');
+        await addTag(userId, 'Tag2', '#33FF57');
 
-        const tags = await getAllTags();
+        const tags = await getAllTags(userId.toString());
         expect(tags.length).toBe(2);
         expect(tags[0].name).toBe('Tag1');
         expect(tags[1].name).toBe('Tag2');
     });
 
+    test('should not get tags for an invalid user ID', async () => {
+        await expect(getAllTags('invalid-user-id')).rejects.toThrow('Invalid user ID format');
+    });
+
     test('should edit a tag name', async () => {
-        const tag = await addTag('Tag1', '#FF5733');
+        const tag = await addTag(userId, 'Tag1', '#FF5733');
         const updatedTag = await editTag(tag._id.toString(), 'Updated Tag');
 
         expect(updatedTag).not.toBeNull();
@@ -59,7 +67,7 @@ describe('Tag Service Tests', () => {
     });
 
     test('should edit a tag color', async () => {
-        const tag = await addTag('Tag1', '#FF5733');
+        const tag = await addTag(userId, 'Tag1', '#FF5733');
         const updatedTag = await editTag(tag._id.toString(), undefined, '#33FF57');
 
         expect(updatedTag).not.toBeNull();
@@ -78,9 +86,9 @@ describe('Tag Service Tests', () => {
     });
 
     test('should delete a tag', async () => {
-        const tag = await addTag('Tag1', '#FF5733');
+        const tag = await addTag(userId, 'Tag1', '#FF5733');
         await deleteTag(tag._id.toString());
-        const tags = await getAllTags();
+        const tags = await getAllTags(userId);
         expect(tags.length).toBe(0);
     });
 

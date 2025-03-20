@@ -18,7 +18,7 @@ export default function TagList({ tags }: TagListProps) {
         if (confirm("Are you sure you want to delete this tag?")) {
             await deleteTag(tagId);
         }
-    }
+    };
 
     return (
         <div className="w-full max-h-96 overflow-y-auto border border-gray-300 rounded-lg shadow-sm">
@@ -51,7 +51,7 @@ export default function TagList({ tags }: TagListProps) {
                                         {tx.name}
                                     </span>
                             </td>
-                            <td className="border-b border-gray-400 px-4 py-2 text-left">
+                            <td className="border-b border-gray-400 text-gray-500 px-4 py-2 text-left">
                                 {tx.message}
                             </td>
                             <td className="border-b border-gray-400 px-4 py-2 text-center">

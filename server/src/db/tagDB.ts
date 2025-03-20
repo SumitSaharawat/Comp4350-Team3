@@ -6,6 +6,7 @@ export interface ITag extends Document {
     user: mongoose.Schema.Types.ObjectId; //ID of the user 
     name: string; // name of the tag
     color: string; //hex code
+    message?: string; //optional message
 }
 
 /**
@@ -25,7 +26,13 @@ const tagSchema = new Schema<ITag>({
         type: String, 
         required: true, 
         match: /^#([0-9A-Fa-f]{6})$/
-        }
+        },
+    message: {
+        type: String,
+        required: false,
+        maxlength: 500, //limit to 500 characters
+        default: ""
+    }
 }, {_id: true});
 
 const Tag = mongoose.model<ITag>('Tag', tagSchema);

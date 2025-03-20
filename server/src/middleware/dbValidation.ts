@@ -74,7 +74,7 @@ export const validateParamsUser = async (req: Request, res: Response, next: Next
 
 //Validate request body contains only allowed fields for tags
 export const validateTagRequest = (req: Request, res: Response, next: NextFunction) => {
-    const allowedFields = ['userId', 'name', 'color'];
+    const allowedFields = ['userId', 'name', 'color', 'message'];
     const bodyKeys = Object.keys(req.body);
 
     // Find unexpected fields

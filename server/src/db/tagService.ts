@@ -3,9 +3,9 @@ import Tag, { ITag } from './tagDB'; // Import the Tag model
 import { dbLog } from './dbLog';
 
 // Create a new tag
-export const addTag = async (userId: string, name: string, color: string): Promise<ITag> => {
+export const addTag = async (userId: string, name: string, color: string, message?: string): Promise<ITag> => {
     try {
-        const newTag = new Tag({ user: userId, name, color });
+        const newTag = new Tag({ user: userId, name, color, message });
         await newTag.save();
         return newTag;
     } 
@@ -32,7 +32,7 @@ export const getAllTags = async (userId: string): Promise<ITag[]> => {
 };
 
 // Edit an existing tag
-export const editTag = async (id: string, name?: string, color?: string): Promise<ITag | null> => {
+export const editTag = async (id: string, name?: string, color?: string, message?: string): Promise<ITag | null> => {
     try {
         //validate tagID format
         if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -43,6 +43,7 @@ export const editTag = async (id: string, name?: string, color?: string): Promis
         const updatedFields: Partial<ITag> = {};
         if (name) updatedFields.name = name;
         if (color) updatedFields.color = color;
+        if (message !== undefined) updatedFields.message = message;
 
         const updatedTag = await Tag.findByIdAndUpdate(id, updatedFields, { new: true });
 

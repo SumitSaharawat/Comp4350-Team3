@@ -20,6 +20,7 @@ router.get('/:userId', authenticateToken, validateReminderRequest,validateParams
 //    "name": "Pay Reminder", 
 //    "text": "You have to pay at 3 PM", 
 //    "time": "2025-03-10T15:00:00Z"
+//    "viewed": "true"
 //  }
 router.post('/', authenticateToken, validateReminderRequest, addReminderController);
 
@@ -29,6 +30,7 @@ router.post('/', authenticateToken, validateReminderRequest, addReminderControll
 //    "name": "Change Payment", 
 //    "text": "You have to pay at 1 PM", 
 //    "time": "2025-03-10T15:00:00Z"
+//    "viewed": "false"
 //  }
 router.put('/:id', authenticateToken, validateReminderRequest, validateParams('id'), editReminderController);
 

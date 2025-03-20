@@ -1,5 +1,8 @@
 "use client";
 
+/**
+ * New Reminder Modal Window
+ */
 import React, { useState } from "react";
 import { useReminders } from "@/app/contexts/ReminderContext";
 import { useAuth } from "@/app/contexts/AuthContext";

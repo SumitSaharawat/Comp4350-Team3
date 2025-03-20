@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * Reminder page
+ *
+ * Display user's reminders
+ */
 import { useState, useEffect } from "react";
 import { useReminders } from "../contexts/ReminderContext";
 import { Reminder } from "../api/reminder";

@@ -8,16 +8,17 @@ import { validateUserRequest, validateParams, validateParamsUser } from '../midd
 
 const router = express.Router();
 
-//http://localhost:portNum/api/user
+//http://localhost:portNum/api/user/someUsername
 
 router.get('/:username', authenticateToken, validateUserRequest, validateParamsUser, getSingleUserController);
 
+//http://localhost:portNum/api/user
 // example body for post: 
-// { 'username': 'someUser', 'password': 'somePass'}
+// { 'username': 'someUser', 'password': 'somePass', 'balance: '1'}
 
 router.post('/', authenticateToken, validateUserRequest, addUserController);
 
-//http://localhost:portNum/api/user/someID  (probably a better way of doing it that im not thinking about)
+//http://localhost:portNum/api/user/someID  
 // example body for put:
 // { 'username': 'someUser', 'password': 'somePass'}
 router.put('/:id', authenticateToken, validateUserRequest, validateParams("id"), editUserController);

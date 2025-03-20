@@ -1,4 +1,10 @@
 "use client";
+
+/**
+ * Transaction Form Modal
+ *
+ * Used for add/edit a transaction
+ */
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";

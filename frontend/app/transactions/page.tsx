@@ -1,5 +1,8 @@
 "use client";
 
+/**
+ * Transactions page
+ */
 import { useState, useEffect } from "react";
 import { useTransactions } from "@/app/contexts/TransactionsContext";
 import { Transaction } from "../api/transac";
@@ -23,6 +26,7 @@ export default function TransactionsPage() {
     const CategoryList = ["CAD", "USD"];
     const searchHint = "Search Transaction";
 
+    // change the transactions displayed on the fly when search term is changing
     const onSearchTermChange = (searchTerm: string) => {
         setData(
             transactions.filter((transaction) =>

@@ -121,7 +121,7 @@ describe("Tag Integration Tests", () => {
 
     expect(res.status).toBe(201);
     expect(res.body.message).toBe("Tag created successfully");
-    expect(res.body.tag).toEqual({id: "123", name: "Urgent", color: "#ff0000"});
+    expect(res.body.tag).toEqual({id: "123", name: "Urgent", color: "#ff0000", message: ""});
   });
 
   /** ✅ Get All Tags */
@@ -135,8 +135,8 @@ describe("Tag Integration Tests", () => {
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual([
-      {id: "123", name: "Urgent", color: "#ff0000"},
-      {id: "456", name: "Important", color: "#00ff00"},
+      {id: "123", name: "Urgent", color: "#ff0000", message: ""},
+      {id: "456", name: "Important", color: "#00ff00", message: ""},
     ]);
   });
 

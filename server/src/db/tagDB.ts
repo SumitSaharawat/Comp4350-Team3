@@ -1,14 +1,23 @@
 import mongoose, { Document } from 'mongoose';
 const Schema = mongoose.Schema;
 
+// Define the interface for the Tags
 export interface ITag extends Document {
-    name: string;
+    user: mongoose.Schema.Types.ObjectId; //ID of the user 
+    name: string; // name of the tag
     color: string; //hex code
+    message?: string; //optional message
 }
 
-// Define the schema for tags
+/**
+ * Mongoose schema for tags
+ */
 const tagSchema = new Schema<ITag>({
-
+    user: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User', // Reference to the User model
+        required: true 
+    },
     name: { 
             type: String, 
             required: [true, "Tag is required"]
@@ -17,7 +26,13 @@ const tagSchema = new Schema<ITag>({
         type: String, 
         required: true, 
         match: /^#([0-9A-Fa-f]{6})$/
-        }
+        },
+    message: {
+        type: String,
+        required: false,
+        maxlength: 500, //limit to 500 characters
+        default: ""
+    }
 }, {_id: true});
 
 const Tag = mongoose.model<ITag>('Tag', tagSchema);

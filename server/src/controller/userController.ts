@@ -8,12 +8,14 @@ import {
 } from "../db/userService";
 import {controlLog} from "./controlLog";
 
+//helps format user to be in a neater format
 const formatUser = (user: IUser) => ({
   id: user._id.toString(),
   username: user.username,
   balance: user.balance,
 });
 
+//controller to add a new user
 export const addUserController = async (req: Request, res: Response) => {
   const {username, password, balance} = req.body;
   try {
@@ -30,6 +32,7 @@ export const addUserController = async (req: Request, res: Response) => {
   }
 };
 
+//Controller to fetch a user by username
 export const getSingleUserController = async (req: Request, res: Response) => {
   try {
     const {username} = req.params;
@@ -52,6 +55,7 @@ export const getSingleUserController = async (req: Request, res: Response) => {
   }
 };
 
+//Controller to edit an existing user
 export const editUserController = async (req: Request, res: Response) => {
   const {id} = req.params;
   const {username, password, balance} = req.body;
@@ -74,6 +78,7 @@ export const editUserController = async (req: Request, res: Response) => {
   }
 };
 
+//Controller to delete a user by ID
 export const deleteUserController = async (req: Request, res: Response) => {
   const {id} = req.params;
   try {

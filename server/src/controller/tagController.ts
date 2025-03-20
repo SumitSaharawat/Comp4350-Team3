@@ -3,16 +3,19 @@ import {ITag} from "../db/tagDB";
 import {addTag, getAllTags, editTag, deleteTag} from "../db/tagService";
 import {controlLog} from "./controlLog";
 
+//helps format tags to be in a neater format
 const formatTag = (tag: ITag) => ({
   id: tag._id.toString(),
   name: tag.name,
   color: tag.color,
+  message: tag.message || ""
 });
 
+//Controller to create a new tag
 export const addTagController = async (req: Request, res: Response) => {
-  const {name, color} = req.body;
+  const {userId, name, color, message} = req.body;
   try {
-    const tag = await addTag(name, color);
+    const tag = await addTag(userId, name, color, message);
     const formattedTag = formatTag(tag);
 
     controlLog("Formatted Tag:", formattedTag);
@@ -24,9 +27,12 @@ export const addTagController = async (req: Request, res: Response) => {
   }
 };
 
+//Controller to fetch all tags for a given user
 export const getAllTagsController = async (req: Request, res: Response) => {
+  const { userId } = req.params; 
+
   try {
-    const tags = await getAllTags();
+    const tags = await getAllTags(userId);
     const formattedTags = tags.map(formatTag);
 
     res.status(200).json(formattedTags);
@@ -36,14 +42,14 @@ export const getAllTagsController = async (req: Request, res: Response) => {
   }
 };
 
+//Controller to handle updating an existing tag
 export const editTagController = async (req: Request, res: Response) => {
   const {id} = req.params;
-  const {name, color} = req.body;
+  const {name, color, message} = req.body;
 
   try {
-    const updatedTag = await editTag(id, name, color);
+    const updatedTag = await editTag(id, name, color, message);
     if (updatedTag) {
-      // Only format the tag if it exists
       const formattedTag = formatTag(updatedTag);
       controlLog("Formatted Tag:", formattedTag);
       res.status(200).json({message: "Tag updated successfully", tag: formattedTag});
@@ -56,7 +62,7 @@ export const editTagController = async (req: Request, res: Response) => {
   }
 };
 
-
+//Controller to handle deleting a tag
 export const deleteTagController = async (req: Request, res: Response) => {
   const {id} = req.params;
   try {

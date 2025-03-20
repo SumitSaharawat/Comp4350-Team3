@@ -1,11 +1,12 @@
 "use client";
 
-import { Tag, getAllTagsFromServer } from "@/app/api/tag";
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { Tag, getTagsFromServer, deleteGoalToServer } from "@/app/api/tag";
+import React, { createContext, useContext, useState } from "react";
 
 interface TagContextType {
     tags: Tag[];
-    getAllTags: () => Promise<boolean>;
+    getTags: (userId: string) => Promise<boolean>;
+    deleteTag: (tagId: string) => Promise<boolean>;
 }
 
 const TagsContext = createContext<TagContextType | undefined>(undefined);
@@ -13,10 +14,9 @@ const TagsContext = createContext<TagContextType | undefined>(undefined);
 export function TagsProvider({ children }: { children: React.ReactNode }) {
     const [tags, setTags] = useState<Tag[]>([]);
 
-    const handleGetAllTags = async () => {
+    const handleGetTags = async (userId: string) => {
         try {
-            const data = await getAllTagsFromServer();
-            console.log("API response:", data); // Debug log
+            const data = await getTagsFromServer(userId);
 
             // Check if data is already an array
             if (Array.isArray(data)) {
@@ -24,7 +24,6 @@ export function TagsProvider({ children }: { children: React.ReactNode }) {
                 return true;
             }
 
-            console.error("Unexpected API response format:", data);
             return false;
         } catch (error) {
             console.error("Error fetching tags:", error);
@@ -32,13 +31,27 @@ export function TagsProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    // Auto-fetch tags when component mounts
-    useEffect(() => {
-        handleGetAllTags();
-    }, []);
+    const handleDeleteTag = async (tagId: string) => {
+        try {
+            await deleteGoalToServer(tagId);
+            setTags((prevTags) =>
+                prevTags.filter((tag) => tag.id !== tagId)
+            );
+            return true;
+        } catch (error) {
+            console.error("Failed to delete tag", error);
+            return false;
+        }
+    };
 
     return (
-        <TagsContext.Provider value={{ tags, getAllTags: handleGetAllTags }}>
+        <TagsContext.Provider value={
+            {
+                tags,
+                getTags: handleGetTags,
+                deleteTag: handleDeleteTag,
+            }
+        }>
             {children}
         </TagsContext.Provider>
     );

@@ -2,19 +2,23 @@ import mongoose, { Document } from 'mongoose';
 import { ITag } from './tagDB.js'
 const Schema = mongoose.Schema;
 
+// Define the interface for the Transaction
 export interface ITransaction extends Document {
-    user: mongoose.Schema.Types.ObjectId;
-    name: string;
-    date: Date;
-    amount: number;
-    currency: string;
-    type: string;
-    tags?: ITag[];
+    user: mongoose.Schema.Types.ObjectId; //ID of the user for their transactions
+    name: string; //name of the transaction
+    date: Date; //date the transaction occurred
+    amount: number; //the amount on the transaction
+    currency: string; //the currency
+    type: string; //Is it Spending or Saving
+    tags?: ITag[]; //List of tags for the user
  
 
 }
 
-// Define the schema for the transaction
+/**
+ * Mongoose schema for transactions
+ * message = error message for invalid formatting
+ */
 const transactionSchema = new Schema<ITransaction>({
     user: { 
         type: mongoose.Schema.Types.ObjectId, 

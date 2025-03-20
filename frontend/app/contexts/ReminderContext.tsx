@@ -1,5 +1,11 @@
 "use client";
 
+/**
+ * Reminder Context
+ *
+ * Context for reminder related data
+ * Toolbox for get reminders, add/edit/delete reminders
+ */
 import React, { createContext, useContext, useState } from "react";
 import {
     Reminder,
@@ -9,6 +15,7 @@ import {
     deleteReminderToServer,
 } from "@/app/api/reminder";
 
+// needed for editting reminder data and pass it into the functions
 class ReminderClass implements Reminder {
     id: string;
     userId: string;
@@ -112,6 +119,7 @@ export function RemindersProvider({ children }: { children: React.ReactNode }) {
         text: string
     ) => {
         try {
+            // construct an instance
             const tempReminderInstance = new ReminderClass(
                 userId,
                 id,

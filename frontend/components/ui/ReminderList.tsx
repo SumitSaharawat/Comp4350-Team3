@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * Reminder List
+ *
+ * Used by reminder page and notificaiton
+ */
 import React from "react";
 import ReminderCard from "./ReminderCard";
 import { Reminder } from "@/app/api/reminder";

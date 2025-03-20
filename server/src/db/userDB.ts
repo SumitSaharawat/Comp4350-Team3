@@ -1,13 +1,16 @@
 import mongoose, { Document } from 'mongoose';
 const Schema = mongoose.Schema;
 
-// Define the interface for the User document
+// Define the interface for the User
 export interface IUser extends Document {
-    username: string;
-    password: string;
-    balance: number;
+    username: string;  // username of the user
+    password: string; //password of the user
+    balance: number; //balance of the user
 }
 
+/**
+ * Mongoose schema for user
+ */
 const userSchema = new Schema({
     username: {
         type: String,

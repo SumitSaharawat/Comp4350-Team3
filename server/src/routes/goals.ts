@@ -18,12 +18,12 @@ router.get('/:userId', authenticateToken, validateGoalRequest, validateParams('u
 //   "time": "2025-02-17T12:00:00Z",
 //   "currAmount": 100.50,
 //   "goalAmount": 100.50,  currAmount has to be smaller or equal to goalAmount (in edit if currAmount > goalAmount it will become = to goalAmount)
-//   "category": "xxxx",
+//   "category": "Saving",
 //   }
 router.post('/', authenticateToken, validateGoalRequest, addGoalController);
 
 // http://localhost:3000/api/goal/id
-// Same as post body except no userId
+// Same as addGoals body except no userId
 router.put('/:id', authenticateToken, validateGoalRequest, validateParams("id"), editGoalController);
 
 // http://localhost:3000/api/goal/id

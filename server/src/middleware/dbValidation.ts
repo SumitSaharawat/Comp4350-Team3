@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { getUsersByUsername } from '../db/userService.js';
 import mongoose from 'mongoose';
 
+//Validate request body contains only allowed fields for transactions
 export const validateTransactionRequest = (req: Request, res: Response, next: NextFunction) => {
     const allowedFields = ['userId', 'name', 'date', 'amount', 'currency', 'type', 'tags'];
     const bodyKeys = Object.keys(req.body);
@@ -18,10 +19,12 @@ export const validateTransactionRequest = (req: Request, res: Response, next: Ne
     next(); 
 };
 
+//Validate format of request parameters
 export const validateParams = (paramName: string) => {
     return (req: Request, res: Response, next: NextFunction) => {
         const id = req.params[paramName];
         
+        //check if ID is a valid MongoDB ID
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ error: `Invalid ${paramName} format` });
         }
@@ -30,7 +33,7 @@ export const validateParams = (paramName: string) => {
     };
 };
 
-
+//Validate request body contains only allowed fields for user
 export const validateUserRequest = (req: Request, res: Response, next: NextFunction) => {
     const allowedFields = ['id', 'username', 'password', 'newPassword', 'balance'];
     const bodyKeys = Object.keys(req.body);
@@ -47,6 +50,7 @@ export const validateUserRequest = (req: Request, res: Response, next: NextFunct
     next(); 
 };
 
+//Validate format of request parameters for user
 export const validateParamsUser = async (req: Request, res: Response, next: NextFunction) => {
     const { username } = req.params;
 
@@ -68,8 +72,9 @@ export const validateParamsUser = async (req: Request, res: Response, next: Next
     }
 };
 
+//Validate request body contains only allowed fields for tags
 export const validateTagRequest = (req: Request, res: Response, next: NextFunction) => {
-    const allowedFields = ['id', 'name', 'color'];
+    const allowedFields = ['userId', 'name', 'color'];
     const bodyKeys = Object.keys(req.body);
 
     // Find unexpected fields
@@ -84,7 +89,7 @@ export const validateTagRequest = (req: Request, res: Response, next: NextFuncti
     next(); 
 };
 
-
+//Validate request body contains only allowed fields for goals
 export const validateGoalRequest = (req: Request, res: Response, next: NextFunction) => {
     const allowedFields = ['userId', 'name', 'time', 'currAmount', 'goalAmount', 'category'];
     const bodyKeys = Object.keys(req.body);
@@ -111,6 +116,7 @@ export const validateGoalRequest = (req: Request, res: Response, next: NextFunct
     next();
 };
 
+//Validate request body contains only allowed fields for reminders
 export const validateReminderRequest = (req: Request, res: Response, next: NextFunction) => {
     const allowedFields = ['userId', 'name', 'text', 'time', 'viewed'];
     const bodyKeys = Object.keys(req.body);

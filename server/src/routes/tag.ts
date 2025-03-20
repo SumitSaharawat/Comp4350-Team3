@@ -6,21 +6,26 @@ import { validateTagRequest, validateParams } from '../middleware/dbValidation.j
 
 const router = express.Router();
 
-//http://localhost:portNum/api/tag
+//Request params for get all tags for a user
+//http://localhost:3000/api/tag/someUserId
+router.get('/:userId', authenticateToken, validateTagRequest, getAllTagsController);
 
-router.get('/', authenticateToken, validateTagRequest, getAllTagsController);
-
-
-
+//http://localhost:3000/api/tag
+// Sample body for creating a tag
+// {
+//     "userId": "67da0903e15887ab7db2e9e3",
+//     "name": "car",
+//     "color": "#332255"
+// }
 router.post('/', authenticateToken, validateTagRequest, addTagController);
 
-//http://localhost:portNum/api/user/someID  (probably a better way of doing it that im not thinking about)
+//http://localhost:portNum/api/user/someID  
 // example body for put:
-// { 'name': 'someTag', 'color': 'someHexcode'}
+// { 'name': 'someTag', 'color': 'someHexcode'} doesen't have to include both but at least 1
 router.put('/:id', authenticateToken, validateTagRequest, validateParams("id"), editTagController);
 
 // example for delete:
-//http://localhost:portNum/api/tag/someID (same as the put path)
+//http://localhost:portNum/api/tag/someID 
 router.delete('/:id', authenticateToken, validateTagRequest, validateParams("id"), deleteTagController);
 
 export default router;

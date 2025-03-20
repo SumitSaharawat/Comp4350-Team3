@@ -2,12 +2,12 @@ import User, {IUser} from './userDB'; // Import the User model
 import mongoose from 'mongoose';
 import { dbLog } from './dbLog';
 
-// Function to add a new user
+// adds a new user to the database
 export const addUser = async (username: string, password: string, balance: number): Promise<IUser> => {
     try {
-
-        if (balance === undefined) {
-            throw new Error('Balance is required');
+        //Ensure balance is provided and positive
+        if (balance === undefined || balance <= 0) {
+            throw new Error('Balance must be a positive number');
         }
 
         const newUser = new User({ username, password, balance });
@@ -25,6 +25,7 @@ export const addUser = async (username: string, password: string, balance: numbe
     }
 };
 
+//Retrieves all users 
 export const getAllUsers = async () => {
     try {
         const users = await User.find({}); // Fetch all users
@@ -36,8 +37,10 @@ export const getAllUsers = async () => {
     }
 };
 
+//Retrieves a user by their username
 export const getUsersByUsername = async (username: string) => {
     try {
+        //Finds user matching provided username
         const users = await User.find({ username });
         if (users.length === 0) {
             dbLog('no users found with username:', username);
@@ -52,16 +55,17 @@ export const getUsersByUsername = async (username: string) => {
 
 
 
-// Function to edit a user
+// Updates a user
 export const editUser = async (id: string, username?: string, password?: string, balance?: number): Promise<IUser | null> => {
     try {
+        //validate userID format
         if (!mongoose.Types.ObjectId.isValid(id)) {
             throw new Error('Invalid user ID format');
         }
 
         const updatedFields: Partial<IUser> = {};
         
-        //Ensures only username and password are updated, not some other field
+        //Allows user to update only the fields provided
         if (username) updatedFields.username = username;
         if (password) updatedFields.password = password;
         if (balance) updatedFields.balance = balance;
@@ -86,6 +90,7 @@ export const editUser = async (id: string, username?: string, password?: string,
     }
 };
 
+//delete existing user
 export const deleteUser = async (id: string) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) {

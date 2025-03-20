@@ -2,10 +2,10 @@ import mongoose from 'mongoose';
 import Tag, { ITag } from './tagDB'; // Import the Tag model
 import { dbLog } from './dbLog';
 
-// Function to add a new tag
-export const addTag = async (name: string, color: string): Promise<ITag> => {
+// Create a new tag
+export const addTag = async (userId: string, name: string, color: string): Promise<ITag> => {
     try {
-        const newTag = new Tag({ name, color });
+        const newTag = new Tag({ user: userId, name, color });
         await newTag.save();
         return newTag;
     } 
@@ -15,11 +15,14 @@ export const addTag = async (name: string, color: string): Promise<ITag> => {
     }
 };
 
-// Function to get all tags
-export const getAllTags = async (): Promise<ITag[]> => {
+// Retrieve all tags created for given user
+export const getAllTags = async (userId: string): Promise<ITag[]> => {
     try {
-   
-        const tags = await Tag.find(); // Fetch all tags
+        //check if userId is valid
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            throw new Error('Invalid user ID format');
+        }
+        const tags = await Tag.find({user: userId}).populate('user'); // Fetch all tags
         return tags;
     } 
     catch (err) {
@@ -28,15 +31,16 @@ export const getAllTags = async (): Promise<ITag[]> => {
     }
 };
 
-// Function to edit a tag
+// Edit an existing tag
 export const editTag = async (id: string, name?: string, color?: string): Promise<ITag | null> => {
     try {
+        //validate tagID format
         if (!mongoose.Types.ObjectId.isValid(id)) {
             throw new Error('Invalid tag ID format');
         }
-
-        const updatedFields: Partial<ITag> = {};
         
+        //Update tags only with the fields provided
+        const updatedFields: Partial<ITag> = {};
         if (name) updatedFields.name = name;
         if (color) updatedFields.color = color;
 

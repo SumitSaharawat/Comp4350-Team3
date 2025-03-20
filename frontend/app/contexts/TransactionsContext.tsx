@@ -1,5 +1,11 @@
 "use client";
 
+/**
+ * Transactions Context
+ *
+ * Context for transactions related data
+ * Toolbox for get/add/edit/delete transactions data
+ */
 import React, { createContext, useContext, useState } from "react";
 import {
     Transaction,
@@ -39,6 +45,7 @@ export function TransactionsProvider({
     const handleDeleteTransaction = async (transactionId: string) => {
         try {
             await deleteTransactionFromServer(transactionId);
+            // only keep the transactions that are not deleted
             setTransactions((prevTransactions) =>
                 prevTransactions.filter(
                     (transaction) => transaction.id !== transactionId

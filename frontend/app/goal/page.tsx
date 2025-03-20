@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * Goal page
+ *
+ * Display user's goals
+ */
 import { useState, useEffect } from "react";
 import { useGoals } from "@/app/contexts/GoalContext";
 import { Goal } from "../api/goal";
@@ -27,6 +32,7 @@ export default function GoalsPage() {
         }
     };
 
+    // get goals data when the user data is available
     useEffect(() => {
         fetchGoals();
         // eslint-disable-next-line react-hooks/exhaustive-deps

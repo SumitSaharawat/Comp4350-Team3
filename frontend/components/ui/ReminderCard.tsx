@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * Reminder Card
+ *
+ * Similar to goal card
+ */
 import React, { useEffect, useRef, useState } from "react";
 import { Reminder, editReminderFromServer } from "@/app/api/reminder";
 import { CheckButton } from "./Button";
@@ -29,6 +34,7 @@ export default function ReminderCard({
     const [isEditing, setIsEditing] = useState(false);
     const cardRef = useRef<HTMLDivElement>(null);
 
+    // close the modal when other place is clicked
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (
@@ -61,6 +67,7 @@ export default function ReminderCard({
         }
     };
 
+    // when the checke button is clicked, flip the viewed field of a reminder
     const flipViewed = async () => {
         const tempViewed = viewed;
         setViewed(!tempViewed);
@@ -75,6 +82,7 @@ export default function ReminderCard({
         reminders[indexToUpdate] = { ...updatedReminder };
     };
 
+    // if the card is not used for notification list, display the full information
     if (!mini) {
         return (
             <div
@@ -170,6 +178,7 @@ export default function ReminderCard({
             </div>
         );
     } else {
+        // otherwise, only display the name and its time from now
         return (
             <div className="bg-white p-3 rounded-md shadow-sm relative border border-gray-200 w-48">
                 {/* Reminder Name */}

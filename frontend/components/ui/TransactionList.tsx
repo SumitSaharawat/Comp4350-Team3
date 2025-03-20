@@ -1,5 +1,9 @@
 "use client";
-
+/**
+ * Transaction List
+ *
+ * Contains a list of transactions
+ */
 import React, { useState } from "react";
 import { MoreHorizontal, Trash2, Edit2 } from "lucide-react";
 import { Transaction } from "@/app/api/transac";

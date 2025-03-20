@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * Reminder Edit Modal Window
+ *
+ * Almost identical to Goal Edit Modal
+ */
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Reminder } from "@/app/api/reminder";

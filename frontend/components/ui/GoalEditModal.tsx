@@ -1,13 +1,23 @@
 "use client";
 
-import React, {useEffect, useRef, useState} from "react";
+/**
+ * Goal Edit Modal Window
+ *
+ * The poped up window when user click edit a goal
+ */
+import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Goal } from "@/app/api/goal";
 import DatePicker from "react-datepicker";
-import {editGoalToServer} from "@/app/api/goal";
+import { editGoalToServer } from "@/app/api/goal";
 const categories = ["Saving", "Investment"];
 
-export default function GoalEditModal({ goal, onClose, triggerRect, refreshGoals }: {
+export default function GoalEditModal({
+    goal,
+    onClose,
+    triggerRect,
+    refreshGoals,
+}: {
     goal: Goal;
     onClose: () => void;
     triggerRect: DOMRect | null;
@@ -25,13 +35,17 @@ export default function GoalEditModal({ goal, onClose, triggerRect, refreshGoals
 
     const [message, setMessage] = useState<{
         text: string;
-        type: "error" | "success"
+        type: "error" | "success";
     } | null>(null);
 
     const window_w = 400;
     const window_h = 400;
 
-    const handleChange = (field: keyof typeof goalData, value: string | number | Date) => {
+    // function to update the stored data to submit
+    const handleChange = (
+        field: keyof typeof goalData,
+        value: string | number | Date
+    ) => {
         setGoalData((prev) => ({ ...prev, [field]: value }));
     };
 
@@ -52,23 +66,27 @@ export default function GoalEditModal({ goal, onClose, triggerRect, refreshGoals
         content.style.opacity = "0";
         content.style.visibility = "visible";
 
-        const animation = content.animate([
+        // the window should pop up from the button to the specific location
+        const animation = content.animate(
+            [
+                {
+                    transform: `translate(${triggerRect.left}px, ${triggerRect.top}px) scale(0.5)`,
+                    width: `${triggerRect.width}px`,
+                    height: `${triggerRect.height}px`,
+                    opacity: "0",
+                },
+                {
+                    transform: `translate(${finalX}px, ${finalY}px)`,
+                    width: `${window_w}px`,
+                    height: `${window_h}px`,
+                    opacity: "1",
+                },
+            ],
             {
-                transform: `translate(${triggerRect.left}px, ${triggerRect.top}px) scale(0.5)`,
-                width: `${triggerRect.width}px`,
-                height: `${triggerRect.height}px`,
-                opacity: "0"
-            },
-            {
-                transform: `translate(${finalX}px, ${finalY}px)`,
-                width: `${window_w}px`,
-                height: `${window_h}px`,
-                opacity: "1"
+                duration: 450,
+                easing: "cubic-bezier(0.4, 0, 0.2, 1)",
             }
-        ], {
-            duration: 450,
-            easing: "cubic-bezier(0.4, 0, 0.2, 1)"
-        });
+        );
 
         animation.onfinish = () => {
             content.style.transform = `translate(${finalX}px, ${finalY}px)`;
@@ -76,13 +94,12 @@ export default function GoalEditModal({ goal, onClose, triggerRect, refreshGoals
             content.style.height = `${window_h}px`;
             content.style.opacity = "1";
         };
-
     }, [triggerRect]);
 
     const handleSubmit = async () => {
         if (!goalData.name || !goalData.currAmount || !goalData.goalAmount) {
             let message = "All fields are required.";
-            if(goalData.currAmount === 0 || goalData.goalAmount === 0) {
+            if (goalData.currAmount === 0 || goalData.goalAmount === 0) {
                 message = "Goal or Saved cannot be 0";
             }
             setMessage({ text: message, type: "error" });
@@ -96,14 +113,11 @@ export default function GoalEditModal({ goal, onClose, triggerRect, refreshGoals
         setMessage(null);
         setLoading(true);
 
-        const formattedDate = goalData.time.toLocaleDateString(
-            "en-US",
-            {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-            }
-        );
+        const formattedDate = goalData.time.toLocaleDateString("en-US", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+        });
 
         try {
             await editGoalToServer(
@@ -122,9 +136,14 @@ export default function GoalEditModal({ goal, onClose, triggerRect, refreshGoals
                 refreshGoals();
                 onClose();
             }, 500);
-
         } catch (error) {
-            setMessage({ text: error instanceof Error ? error.message : "Failed to edit goal", type: "error" });
+            setMessage({
+                text:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to edit goal",
+                type: "error",
+            });
             setLoading(false);
         }
     };
@@ -140,23 +159,26 @@ export default function GoalEditModal({ goal, onClose, triggerRect, refreshGoals
         const finalX = (window.innerWidth - window_w) / 2;
         const finalY = (window.innerHeight - window_h) / 2;
 
-        const animation = content.animate([
+        const animation = content.animate(
+            [
+                {
+                    transform: `translate(${finalX}px, ${finalY}px) scale(1)`,
+                    width: `${window_w}px`,
+                    height: `${window_h}px`,
+                    opacity: "1",
+                },
+                {
+                    transform: `translate(${triggerRect.left}px, ${triggerRect.top}px) scale(0.5)`,
+                    width: `${triggerRect.width}px`,
+                    height: `${triggerRect.height}px`,
+                    opacity: "0",
+                },
+            ],
             {
-                transform: `translate(${finalX}px, ${finalY}px) scale(1)`,
-                width: `${window_w}px`,
-                height: `${window_h}px`,
-                opacity: "1"
-            },
-            {
-                transform: `translate(${triggerRect.left}px, ${triggerRect.top}px) scale(0.5)`,
-                width: `${triggerRect.width}px`,
-                height: `${triggerRect.height}px`,
-                opacity: "0"
+                duration: 450,
+                easing: "cubic-bezier(0.4, 0, 0.2, 1)",
             }
-        ], {
-            duration: 450,
-            easing: "cubic-bezier(0.4, 0, 0.2, 1)"
-        });
+        );
 
         animation.onfinish = () => {
             content.style.visibility = "hidden";
@@ -175,14 +197,15 @@ export default function GoalEditModal({ goal, onClose, triggerRect, refreshGoals
                 max-w-[${window_w}px] 
                 max-h-[${window_h}px] 
                 origin-center`}
-
                 style={{
                     width: triggerRect?.width + "px",
-                    height: triggerRect?.height + "px"
+                    height: triggerRect?.height + "px",
                 }}
             >
                 <div className="p-2 w-full">
-                    <h2 className="text-xl font-bold text-center pt-1">Edit Goal</h2>
+                    <h2 className="text-xl font-bold text-center pt-1">
+                        Edit Goal
+                    </h2>
 
                     {/* Goal Name */}
                     <input
@@ -199,7 +222,11 @@ export default function GoalEditModal({ goal, onClose, triggerRect, refreshGoals
                         placeholder="Current Amount"
                         value={goalData.currAmount}
                         onChange={(e) =>
-                            handleChange("currAmount", e.target.value ? Number(e.target.value) : "")}
+                            handleChange(
+                                "currAmount",
+                                e.target.value ? Number(e.target.value) : ""
+                            )
+                        }
                         className="w-full border border-gray-300 p-2 rounded mb-2"
                     />
 
@@ -209,7 +236,11 @@ export default function GoalEditModal({ goal, onClose, triggerRect, refreshGoals
                         placeholder="Goal Amount"
                         value={goalData.goalAmount}
                         onChange={(e) =>
-                            handleChange("goalAmount", e.target.value ? Number(e.target.value) : "")}
+                            handleChange(
+                                "goalAmount",
+                                e.target.value ? Number(e.target.value) : ""
+                            )
+                        }
                         className="w-full border border-gray-300 p-2 rounded mb-2"
                     />
 
@@ -217,7 +248,8 @@ export default function GoalEditModal({ goal, onClose, triggerRect, refreshGoals
                     <select
                         value={goalData.category}
                         onChange={(e) =>
-                            handleChange("category", e.target.value)}
+                            handleChange("category", e.target.value)
+                        }
                         className="w-full border border-gray-300 p-2 rounded mb-4 bg-white"
                     >
                         {categories.map((cur) => (
@@ -230,7 +262,9 @@ export default function GoalEditModal({ goal, onClose, triggerRect, refreshGoals
                     {/* Date Picker */}
                     <DatePicker
                         selected={goalData.time}
-                        onChange={(date: Date | null) => handleChange("time", date || new Date())}
+                        onChange={(date: Date | null) =>
+                            handleChange("time", date || new Date())
+                        }
                         dateFormat="yyyy-MM-dd"
                         className="w-full border border-gray-300 p-2 rounded mb-2"
                         showPopperArrow={false}
@@ -249,7 +283,9 @@ export default function GoalEditModal({ goal, onClose, triggerRect, refreshGoals
                             onClick={handleSubmit}
                             disabled={loading}
                             className={`px-4 py-2 rounded-md text-white ${
-                                loading ? "bg-gray-500 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+                                loading
+                                    ? "bg-gray-500 cursor-not-allowed"
+                                    : "bg-blue-600 hover:bg-blue-700"
                             }`}
                         >
                             {loading ? "Saving..." : "Save"}
@@ -258,7 +294,13 @@ export default function GoalEditModal({ goal, onClose, triggerRect, refreshGoals
 
                     {/* Message Display */}
                     {message && (
-                        <p className={`text-sm text-center mt-1 ${message.type === "error" ? "text-red-600" : "text-green-600"}`}>
+                        <p
+                            className={`text-sm text-center mt-1 ${
+                                message.type === "error"
+                                    ? "text-red-600"
+                                    : "text-green-600"
+                            }`}
+                        >
                             {message.text}
                         </p>
                     )}

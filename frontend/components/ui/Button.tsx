@@ -1,3 +1,6 @@
+/**
+ * Buttons used by the app
+ */
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { CheckCheck, Check, Bell, BellDot } from "lucide-react";
@@ -111,6 +114,7 @@ const FloatingButton = ({ toggle }: FloatingButtonProps) => {
     );
 };
 
+// filter Name: what to display on the button, filter options: what's in the list, on select options: functions to execute when selected
 const FilterButton = ({
     filterName,
     filterOptions,
@@ -138,7 +142,11 @@ const FilterButton = ({
                 onClick={() => setIsOpen(!isOpen)}
             >
                 {filterName}{" "}
-                <span className={`transition-transform ${isOpen ? "rotate-180" : ""}`}>
+                <span
+                    className={`transition-transform ${
+                        isOpen ? "rotate-180" : ""
+                    }`}
+                >
                     ⌄
                 </span>
             </button>
@@ -165,6 +173,7 @@ const FilterButton = ({
     );
 };
 
+// similar to filter button
 const DropDownButton = ({
     dropDownName,
     dropDownList,
@@ -195,6 +204,7 @@ const DropDownButton = ({
     );
 };
 
+// dislay two check marks when the component is marked chechekd, and one check mark otherwise
 const CheckButton = ({ checked, onClickFunc }: CheckButtonProps) => {
     return (
         <button className="btn btn-sm btn-square" onClick={onClickFunc}>
@@ -207,6 +217,7 @@ const CheckButton = ({ checked, onClickFunc }: CheckButtonProps) => {
     );
 };
 
+// display a bell when the notification list is indicated empty, and display a bell with a dot otherwise
 const NotificationButton = ({
     onClickFunc,
     empty,

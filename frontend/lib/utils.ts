@@ -11,6 +11,7 @@ export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
 
+// used by notificaiton list
 export function formatTimeDifference(inputTime: Date) {
     const currTime = new Date();
 

@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Login page
+ * The page that user would see when first enter the website
+ */
 import { useState } from "react";
 import { AuthInput } from "@/components/ui/Input";
 import { AuthButton } from "@/components/ui/Button";
@@ -24,6 +28,7 @@ export default function LoginPage() {
             return;
         }
 
+        // call the login function from auth context, if error occurs display the error
         try {
             setLoading(true);
             const response = await login(username, password);

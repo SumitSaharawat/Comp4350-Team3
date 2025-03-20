@@ -20,6 +20,23 @@ export async function getAllTagsFromServer(): Promise<Tag[]> {
     return data || [];
 }
 
+export async function addTagToServer(
+    name: string,
+    color: string ): Promise<{message: string}> {
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tag/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({name, color}),
+        credentials: "include"
+    });
+
+    if (!res.ok) {
+        throw new Error((await res.json()).message || "Failed to add tag");
+    }
+    return res.json();
+}
+
 export async function deleteGoalToServer(tagId: string): Promise<{message: string}> {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tag/${tagId}`, {
         method: "DELETE",

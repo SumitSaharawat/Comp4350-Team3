@@ -35,7 +35,7 @@ describe('Reminder Service Tests', () => {
 
     test('should not add a reminder with an invalid date', async () => {
         await expect(addReminder(userId, 'Invalid Reminder', 'Invalid time test', 'invalid-date'))
-            .rejects.toThrowError(expect.objectContaining({ message: expect.stringMatching(/Invalid date format|Cast to date failed/) }));
+            .rejects.toThrow(expect.objectContaining({ message: expect.stringMatching(/Invalid date format|Cast to date failed/) }));
     });
 
     test('should retrieve all reminders for a user', async () => {
@@ -58,5 +58,40 @@ describe('Reminder Service Tests', () => {
         await deleteReminder(reminder._id.toString());
         const reminders = await getAllReminders(userId);
         expect(reminders.length).toBe(0);
+    });
+
+    // Edge case 1: Invalid userId when adding reminder
+    test('should not add a reminder with an invalid userId', async () => {
+        await expect(addReminder(new mongoose.Types.ObjectId().toString(), 'Invalid User', 'Test reminder', '2025-12-31T12:00:00.000Z'))
+            .rejects.toThrow('User does not exist');
+    });
+
+    // Edge case 2: Editing a non-existent reminder
+    test('should not edit a non-existent reminder', async () => {
+        const nonExistentId = new mongoose.Types.ObjectId().toString();
+        const result = await editReminder(nonExistentId, 'New Name');
+        expect(result).toBeNull();
+    });
+
+    // Edge case 3: Deleting a non-existent reminder
+    test('should not delete a non-existent reminder', async () => {
+        const nonExistentId = new mongoose.Types.ObjectId().toString();
+        const result = await deleteReminder(nonExistentId);
+        expect(result.deletedCount).toBe(0);
+    });
+
+    // Edge case 4: Editing a reminder without changing anything
+    test('should not change reminder if no fields are updated', async () => {
+        const reminder = await addReminder(userId, 'Unchanged Reminder', 'No updates', '2025-12-31T08:00:00.000Z');
+        const unchangedReminder = await editReminder(reminder._id.toString());
+        expect(unchangedReminder).not.toBeNull();
+        expect(unchangedReminder?.name).toBe('Unchanged Reminder');
+        expect(unchangedReminder?.text).toBe('No updates');
+    });
+
+    // Edge case 5: Retrieving reminders with an invalid userId
+    test('should not retrieve reminders with an invalid userId', async () => {
+        await expect(getAllReminders("Invalid ID"))
+            .rejects.toThrow('Invalid user ID format');
     });
 });

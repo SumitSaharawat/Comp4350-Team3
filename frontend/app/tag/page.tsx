@@ -37,9 +37,7 @@ export default function TagPage() {
     }, []);
 
     useEffect(() => {
-        if (tags.length > 0) {
-            setData(tags);
-        }
+        setData(tags);
     }, [tags]);
 
     const toggleForm = () => {
@@ -61,7 +59,7 @@ export default function TagPage() {
 
             {isAdding && <NewTagModal toggle={toggleForm} refreshList={fetchTags}/>}
 
-            <TagList tags={data}/>
+            <TagList tags={data} refreshList={fetchTags}/>
         </Layout>
     );
 }

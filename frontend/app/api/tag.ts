@@ -39,6 +39,24 @@ export async function addTagToServer(
     return res.json();
 }
 
+export async function editTagToServer(
+    tagId: string,
+    name: string,
+    color: string,
+    message: string): Promise<{message: string}> {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tag/${tagId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({name, color, message}),
+        credentials: "include"
+    });
+
+    if (!res.ok) {
+        throw new Error((await res.json()).message || "Failed to edit tag");
+    }
+    return res.json();
+}
+
 export async function deleteGoalToServer(tagId: string): Promise<{message: string}> {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tag/${tagId}`, {
         method: "DELETE",

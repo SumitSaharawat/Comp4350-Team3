@@ -51,7 +51,7 @@ export default function TagList({ tags }: TagListProps) {
                                         {tx.name}
                                     </span>
                             </td>
-                            <td className="border-b border-gray-400 px-4 py-2 text-left">
+                            <td className="border-b border-gray-400 text-gray-500 px-4 py-2 text-left">
                                 {tx.message}
                             </td>
                             <td className="border-b border-gray-400 px-4 py-2 text-center">

@@ -23,12 +23,13 @@ export async function getTagsFromServer(userId: string): Promise<Tag[]> {
 export async function addTagToServer(
     userId:string,
     name: string,
-    color: string ): Promise<{message: string}> {
+    color: string,
+    message: string): Promise<{message: string}> {
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tag/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({userId, name, color}),
+        body: JSON.stringify({userId, name, color, message}),
         credentials: "include"
     });
 

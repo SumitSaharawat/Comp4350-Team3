@@ -31,7 +31,7 @@ export default function NewTagModal({toggle, refreshList}: NewTagModalProps) {
             return;
         }
         try{
-            await addTagToServer(userId, name, color);
+            await addTagToServer(userId, name, color, description);
             refreshList();
         }
         catch (error) {

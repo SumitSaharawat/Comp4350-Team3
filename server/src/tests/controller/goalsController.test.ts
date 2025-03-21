@@ -11,6 +11,13 @@ jest.mock('../../db/goalsService', () => ({
     deleteGoal: jest.fn(),
 }));
 
+beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+afterEach(() => {
+    jest.restoreAllMocks();
+});
+
 const app = express();
 app.use(express.json());
 

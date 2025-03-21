@@ -15,6 +15,13 @@ import {
 
 jest.mock('../../db/transactionService');
 
+beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+afterEach(() => {
+    jest.restoreAllMocks();
+});
+
 describe('Transaction Controller', () => {
     //Test settings assisted by AI
     let mockReq: Partial<Request>;

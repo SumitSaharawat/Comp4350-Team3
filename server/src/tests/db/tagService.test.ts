@@ -5,6 +5,13 @@ import { addTag, getAllTags, editTag, deleteTag } from '../../db/tagService';
 import '../../db/userDB'
 
 //Test settings assisted by AI
+beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+afterEach(() => {
+    jest.restoreAllMocks();
+});
+
 describe('Tag Service Tests', () => {
     let mongoServer: MongoMemoryServer;
     let userId: string;

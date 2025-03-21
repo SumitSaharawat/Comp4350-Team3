@@ -4,6 +4,13 @@ import { addUser, getUsersByUsername, editUser, deleteUser } from '../../db/user
 
 jest.mock('../../db/userService');
 
+beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+afterEach(() => {
+    jest.restoreAllMocks();
+});
+
 describe('User Controller', () => {
     //Test settings assisted by AI
     let req: Partial<Request>;

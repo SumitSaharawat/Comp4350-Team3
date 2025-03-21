@@ -6,6 +6,13 @@ import { addReminder, getAllReminders, editReminder, deleteReminder } from '../.
 import { addUser } from '../../db/userService';
 
 //Test settings assisted by AI
+beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+afterEach(() => {
+    jest.restoreAllMocks();
+});
+
 describe('Reminder Service Tests', () => {
     let mongoServer: MongoMemoryServer;
     let userId: string;

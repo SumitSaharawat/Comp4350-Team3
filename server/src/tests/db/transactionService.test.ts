@@ -1,12 +1,17 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
-import Transaction from '../../db/transactionDB';
 import User from '../../db/userDB';
 import Tag from '../../db/tagDB';
 import { addTransaction, getAllTransactions, editTransaction, deleteTransaction } from '../../db/transactionService';
-import { addUser } from '../../db/userService';
 
 //Test settings assisted by AI
+beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+afterEach(() => {
+    jest.restoreAllMocks();
+});
+
 describe('Transaction Service Tests', () => {
     let userId:string;
     let tagId:string;

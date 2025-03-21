@@ -22,6 +22,13 @@ const mockUser = {
     password: bcrypt.hashSync('password123', 10),
 };
 
+beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+afterEach(() => {
+    jest.restoreAllMocks();
+});
+
 describe('Login Controller', () => {
     beforeEach(() => {
         jest.clearAllMocks();

@@ -6,6 +6,13 @@ import { addGoal, getAllGoals, editGoal, deleteGoal } from '../../db/goalsServic
 import { addUser } from '../../db/userService';
 
 //Test settings assisted by AI
+beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+afterEach(() => {
+    jest.restoreAllMocks();
+});
+
 describe('Goals Service Tests', () => {
     let mongoServer: MongoMemoryServer;
     let userId: string;

@@ -6,6 +6,13 @@ import { addTag, getAllTags, editTag, deleteTag } from '../../db/tagService';
 
 jest.mock('../../db/tagService');
 
+beforeEach(() => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
 describe('Tag Controller', () => {
   let app: Express;
   

@@ -6,6 +6,13 @@ import { addReminderController, getAllRemindersController, editReminderControlle
 jest.mock('../../db/reminderService');
 jest.mock('../../controller/controlLog');
 
+beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+afterEach(() => {
+    jest.restoreAllMocks();
+});
+
 const fakeReminder = {
     _id: 'reminder123',
     name: 'Test Reminder',

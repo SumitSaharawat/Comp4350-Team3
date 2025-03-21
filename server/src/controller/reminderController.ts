@@ -40,21 +40,20 @@ export const getAllRemindersController = async (req: Request, res: Response) => 
 
 //Controller to handle editing an existing reminder
 export const editReminderController = async (req: Request, res: Response) => {
-  const {id} = req.params;
-  const {name, text, time, viewed} = req.body;
-  controlLog(`${viewed}`);
-  try {
-    const updatedReminder = await editReminder(id, name, text, time, viewed);
-    controlLog(JSON.stringify(formatReminder(updatedReminder)));
-    if (updatedReminder) {
-      res.status(200).json({message: "Reminder updated successfully", reminder: formatReminder(updatedReminder)});
-    } else {
-      res.status(404).json({message: "Reminder not found"});
+    const { id } = req.params;
+    const { name, text, time, viewed } = req.body;
+
+    try {
+        const updatedReminder = await editReminder(id, name, text, time, viewed);
+        if (updatedReminder) {
+            res.status(200).json({ message: 'Reminder updated successfully', reminder: formatReminder(updatedReminder) });
+        } else {
+            res.status(404).json({ message: 'Reminder not found' });
+        }
+    } catch (err) {
+        console.error('Error updating reminder:', err.message || err);
+        return res.status(500).json({ error: err.message || 'Error updating reminder' });
     }
-  } catch (err) {
-    console.error("Error updating reminder:", err.message || err);
-    return res.status(500).json({error: err.message || "Error updating reminder"});
-  }
 };
 
 //Controller to handle deleting a reminder
@@ -63,7 +62,7 @@ export const deleteReminderController = async (req: Request, res: Response) => {
 
   try {
     const result = await deleteReminder(id);
-    if (result) {
+    if (result.deletedCount > 0) {
       res.status(200).json({message: "Reminder deleted successfully"});
     } else {
       res.status(404).json({message: "Reminder not found"});

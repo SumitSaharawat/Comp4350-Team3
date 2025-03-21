@@ -30,7 +30,7 @@ export default function GoalEditModal({
         currAmount: goal?.currAmount || 0,
         goalAmount: goal?.goalAmount || 0,
         category: goal?.category || categories[0],
-        time: goal?.time || new Date(),
+        time: goal?.time ? new Date(goal.time) : new Date(),
     });
 
     const [message, setMessage] = useState<{

@@ -58,6 +58,7 @@ export default function TransactionFormModal({
         transacData.time = new Date();
         transacData.type = "Saving";
         transacData.currency = "CAD";
+        transacData.tags = [];
     };
 
     const handleChange = (

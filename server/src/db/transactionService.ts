@@ -8,13 +8,13 @@ import { dbLog } from './dbLog';
 export const addTransaction = async (userId: string, name: string, date: string, amount: number, currency: string, type: string, tags?: string[]) => {
     try {
 
-        // 🔹 Validate if user exists before proceeding
+        // Validate if user exists before proceeding
         const userExists = await User.findById(userId);
         if (!userExists) {
             throw new Error('User does not exist');
         }
 
-         // 🔹 Validate and filter out invalid tag IDs
+         // Validate and filter out invalid tag IDs
         const validTags = tags?.filter(tagId => mongoose.Types.ObjectId.isValid(tagId)) || [];
 
         if (type) {
@@ -30,10 +30,10 @@ export const addTransaction = async (userId: string, name: string, date: string,
             throw new Error('User does not exist');
         }
 
-        // 🔹Ensure all provided tags exist in the database
+        // Ensure all provided tags exist in the database
         const existingTags = await Tag.find({ _id: { $in: validTags } });
 
-        // 🔹 Check if each tag has the same userId as the given userId
+        // Check if each tag has the same userId as the given userId
         for (const tag of existingTags) {
             if (!tag.user || tag.user.toString() !== user._id.toString()) {
                 throw new Error(`Tag "${tag.name}" does not belong to the user with ID ${userId}`);

@@ -57,7 +57,7 @@ describe("Transaction Service Tests", () => {
       name: "Grocery Shopping",
       date: new Date(),
       amount: 100,
-      currency: "USD",
+      currency: "CAD",
       type: "Spending",
       tags: [tagId],
     });
@@ -67,19 +67,23 @@ describe("Transaction Service Tests", () => {
 
   describe("addTransaction function", () => {
     it("should add a new transaction for a user", async () => {
-      const newTransaction = await addTransaction(userId, "Test Transaction", "2025-03-27", 50, "USD", "Spending", [tagId]);
+      const newTransaction = await addTransaction(userId, "Test Transaction", "2025-03-27", 50, "CAD", "Spending", [tagId]);
 
       expect(newTransaction).toHaveProperty("_id");
       expect(newTransaction.name).toBe("Test Transaction");
       expect(newTransaction.amount).toBe(50);
-      expect(newTransaction.currency).toBe("USD");
+      expect(newTransaction.currency).toBe("CAD");
       expect(newTransaction.type).toBe("Spending");
       expect(newTransaction.tags.length).toBeGreaterThan(0);
     });
 
     it("should throw error if user does not exist", async () => {
       const invalidUserId = new mongoose.Types.ObjectId().toString();
-      await expect(addTransaction(invalidUserId.toString(), "Test Transaction", "2025-03-27", 50, "USD", "Spending", [tagId])).rejects.toThrow("User does not exist");
+      await expect(addTransaction(invalidUserId.toString(), "Test Transaction", "2025-03-27", 50, "CAD", "Spending", [tagId])).rejects.toThrow("User does not exist");
+    });
+
+    it("should throw error if amount is negative", async () => {
+      await expect(addTransaction(userId, "Invalid Transaction", "2025-03-27", -50, "CAD", "Spending", [tagId])).rejects.toThrow("Validation Error: Amount must be a positive number");
     });
   });
 
@@ -94,11 +98,23 @@ describe("Transaction Service Tests", () => {
     it("should throw error for invalid user ID format", async () => {
       await expect(getAllTransactions("invalidUserId")).rejects.toThrow("Invalid user ID format");
     });
+
+    it("should return an empty array if user has no transactions", async () => {
+      const newUser = new User({
+        username: `another_user_${Date.now()}`,
+        password: "password123",
+        balance: 500,
+      });
+      await newUser.save();
+
+      const transactions = await getAllTransactions(newUser._id);
+      expect(transactions).toHaveLength(0);
+    });
   });
 
   describe("editTransaction function", () => {
     it("should update an existing transaction", async () => {
-      const updatedTransaction = await editTransaction(transactionId, "Updated Grocery Shopping", "2025-03-28", 120, "USD", "Spending", [tagId]);
+      const updatedTransaction = await editTransaction(transactionId, "Updated Grocery Shopping", "2025-03-28", 120, "CAD", "Spending", [tagId]);
 
       expect(updatedTransaction).toHaveProperty("_id", transactionId);
       expect(updatedTransaction.name).toBe("Updated Grocery Shopping");
@@ -107,6 +123,10 @@ describe("Transaction Service Tests", () => {
 
     it("should throw error if transaction ID is invalid", async () => {
       await expect(editTransaction("invalidTransactionId")).rejects.toThrow("Invalid transaction ID format");
+    });
+
+    it("should throw error if updated amount is negative", async () => {
+      await expect(editTransaction(transactionId, "Updated Grocery Shopping", "2025-03-28", -120, "CAD", "Spending", [tagId])).rejects.toThrow("Validation Error: Amount must be a positive number");
     });
   });
 
@@ -120,6 +140,11 @@ describe("Transaction Service Tests", () => {
     it("should throw error if transaction does not exist", async () => {
       const invalidTransactionId = new mongoose.Types.ObjectId().toString();
       await expect(deleteTransaction(invalidTransactionId)).rejects.toThrow(new RegExp(`No transaction found with ID ${invalidTransactionId}`));
-    })    
+    });
+
+    it("should throw error if transaction has already been deleted", async () => {
+      await deleteTransaction(transactionId);
+      await expect(deleteTransaction(transactionId)).rejects.toThrow(new RegExp(`No transaction found with ID ${transactionId}`));
+    });
   });
 });

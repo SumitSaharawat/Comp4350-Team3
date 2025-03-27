@@ -15,6 +15,7 @@ describe("User Service Tests", () => {
   let existingUserId: string;
 
   beforeAll(async () => {
+    mongoose.set('strictQuery', true);
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
     await mongoose.connect(mongoUri);

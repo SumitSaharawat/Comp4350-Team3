@@ -18,6 +18,7 @@ describe("Transaction Service Tests", () => {
   let mongoServer:MongoMemoryServer;
 
   beforeAll(async () => {
+    mongoose.set('strictQuery', true);
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
     await mongoose.connect(mongoUri);

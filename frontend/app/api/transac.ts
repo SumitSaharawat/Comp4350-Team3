@@ -31,9 +31,9 @@ export async function addTransactionsToServer(
     date: string,
     amount: number,
     type: string,
-    currency: string,
     tags: Tag[]): Promise<{message: string}> {
 
+    const currency = "CAD";
     const tagIds = tags.map(tag => tag.id);
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transaction/`, {
         method: "POST",
@@ -54,9 +54,9 @@ export async function editTransactionsOnServer(
     date: string,
     amount: number,
     type: string,
-    currency: string,
     tags: Tag[]): Promise< {message:string}> {
 
+    const currency = "CAD";
     const tagIds = tags.map(tag => tag.id);
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${transactionId}`, {
         method: "PUT",

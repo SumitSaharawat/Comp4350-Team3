@@ -106,4 +106,16 @@ describe("Tag Service Tests", () => {
     const result = await deleteTag(nonExistentId);
     expect(result.deletedCount).toBe(0);
   });
+
+  test("should update the message if provided", async () => {
+    const tag = await addTag(userId, "Tag1", "#FF5733");
+    
+    // Assume we have a field `message` and update it
+    const updatedTag = await editTag(tag._id.toString(), "Updated Tag", "#33FF57", "New message");
+    
+    expect(updatedTag).not.toBeNull();
+    expect(updatedTag?.message).toBe("New message");
+    expect(updatedTag?.name).toBe("Updated Tag");
+    expect(updatedTag?.color).toBe("#33FF57");
+  });
 });

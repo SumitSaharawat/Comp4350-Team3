@@ -81,6 +81,17 @@ describe("Transaction Service Tests", () => {
       const invalidUserId = new mongoose.Types.ObjectId().toString();
       await expect(addTransaction(invalidUserId, "Test Transaction", "2025-03-27", 50, "CAD", "Spending", [tagId])).rejects.toThrow("User does not exist");
     });
+
+    it("should throw error if tag does not exist", async () => {
+      const invalidTagId = new mongoose.Types.ObjectId().toString();
+      await expect(addTransaction(userId, "Test Transaction", "2025-03-27", 50, "CAD", "Spending", [invalidTagId]))
+        .rejects.toThrow("One or more tags do not exist.");
+    });
+  
+    it("should throw error if amount is negative", async () => {
+      await expect(addTransaction(userId, "Test Transaction", "2025-03-27", -50, "CAD", "Spending", [tagId]))
+        .rejects.toThrow("Validation Error: Amount must be a positive number");
+    });
   });
 
   describe("getAllTransactions function", () => {
@@ -93,6 +104,17 @@ describe("Transaction Service Tests", () => {
 
     it("should throw error for invalid user ID format", async () => {
       await expect(getAllTransactions("invalidUserId")).rejects.toThrow("Invalid user ID format");
+    });
+
+    it("should return empty array if user has no transactions", async () => {
+      const newUser = new User({
+        username: `newuser_${Date.now()}`,
+        password: "newpassword",
+        balance: 500,
+      });
+      await newUser.save();
+      const transactions = await getAllTransactions(newUser._id);
+      expect(transactions).toHaveLength(0);
     });
   });
 
@@ -127,6 +149,20 @@ describe("Transaction Service Tests", () => {
       const newBalance = (await User.findById(userId)).balance;
       expect(newBalance).toBe(originalBalance + 120+1000);
     });
+
+    it("should return null if transaction does not exist", async () => {
+      const invalidTransactionId = new mongoose.Types.ObjectId().toString();
+      const result = await editTransaction(invalidTransactionId, "Updated Transaction", "2025-03-28", 120, "CAD", "Spending", [tagId]);
+      expect(result).toBeNull();
+    });
+  
+    it("should throw error if date format is invalid", async () => {
+      await expect(editTransaction(transactionId, "Updated Grocery Shopping", "Invalid Date", 120, "CAD", "Spending", [tagId]))
+        .rejects.toThrow(expect.objectContaining({
+          message: expect.stringMatching(/Validation Error: Cast to date failed for value "Invalid Date"/)
+        }));
+    });    
+  
   });
 
   describe("deleteTransaction function", () => {

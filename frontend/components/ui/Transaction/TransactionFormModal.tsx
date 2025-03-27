@@ -16,7 +16,6 @@ import {
     Transaction,
 } from "@/app/api/transac";
 import {Tag} from "@/app/api/tag";
-const currencies = ["CAD", "USD"];
 const types = ["Saving", "Spending"];
 
 interface TransactionFormModalProps {
@@ -40,7 +39,6 @@ export default function TransactionFormModal({
         amount: null as number | null,
         time: new Date(),
         type: "Saving",
-        currency: "CAD",
         tags: [] as Tag[],
     });
 
@@ -57,7 +55,6 @@ export default function TransactionFormModal({
         transacData.amount = null;
         transacData.time = new Date();
         transacData.type = "Saving";
-        transacData.currency = "CAD";
         transacData.tags = [];
     };
 
@@ -77,7 +74,6 @@ export default function TransactionFormModal({
             transacData.amount = existingTransaction.amount;
             transacData.time = new Date(existingTransaction.date);
             transacData.type = existingTransaction.type;
-            transacData.currency = existingTransaction.currency;
             transacData.tags = existingTransaction.tags || [];
             setHeadLine("Edit Transaction");
         } else {
@@ -118,7 +114,6 @@ export default function TransactionFormModal({
         if (
             !transacData.name ||
             !transacData.amount ||
-            !transacData.currency ||
             !transacData.type
         ) {
             setMessage({ text: "All fields are required.", type: "error" });
@@ -149,7 +144,6 @@ export default function TransactionFormModal({
                     formattedDate,
                     transacData.amount,
                     transacData.type,
-                    transacData.currency,
                     transacData.tags,
                 );
                 setMessage({
@@ -163,7 +157,6 @@ export default function TransactionFormModal({
                     formattedDate,
                     transacData.amount,
                     transacData.type,
-                    transacData.currency,
                     transacData.tags,
                 );
                 setMessage({
@@ -235,19 +228,6 @@ export default function TransactionFormModal({
                     }
                     className="w-full border border-gray-300 p-2 rounded mb-2"
                 />
-
-                {/* Currency Dropdown */}
-                <select
-                    value={transacData.currency}
-                    onChange={(e) => handleChange("currency", e.target.value)}
-                    className="w-full border border-gray-300 p-2 rounded mb-4 bg-white"
-                >
-                    {currencies.map((cur) => (
-                        <option key={cur} value={cur}>
-                            {cur}
-                        </option>
-                    ))}
-                </select>
 
                 {/* Type Dropdown */}
                 <select

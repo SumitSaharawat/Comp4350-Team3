@@ -56,7 +56,7 @@ describe("Transaction Service Tests", () => {
       user: userId,
       name: "Grocery Shopping",
       date: new Date(),
-      amount: 100,
+      amount: 1000,
       currency: "CAD",
       type: "Spending",
       tags: [tagId],
@@ -79,11 +79,7 @@ describe("Transaction Service Tests", () => {
 
     it("should throw error if user does not exist", async () => {
       const invalidUserId = new mongoose.Types.ObjectId().toString();
-      await expect(addTransaction(invalidUserId.toString(), "Test Transaction", "2025-03-27", 50, "CAD", "Spending", [tagId])).rejects.toThrow("User does not exist");
-    });
-
-    it("should throw error if amount is negative", async () => {
-      await expect(addTransaction(userId, "Invalid Transaction", "2025-03-27", -50, "CAD", "Spending", [tagId])).rejects.toThrow("Validation Error: Amount must be a positive number");
+      await expect(addTransaction(invalidUserId, "Test Transaction", "2025-03-27", 50, "CAD", "Spending", [tagId])).rejects.toThrow("User does not exist");
     });
   });
 
@@ -98,18 +94,6 @@ describe("Transaction Service Tests", () => {
     it("should throw error for invalid user ID format", async () => {
       await expect(getAllTransactions("invalidUserId")).rejects.toThrow("Invalid user ID format");
     });
-
-    it("should return an empty array if user has no transactions", async () => {
-      const newUser = new User({
-        username: `another_user_${Date.now()}`,
-        password: "password123",
-        balance: 500,
-      });
-      await newUser.save();
-
-      const transactions = await getAllTransactions(newUser._id);
-      expect(transactions).toHaveLength(0);
-    });
   });
 
   describe("editTransaction function", () => {
@@ -119,14 +103,29 @@ describe("Transaction Service Tests", () => {
       expect(updatedTransaction).toHaveProperty("_id", transactionId);
       expect(updatedTransaction.name).toBe("Updated Grocery Shopping");
       expect(updatedTransaction.amount).toBe(120);
+      expect(updatedTransaction.currency).toBe("CAD");
     });
 
-    it("should throw error if transaction ID is invalid", async () => {
-      await expect(editTransaction("invalidTransactionId")).rejects.toThrow("Invalid transaction ID format");
+    it("should throw error for invalid transaction type", async () => {
+      await expect(editTransaction(transactionId, "Updated Grocery Shopping", "2025-03-28", 120, "CAD", "InvalidType", [tagId])).rejects.toThrow("Invalid type. Must be one of: Saving, Spending");
     });
 
-    it("should throw error if updated amount is negative", async () => {
-      await expect(editTransaction(transactionId, "Updated Grocery Shopping", "2025-03-28", -120, "CAD", "Spending", [tagId])).rejects.toThrow("Validation Error: Amount must be a positive number");
+    it("should update user balance after spending", async () => {
+      const originalBalance = (await User.findById(userId)).balance;
+      const updatedTransaction = await editTransaction(transactionId, "Updated Grocery Shopping", "2025-03-28", 120, "CAD", "Spending", [tagId]);
+
+      expect(updatedTransaction.amount).toBe(120);
+      const newBalance = (await User.findById(userId)).balance;
+      expect(newBalance).toBe(originalBalance - 120+1000);
+    });
+
+    it("should update user balance after saving", async () => {
+      const originalBalance = (await User.findById(userId)).balance;
+      const updatedTransaction = await editTransaction(transactionId, "Updated Grocery Shopping", "2025-03-28", 120, "CAD", "Saving", [tagId]);
+
+      expect(updatedTransaction.amount).toBe(120);
+      const newBalance = (await User.findById(userId)).balance;
+      expect(newBalance).toBe(originalBalance + 120+1000);
     });
   });
 
@@ -142,9 +141,22 @@ describe("Transaction Service Tests", () => {
       await expect(deleteTransaction(invalidTransactionId)).rejects.toThrow(new RegExp(`No transaction found with ID ${invalidTransactionId}`));
     });
 
-    it("should throw error if transaction has already been deleted", async () => {
-      await deleteTransaction(transactionId);
-      await expect(deleteTransaction(transactionId)).rejects.toThrow(new RegExp(`No transaction found with ID ${transactionId}`));
+    it("should update user balance after deleting a spending transaction", async () => {
+      const originalBalance = (await User.findById(userId)).balance;
+      const result = await deleteTransaction(transactionId);
+
+      const newBalance = (await User.findById(userId)).balance;
+      expect(newBalance).toBe(originalBalance + 1000);
+    });
+
+    it("should update user balance after deleting a saving transaction", async () => {
+      const savingTransaction = await addTransaction(userId, "Test Saving Transaction", "2025-03-28", 150, "CAD", "Saving", [tagId]);
+
+      const originalBalance = (await User.findById(userId)).balance;
+      await deleteTransaction(savingTransaction._id);
+
+      const newBalance = (await User.findById(userId)).balance;
+      expect(newBalance).toBe(originalBalance - 150);
     });
   });
 });

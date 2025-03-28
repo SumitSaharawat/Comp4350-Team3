@@ -107,4 +107,17 @@ describe("User Service Tests", () => {
     await expect(deleteUser("invalidID"))
       .rejects.toThrow("Invalid user ID");
   });
+
+  test("should not add a user with zero or negative balance", async () => {
+    await expect(addUser("userWithZeroBalance", "password123", 0))
+      .rejects.toThrow("Balance must be a positive number");
+    await expect(addUser("userWithNegativeBalance", "password123", -100))
+      .rejects.toThrow("Balance must be a positive number");
+  });
+
+  test("should allow balance update when editing user", async () => {
+    const updatedUser = await editUser(existingUserId, undefined, undefined, 500);
+    expect(updatedUser?.balance).toBe(500);
+  });
+  
 });

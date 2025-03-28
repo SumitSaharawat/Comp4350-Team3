@@ -192,6 +192,13 @@ describe("Transaction Service Tests", () => {
       expect(result).toBeNull();
     });
   
+    describe("getAllTransactions function", () => {
+      it("should throw a ValidationError if there is a validation issue", async () => {
+        const invalidUserId = "invalidUserId";
+        await expect(getAllTransactions(invalidUserId)).rejects.toThrow("Invalid user ID format");
+      });
+    });
+    
     it("should throw error if user balance is insufficient for spending", async () => {
       await expect(editTransaction(transactionId, "Updated Grocery Shopping", "2025-03-28", 150000, "CAD", "Spending", [tagId]))
         .rejects.toThrow("Insufficient balance for spending.");
@@ -285,6 +292,21 @@ describe("Transaction Service Tests", () => {
     } catch (err) {
       expect(err.message).toBe("Insufficient balance for spending.");
     }
+  });
+  it("should throw error if transaction exists but user does not exist", async () => {
+    const invalidUserId = new mongoose.Types.ObjectId().toString();
+    const transaction = new Transaction({
+      user: invalidUserId,
+      name: "Test Transaction",
+      date: new Date(),
+      amount: 100,
+      currency: "CAD",
+      type: "Spending",
+      tags: [tagId],
+    });
+    await transaction.save();
+
+    await expect(deleteTransaction(transaction._id)).rejects.toThrow(`User not found.`);
   });
 
   it("should throw an error if the tags do not exist in editTransaction", async () => {

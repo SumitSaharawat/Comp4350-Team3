@@ -120,4 +120,55 @@ describe("Reminder Service Tests", () => {
         .rejects.toThrow("Invalid user ID format");
     });
   });
+
+  test("should not add a reminder if user does not exist", async () => {
+    const nonExistentUserId = new mongoose.Types.ObjectId().toString();
+  
+    await expect(
+      addReminder(nonExistentUserId, "Ghost Reminder", "This user doesn't exist", "2025-12-31T10:00:00.000Z")
+    ).rejects.toThrow("User does not exist");
+  });
+
+  test("should not edit a reminder with an invalid ID", async () => {
+    await expect(editReminder("invalid-id", "New Name"))
+      .rejects.toThrow("Invalid reminder ID format");
+  });
+
+  test("should not delete a reminder with an invalid ID", async () => {
+    await expect(deleteReminder("invalid-id"))
+      .rejects.toThrow("Invalid reminder ID format");
+  });
+
+  test("should handle unexpected errors when adding a reminder", async () => {
+    jest.spyOn(Reminder.prototype, "save").mockRejectedValue(new Error("Database error"));
+  
+    await expect(addReminder(userId, "Error Reminder", "Should fail", "2025-12-31T10:00:00.000Z"))
+      .rejects.toThrow("Database error");
+    
+    jest.restoreAllMocks();
+  });
+
+  test("should update the text of an existing reminder", async () => {
+    const reminder = await addReminder(userId, "Initial Reminder", "Details before update", "2025-12-31T12:00:00.000Z");
+    const updatedReminder = await editReminder(reminder._id.toString(), "Updated Reminder", "Updated details", undefined);
+  
+    expect(updatedReminder).not.toBeNull();
+    expect(updatedReminder?.text).toBe("Updated details");
+  });
+
+  test("should update the time of an existing reminder", async () => {
+    const reminder = await addReminder(userId, "Reminder", "Details", "2025-12-31T12:00:00.000Z");
+    const updatedReminder = await editReminder(reminder._id.toString(), undefined, undefined, "2025-12-31T15:00:00.000Z");
+  
+    expect(updatedReminder).not.toBeNull();
+    expect(updatedReminder?.time.toISOString()).toBe("2025-12-31T15:00:00.000Z");
+  });
+
+  test("should update the viewed status of an existing reminder", async () => {
+    const reminder = await addReminder(userId, "Reminder to View", "Check it out", "2025-12-31T12:00:00.000Z");
+    const updatedReminder = await editReminder(reminder._id.toString(), undefined, undefined, undefined, true);
+  
+    expect(updatedReminder).not.toBeNull();
+    expect(updatedReminder?.viewed).toBe(true);
+  });
 });

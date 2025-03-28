@@ -1,11 +1,10 @@
-import {MongoMemoryServer} from "mongodb-memory-server"; 
+import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import Goal from "../../db/goalsDB";
 import User from "../../db/userDB";
-import {addGoal, getAllGoals, editGoal, deleteGoal} from "../../db/goalsService";
-import {addUser} from "../../db/userService";
+import { addGoal, getAllGoals, editGoal, deleteGoal } from "../../db/goalsService";
+import { addUser } from "../../db/userService";
 
-// Test settings assisted by AI
 beforeEach(() => {
   jest.spyOn(console, "error").mockImplementation(() => {});
 });

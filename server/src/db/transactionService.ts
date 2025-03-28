@@ -25,9 +25,6 @@ export const addTransaction = async (userId: string, name: string, date: string,
 
     // check if user exists or not
     const user = await User.findById(userId);
-    if (!user) {
-      throw new Error("User does not exist");
-    }
 
     // Ensure all provided tags exist in the database
     const existingTags = await Tag.find({_id: {$in: validTags}});

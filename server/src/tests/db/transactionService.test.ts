@@ -92,6 +92,30 @@ describe("Transaction Service Tests", () => {
       await expect(addTransaction(userId, "Test Transaction", "2025-03-27", -50, "CAD", "Spending", [tagId]))
         .rejects.toThrow("Validation Error: Amount must be a positive number");
     });
+
+    // Example test case assisted by AI
+    it("should throw error if user balance is insufficient for spending", async () => {
+      const userWithInsufficientBalance = await User.create({
+        username: "user2",
+        password: "testpassword",
+        balance: 10,
+      });
+    
+      const validTag = await Tag.create({
+        name: "Food",
+        user: userWithInsufficientBalance._id,
+        color: "#FF5733",
+      });
+      
+      await expect(addTransaction(userWithInsufficientBalance._id, "Test Transaction", "2025-03-27", 50, "CAD", "Spending", [validTag._id]))
+        .rejects.toThrow("Insufficient balance for spending.");
+    });
+    
+
+    it("should throw error if transaction type is invalid", async () => {
+      await expect(addTransaction(userId, "Test Transaction", "2025-03-27", 50, "CAD", "InvalidType", [tagId]))
+        .rejects.toThrow("Invalid type. Must be one of: Saving, Spending");
+    });
   });
 
   describe("getAllTransactions function", () => {
@@ -156,6 +180,11 @@ describe("Transaction Service Tests", () => {
       expect(result).toBeNull();
     });
   
+    it("should throw error if user balance is insufficient for spending", async () => {
+      await expect(editTransaction(transactionId, "Updated Grocery Shopping", "2025-03-28", 150000, "CAD", "Spending", [tagId]))
+        .rejects.toThrow("Insufficient balance for spending.");
+    });    
+
     it("should throw error if date format is invalid", async () => {
       await expect(editTransaction(transactionId, "Updated Grocery Shopping", "Invalid Date", 120, "CAD", "Spending", [tagId]))
         .rejects.toThrow(expect.objectContaining({

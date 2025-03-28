@@ -34,7 +34,7 @@ describe("Goals Service Tests", () => {
     userId = user._id.toString();
   });
 
-  // ✅ Adding Goals
+  // Adding Goals
   test("should add a goal successfully", async () => {
     const goal = await addGoal(userId, "Save for Laptop", "2025-12-31", 200, 1000, "Saving");
     expect(goal.name).toBe("Save for Laptop");
@@ -66,7 +66,7 @@ describe("Goals Service Tests", () => {
     ).rejects.toThrow();
   });
 
-  // ✅ Retrieving Goals
+  // Retrieving Goals
   test("should retrieve all goals for a user", async () => {
     await addGoal(userId, "Goal1", "2025-12-31", 200, 1000, "Saving");
     await addGoal(userId, "Goal2", "2026-06-30", 500, 1500, "Investment");
@@ -83,7 +83,7 @@ describe("Goals Service Tests", () => {
     await expect(getAllGoals("invalid-user-id")).rejects.toThrow("Invalid user ID format");
   });
 
-  // ✅ Editing Goals
+  // Editing Goals
   test("should edit a goal successfully", async () => {
     const goal = await addGoal(userId, "Edit Goal", "2025-12-31", 300, 800, "Saving");
     const updatedGoal = await editGoal(goal._id.toString(), "Updated Goal", undefined, 400, 1200);
@@ -172,7 +172,7 @@ describe("Goals Service Tests", () => {
     expect(updatedGoal?.time.toISOString()).toBe("2025-12-25T00:00:00.000Z");
   });
 
-  // ✅ Deleting Goals
+  // Deleting Goals
   test("should delete a goal successfully", async () => {
     const goal = await addGoal(userId, "Delete Goal", "2025-12-31", 100, 500, "Saving");
     await deleteGoal(goal._id.toString());

@@ -116,6 +116,18 @@ describe("Transaction Service Tests", () => {
       await expect(addTransaction(userId, "Test Transaction", "2025-03-27", 50, "CAD", "InvalidType", [tagId]))
         .rejects.toThrow("Invalid type. Must be one of: Saving, Spending");
     });
+
+    it("should throw error if tag does not belong to the user during transaction creation", async () => {
+      const newTag = new Tag({
+        name: "Shopping",
+        user: new mongoose.Types.ObjectId(),
+        color: "#5F9EA0",
+      });
+      await newTag.save();
+      
+      await expect(addTransaction(userId, "Test Transaction", "2025-03-27", 50, "CAD", "Spending", [newTag._id]))
+        .rejects.toThrow(/Tag "Shopping" does not belong to the user with ID/);
+    });
   });
 
   describe("getAllTransactions function", () => {
@@ -191,7 +203,13 @@ describe("Transaction Service Tests", () => {
           message: expect.stringMatching(/Validation Error: Cast to date failed for value "Invalid Date"/)
         }));
     });    
-  
+    it("should throw an error if no valid tags are provided during transaction update", async () => {
+      const invalidTagId = new mongoose.Types.ObjectId().toString();
+      const transaction = await addTransaction(userId.toString(), "Rent", "2025-03-20", 100, "USD", "Spending", [tagId.toString()]);
+    
+      await expect(editTransaction(transaction._id.toString(), "Rent", "2025-03-20", 100, "USD", "Spending", [invalidTagId]))
+        .rejects.toThrow("One or more tags do not exist.");
+    });
   });
 
   describe("deleteTransaction function", () => {

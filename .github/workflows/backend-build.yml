@@ -42,7 +42,7 @@ jobs:
               uses: actions/upload-artifact@v3
               with:
                 name: coverage-reports
-                path: ./coverage/lcov-report/index-lcov.xml
+                path: ./server/coverage/lcov-report/index-lcov.xml
 
     webhook-request:
         name: Send Discord Notification

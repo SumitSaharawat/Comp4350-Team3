@@ -22,7 +22,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: coverage-reports
-          path: ./coverage
+          path: ./server/coverage/lcov-report/index-lcov.xml
 
       - name: Clean up coverage reports
-        run: rm -rf /tmp/coverage
+        run: rm -rf ./server/coverage/lcov-report/index-lcov.xml

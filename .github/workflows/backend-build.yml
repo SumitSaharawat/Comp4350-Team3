@@ -39,10 +39,10 @@ jobs:
               run: rm -rf build && npm run clean && npm run test -- --coverage --coverageReporters=lcov
             
             - name: Upload coverage reports
-              uses: actions/upload-artifact@v2
+              uses: actions/upload-artifact@v3
               with:
                 name: coverage-reports
-                path: /tmp/coverage
+                path: ./coverage/lcov-report/index-lcov.xml
 
     webhook-request:
         name: Send Discord Notification

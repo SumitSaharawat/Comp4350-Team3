@@ -18,5 +18,11 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+      - name: Download coverage reports from Backend Build
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage-reports
+          path: ./coverage
+
       - name: Clean up coverage reports
         run: rm -rf /tmp/coverage

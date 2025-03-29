@@ -17,12 +17,3 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-      - name: Download coverage reports from Backend Build
-        uses: actions/download-artifact@v3
-        with:
-          name: coverage-reports
-          path: ./server/coverage/lcov-report/index-lcov.xml
-
-      - name: Clean up coverage reports
-        run: rm -rf ./server/coverage/lcov-report/index-lcov.xml

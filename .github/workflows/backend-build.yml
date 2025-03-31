@@ -1,5 +1,4 @@
-name: Backend Build and SonarQube Scan
-
+name: Backend Build
 on:
   push:
     branches:
@@ -38,20 +37,6 @@ jobs:
 
       - name: Unit Test
         run: rm -rf build && npm run clean && npm run test -- --coverage --coverageReporters=lcov>./server/coverage
-
-  sonarqbe:
-    name: SonarQube Scan
-    runs-on: windows-latest
-    needs: build  # Ensure the SonarQube scan runs after the build job
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   webhook-request:
     name: Send Discord Notification

@@ -36,7 +36,7 @@ jobs:
               run: npm run build
 
             - name: Unit Test
-              run: rm -rf build && npm run clean && npm run test
+              run: rm -rf build && npm run clean && npm run test -- --coverage --coverageReporters=lcov>>./result
 
     webhook-request:
         name: Send Discord Notification

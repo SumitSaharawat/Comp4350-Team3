@@ -3,6 +3,8 @@ import {IGoal} from "../db/goalsDB";
 import {addGoal, deleteGoal, editGoal, getAllGoals} from "../db/goalsService";
 import {controlLog} from "./controlLog";
 
+import { addTransaction } from "../db/transactionService"; 
+
 // format the goal data in a neater way
 const formatGoal = (goal: IGoal) => ({
   id: goal._id.toString(),
@@ -66,6 +68,19 @@ export const editGoalController = async (req: Request, res: Response) => {
     } else {
       res.status(404).json({message: "Goal not found"});
     }
+
+    // If goal is complete, create a transaction
+    if (updatedGoal.currAmount === updatedGoal.goalAmount) {
+      await addTransaction(
+        updatedGoal.user.toString(), // Associate with user
+        updatedGoal.name,   // Name of the goal
+        new Date().toISOString(),         // Transaction date
+        updatedGoal.goalAmount, // Amount spent
+        "CAD",              // Default currency (or get from user)
+        "Spending",         // Transaction type
+      );
+    }
+
   } catch (err) {
     console.error("Error updating goal:", err.message || err);
     return res.status(500).json({error: err.message || "Error updating goal"});

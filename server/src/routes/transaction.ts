@@ -15,7 +15,7 @@ router.get("/:userId", authenticateToken, validateTransactionRequest, validatePa
 // Example body for addTransaction
 // {
 //     "name": "Bush Ranger",
-//     "date": "Wed, Feb 26, 2025",
+//     "date": "2025-02-17T12:00:00Z",
 //     "amount": 225.33,
 //     "currency": "USD",
 //     "type": "Saving",

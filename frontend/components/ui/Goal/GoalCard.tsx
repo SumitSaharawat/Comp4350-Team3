@@ -62,7 +62,10 @@ export default function GoalCard({ goal, refreshGoals }: GoalCardProps) {
     return (
         <div
             ref={cardRef}
-            className="bg-white p-4 rounded-lg shadow-md relative border border-gray-200"
+            className="p-4 rounded-lg shadow-md relative border border-gray-200 backdrop-blur-md"
+            style={{
+                backgroundImage: `linear-gradient(to top right, black 60%, #f9769d 100%)`,
+            }}
         >
             <div className="flex justify-between items-center mb-3">
                 <div className="flex items-center gap-2">

@@ -17,7 +17,7 @@ describe("Tag Service Tests", () => {
   let userId: string;
 
   beforeAll(async () => {
-    mongoose.set('strictQuery', true);
+    mongoose.set("strictQuery", true);
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
     await mongoose.connect(mongoUri);
@@ -110,10 +110,10 @@ describe("Tag Service Tests", () => {
 
   test("should update the message if provided", async () => {
     const tag = await addTag(userId, "Tag1", "#FF5733");
-    
+
     // Assume we have a field `message` and update it
     const updatedTag = await editTag(tag._id.toString(), "Updated Tag", "#33FF57", "New message");
-    
+
     expect(updatedTag).not.toBeNull();
     expect(updatedTag?.message).toBe("New message");
     expect(updatedTag?.name).toBe("Updated Tag");

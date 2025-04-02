@@ -1,7 +1,7 @@
-import { MongoMemoryServer } from "mongodb-memory-server";
+import {MongoMemoryServer} from "mongodb-memory-server";
 import mongoose from "mongoose";
 import User from "../../db/userDB";
-import { addUser, getAllUsers, getUsersByUsername, editUser, deleteUser } from "../../db/userService";
+import {addUser, getAllUsers, getUsersByUsername, editUser, deleteUser} from "../../db/userService";
 
 beforeEach(() => {
   jest.spyOn(console, "error").mockImplementation(() => {});
@@ -64,7 +64,7 @@ describe("User Service Tests", () => {
       const mockError = new Error("Database connection failed");
       jest.spyOn(User, "find").mockRejectedValue(mockError);
       const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
-      
+
       await expect(getAllUsers()).rejects.toThrow(mockError);
       expect(consoleErrorSpy).toHaveBeenCalledWith("Error retrieving users:", mockError);
       consoleErrorSpy.mockRestore();
@@ -151,5 +151,4 @@ describe("User Service Tests", () => {
     const updatedUser = await editUser(existingUserId, undefined, undefined, 500);
     expect(updatedUser?.balance).toBe(500);
   });
-  
 });

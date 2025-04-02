@@ -107,7 +107,7 @@ export default function GoalEditModal({
         }
 
         if (goalData.currAmount > goalData.goalAmount) {
-            setMessage({ text: "Goal is less than saving!", type: "error" });
+            setMessage({ text: "You are saving more than the goal amount", type: "error" });
             return;
         }
         setMessage(null);

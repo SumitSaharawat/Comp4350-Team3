@@ -1,9 +1,9 @@
-import { MongoMemoryServer } from "mongodb-memory-server";
+import {MongoMemoryServer} from "mongodb-memory-server";
 import mongoose from "mongoose";
 import User from "../../db/userDB";
 import Tag from "../../db/tagDB";
 import Transaction from "../../db/transactionDB";
-import { addTransaction, getAllTransactions, editTransaction, deleteTransaction } from "../../db/transactionService";
+import {addTransaction, getAllTransactions, editTransaction, deleteTransaction} from "../../db/transactionService";
 
 // Test settings assisted by AI
 beforeEach(() => {
@@ -20,7 +20,7 @@ describe("Transaction Service Tests", () => {
   let transactionId: string;
 
   beforeAll(async () => {
-    mongoose.set('strictQuery', true);
+    mongoose.set("strictQuery", true);
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
     await mongoose.connect(mongoUri);
@@ -87,7 +87,7 @@ describe("Transaction Service Tests", () => {
       await expect(addTransaction(userId, "Test Transaction", "2025-03-27", 50, "CAD", "Spending", [invalidTagId]))
         .rejects.toThrow("One or more tags do not exist.");
     });
-  
+
     it("should throw error if amount is negative", async () => {
       await expect(addTransaction(userId, "Test Transaction", "2025-03-27", -50, "CAD", "Spending", [tagId]))
         .rejects.toThrow("Validation Error: Amount must be a positive number");
@@ -100,17 +100,17 @@ describe("Transaction Service Tests", () => {
         password: "testpassword",
         balance: 10,
       });
-    
+
       const validTag = await Tag.create({
         name: "Food",
         user: userWithInsufficientBalance._id,
         color: "#FF5733",
       });
-      
+
       await expect(addTransaction(userWithInsufficientBalance._id, "Test Transaction", "2025-03-27", 50, "CAD", "Spending", [validTag._id]))
         .rejects.toThrow("Insufficient balance for spending.");
     });
-    
+
 
     it("should throw error if transaction type is invalid", async () => {
       await expect(addTransaction(userId, "Test Transaction", "2025-03-27", 50, "CAD", "InvalidType", [tagId]))
@@ -124,7 +124,7 @@ describe("Transaction Service Tests", () => {
         color: "#5F9EA0",
       });
       await newTag.save();
-      
+
       await expect(addTransaction(userId, "Test Transaction", "2025-03-27", 50, "CAD", "Spending", [newTag._id]))
         .rejects.toThrow(/Tag "Shopping" does not belong to the user with ID/);
     });
@@ -191,29 +191,29 @@ describe("Transaction Service Tests", () => {
       const result = await editTransaction(invalidTransactionId, "Updated Transaction", "2025-03-28", 120, "CAD", "Spending", [tagId]);
       expect(result).toBeNull();
     });
-  
+
     describe("getAllTransactions function", () => {
       it("should throw a ValidationError if there is a validation issue", async () => {
         const invalidUserId = "invalidUserId";
         await expect(getAllTransactions(invalidUserId)).rejects.toThrow("Invalid user ID format");
       });
     });
-    
+
     it("should throw error if user balance is insufficient for spending", async () => {
       await expect(editTransaction(transactionId, "Updated Grocery Shopping", "2025-03-28", 150000, "CAD", "Spending", [tagId]))
         .rejects.toThrow("Insufficient balance for spending.");
-    });    
+    });
 
     it("should throw error if date format is invalid", async () => {
       await expect(editTransaction(transactionId, "Updated Grocery Shopping", "Invalid Date", 120, "CAD", "Spending", [tagId]))
         .rejects.toThrow(expect.objectContaining({
-          message: expect.stringMatching(/Validation Error: Cast to date failed for value "Invalid Date"/)
+          message: expect.stringMatching(/Validation Error: Cast to date failed for value "Invalid Date"/),
         }));
-    });    
+    });
     it("should throw an error if no valid tags are provided during transaction update", async () => {
       const invalidTagId = new mongoose.Types.ObjectId().toString();
       const transaction = await addTransaction(userId.toString(), "Rent", "2025-03-20", 100, "USD", "Spending", [tagId.toString()]);
-    
+
       await expect(editTransaction(transaction._id.toString(), "Rent", "2025-03-20", 100, "USD", "Spending", [invalidTagId]))
         .rejects.toThrow("One or more tags do not exist.");
     });
@@ -257,7 +257,7 @@ describe("Transaction Service Tests", () => {
       expect(err.message).toBe("Invalid transaction ID format");
     }
   });
-  
+
   it("should throw an error when an invalid transaction ID is passed in deleteTransaction", async () => {
     try {
       await deleteTransaction("invalid-id");
@@ -271,7 +271,7 @@ describe("Transaction Service Tests", () => {
     const result = await editTransaction(invalidTransactionId, "Rent", "2025-03-20", 100, "USD", "Spending", [tagId.toString()]);
     expect(result).toBeNull();
   });
-  
+
   it("should throw an error if the transaction is not found in deleteTransaction", async () => {
     const invalidTransactionId = new mongoose.Types.ObjectId().toString();
     try {
@@ -286,7 +286,7 @@ describe("Transaction Service Tests", () => {
     const user = await User.findById(userId);
     user.balance = 500; // Setting balance lower than transaction amount
     await user.save();
-  
+
     try {
       await editTransaction(transaction._id.toString(), "Rent", "2025-03-20", 1000, "USD", "Spending", [tagId.toString()]);
     } catch (err) {
@@ -306,13 +306,13 @@ describe("Transaction Service Tests", () => {
     });
     await transaction.save();
 
-    await expect(deleteTransaction(transaction._id)).rejects.toThrow(`User not found.`);
+    await expect(deleteTransaction(transaction._id)).rejects.toThrow("User not found.");
   });
 
   it("should throw an error if the tags do not exist in editTransaction", async () => {
     const invalidTagId = new mongoose.Types.ObjectId().toString();
     const transaction = await addTransaction(userId.toString(), "Rent", "2025-03-20", 100, "USD", "Spending", [tagId.toString()]);
-  
+
     try {
       await editTransaction(transaction._id.toString(), "Rent", "2025-03-20", 100, "USD", "Spending", [invalidTagId]);
     } catch (err) {
@@ -322,7 +322,7 @@ describe("Transaction Service Tests", () => {
 
   it("should throw an error when an invalid transaction type is provided in editTransaction", async () => {
     const transaction = await addTransaction(userId.toString(), "Rent", "2025-03-20", 100, "USD", "Spending", [tagId.toString()]);
-  
+
     try {
       await editTransaction(transaction._id.toString(), "Rent", "2025-03-20", 100, "USD", "InvalidType", [tagId.toString()]);
     } catch (err) {
@@ -333,7 +333,7 @@ describe("Transaction Service Tests", () => {
   it("should throw an error when an invalid type is provided in editTransaction", async () => {
     // Create a transaction with a valid type ("Spending")
     const transaction = await addTransaction(userId.toString(), "Rent", "2025-03-20", 100, "USD", "Spending", [tagId.toString()]);
-  
+
     // Try to update the transaction with an invalid type
     try {
       await editTransaction(transaction._id.toString(), "Rent", "2025-03-20", 100, "USD", "InvalidType", [tagId.toString()]);
@@ -345,10 +345,10 @@ describe("Transaction Service Tests", () => {
   it("should throw an error when the user does not exist during transaction update", async () => {
     // Create a transaction with a valid user
     const transaction = await addTransaction(userId.toString(), "Rent", "2025-03-20", 100, "USD", "Spending", [tagId.toString()]);
-  
+
     // Delete the user associated with the transaction
     await User.findByIdAndDelete(userId);
-  
+
     // Try to update the transaction after the user is deleted
     try {
       await editTransaction(transaction._id.toString(), "Rent", "2025-03-20", 100, "USD", "Spending", [tagId.toString()]);
@@ -367,10 +367,10 @@ describe("Transaction Service Tests", () => {
     });
     await user.save();
     const userId = user._id;
-  
-    const tag = new Tag({ user: userId, name: "Food", color: "#FF5733" });
+
+    const tag = new Tag({user: userId, name: "Food", color: "#FF5733"});
     await tag.save();
-  
+
     // Create another user and a tag for that user
     const anotherUser = new User({
       username: `anotheruser_${Date.now()}`,
@@ -380,13 +380,13 @@ describe("Transaction Service Tests", () => {
     });
     await anotherUser.save();
     const anotherUserId = anotherUser._id;
-  
-    const invalidTag = new Tag({ user: anotherUserId, name: "Health", color: "#00FF00" });
+
+    const invalidTag = new Tag({user: anotherUserId, name: "Health", color: "#00FF00"});
     await invalidTag.save();
-  
+
     // Create a transaction with a valid tag from the first user
     const transaction = await addTransaction(userId.toString(), "Groceries", "2025-03-20", 100, "USD", "Spending", [tag._id.toString()]);
-  
+
     // Try to update the transaction with a tag from a different user
     try {
       await editTransaction(transaction._id.toString(), "Groceries", "2025-03-20", 100, "USD", "Spending", [invalidTag._id.toString()]);
@@ -394,7 +394,7 @@ describe("Transaction Service Tests", () => {
       expect(err.message).toBe(`Tag "${invalidTag.name}" does not belong to the user with ID ${userId}`);
     }
   });
-  
+
   it("should handle validation errors correctly", async () => {
     // Simulate a situation where required fields are missing (for example, missing transaction name)
     try {
@@ -410,7 +410,7 @@ describe("Transaction Service Tests", () => {
     const user = await User.findById(userId);
     user.balance = 50; // Insufficient balance for the updated transaction
     await user.save();
-  
+
     try {
       await editTransaction(transaction._id.toString(), "Groceries", "2025-03-20", 100, "USD", "Spending", [tagId.toString()]);
     } catch (err) {
@@ -420,17 +420,17 @@ describe("Transaction Service Tests", () => {
 
   it("should throw an error if amount is missing during transaction edit", async () => {
     const transaction = await addTransaction(userId.toString(), "Groceries", "2025-03-20", 100, "USD", "Spending", [tagId.toString()]);
-  
+
     try {
       await editTransaction(transaction._id.toString(), "Groceries", "2025-03-20", undefined, "USD", "Spending", [tagId.toString()]);
     } catch (err) {
       expect(err.message).toBe("Validation Error: Path `amount` is required.");
     }
   });
-  
+
   it("should throw an error if an invalid transaction type is provided in editTransaction", async () => {
     const transaction = await addTransaction(userId.toString(), "Groceries", "2025-03-20", 100, "USD", "Spending", [tagId.toString()]);
-    
+
     try {
       await editTransaction(transaction._id.toString(), "Groceries", "2025-03-20", 100, "USD", "InvalidType", [tagId.toString()]);
     } catch (err) {
@@ -449,8 +449,8 @@ describe("Transaction Service Tests", () => {
 
   it("should allow removing all tags from a transaction", async () => {
     const transaction = await addTransaction(userId.toString(), "Groceries", "2025-03-20", 100, "USD", "Spending", [tagId.toString()]);
-    
+
     const updatedTransaction = await editTransaction(transaction._id.toString(), "Groceries", "2025-03-20", 100, "USD", "Spending", []);
     expect(updatedTransaction.tags).toHaveLength(0); // Tags should be empty
-  });   
+  });
 });

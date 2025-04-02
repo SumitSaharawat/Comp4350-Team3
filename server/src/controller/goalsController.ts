@@ -35,6 +35,18 @@ export const addGoalController = async (req: Request, res: Response) => {
 
   try {
     const goal = await addGoal(userId, name, time, currAmount, goalAmount, category);
+
+    // If goal is complete, create a transaction
+    if (goal.currAmount === goal.goalAmount) {
+      await addTransaction(
+        goal.user.toString(), // Associate with user
+        goal.name, // Name of the goal
+        new Date().toISOString(), // Transaction date
+        goal.goalAmount, // Amount spent
+        "CAD", // Default currency (or get from user)
+        "Spending", // Transaction type
+      );
+    }
     res.status(201).json({message: "Goal added successfully", goal: formatGoal(goal)});
   } catch (err) {
     console.error("Error creating goal:", err.message || err);

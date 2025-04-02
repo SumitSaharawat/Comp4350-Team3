@@ -7,6 +7,7 @@ interface TagContextType {
     tags: Tag[];
     getTags: (userId: string) => Promise<boolean>;
     deleteTag: (tagId: string) => Promise<boolean>;
+    handleGetTagsNameList: () => string[];
 }
 
 const TagsContext = createContext<TagContextType | undefined>(undefined);
@@ -31,6 +32,14 @@ export function TagsProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
+    // Getting all tag names and place on a list
+    const handleGetTagsNameList = (): string[] => {
+        if (tags && tags.length > 0) {
+            return tags.map(tag => tag.name);
+        }
+        return [];
+    };
+
     const handleDeleteTag = async (tagId: string) => {
         try {
             await deleteGoalToServer(tagId);
@@ -50,6 +59,7 @@ export function TagsProvider({ children }: { children: React.ReactNode }) {
                 tags,
                 getTags: handleGetTags,
                 deleteTag: handleDeleteTag,
+                handleGetTagsNameList: handleGetTagsNameList,
             }
         }>
             {children}

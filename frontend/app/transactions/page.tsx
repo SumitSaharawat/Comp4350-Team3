@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import { useTransactions } from "@/app/contexts/TransactionsContext";
 import { Transaction } from "../api/transac";
 import { useAuth } from "@/app/contexts/AuthContext";
-
+import { useTags } from "@/app/contexts/TagContext";
 // components
 import Layout from "@/components/ui/Layout";
 import TransactionList from "@/components/ui/Transaction/TransactionList";
@@ -18,12 +18,12 @@ import { SearchBar } from "@/components/ui/Input";
 export default function TransactionsPage() {
     const { transactions, getTransactions } = useTransactions();
     const { user } = useAuth();
+    const { getTags, handleGetTagsNameList } = useTags();
     const [data, setData] = useState<Transaction[]>([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editTransaction, setEditTransaction] = useState<Transaction | null>(
         null
     );
-    const CategoryList = ["CAD", "USD"];
     const searchHint = "Search Transaction";
 
     // change the transactions displayed on the fly when search term is changing
@@ -37,20 +37,22 @@ export default function TransactionsPage() {
         );
     };
 
+    // find out the target tag name
     const onSelectCategory = (items: string[]) => {
         setData(
             items.length > 0
                 ? transactions.filter((transaction) =>
-                      items.some((i) =>
-                          transaction.currency
-                              .toLowerCase()
-                              .includes(i.toLowerCase())
-                      )
-                  )
+                    transaction.tags.some((tag) =>
+                        items.some((i) =>
+                            tag.name.toLowerCase().includes(i.toLowerCase())
+                        )
+                    )
+                )
                 : transactions
         );
     };
 
+    // render for all transactions
     const getDataOnRender = async () => {
         try {
             const success = await getTransactions(
@@ -68,13 +70,21 @@ export default function TransactionsPage() {
         }
     };
 
+    // fetch for all tags
+    const renderTags = async () =>{
+        await getTags(user?.id || (localStorage.getItem("userid") as string));
+    };
+
     useEffect(() => {
+        renderTags();
         getDataOnRender();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     useEffect(() => {
         setData(transactions);
+        renderTags();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [transactions]);
 
     // **OPEN MODAL FOR ADDING**
@@ -101,34 +111,14 @@ export default function TransactionsPage() {
                 searchHint={searchHint || ""}
                 onTextChange={onSearchTermChange}
             />
+
             <FilterButton
                 filterName="Category"
-                filterOptions={CategoryList}
+                filterOptions={handleGetTagsNameList()}
                 onSelectOption={onSelectCategory}
             />
         </div>
     );
-
-    // const onSelectCurrency = (item: string) => {
-    //     console.log(item);
-    // };
-    //
-    // const rightComponent = () => {
-    //     return (
-    //         <details className="dropdown">
-    //             <summary className="btn m-1">{"Currency"}</summary>
-    //             <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-    //                 {currencyList.map((d) => {
-    //                     return (
-    //                         <li key={d}>
-    //                             <a onClick={() => onSelectCurrency(d)}>{d}</a>
-    //                         </li>
-    //                     );
-    //                 })}
-    //             </ul>
-    //         </details>
-    //     );
-    // };
 
     return (
         <Layout title="Transactions" middleComponent={middleComponent}>

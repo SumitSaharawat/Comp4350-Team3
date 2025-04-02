@@ -34,7 +34,7 @@ export default function TransactionList({
     return (
         <div className="w-full h-full overflow-y-auto border border-gray-300 rounded-lg shadow-sm">
             <table className="w-full border-collapse table-fixed">
-                <thead className="sticky top-0 bg-gray-100 text-black">
+                <thead className="sticky top-0 bg-customSecondDark text-foreground">
                 <tr>
                     <th className="border-b border-gray-400 px-2 py-2 font-bold text-left">
                         Name
@@ -60,12 +60,12 @@ export default function TransactionList({
                 </tr>
                 </thead>
 
-                <tbody className="text-black">
+                <tbody className="text-foreground ">
                 {transactions.length > 0 ? (
                     transactions.map((tx) => (
                         <React.Fragment key={tx.id}>
                             {/* Transaction Row */}
-                            <tr className="hover:bg-gray-200 h-12">
+                            <tr className="hover:bg-gray-700 h-12">
                                 <td className="border-b border-gray-400 px-2 py-2 text-left">
                                     {tx.name || ""}
                                 </td>

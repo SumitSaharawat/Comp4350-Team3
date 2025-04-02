@@ -138,7 +138,7 @@ const FilterButton = ({
     return (
         <div className="relative ml-10">
             <button
-                className="flex items-center gap-1 text-black font-bold focus:outline-none"
+                className="flex items-center gap-1 text-foreground font-bold focus:outline-none"
                 onClick={() => setIsOpen(!isOpen)}
             >
                 {filterName}{" "}
@@ -153,7 +153,7 @@ const FilterButton = ({
 
             {/* Dropdown menu */}
             {isOpen && (
-                <ul className="absolute left-0 mt-3 w-52 bg-white rounded-lg shadow-md p-2 z-10">
+                <ul className="absolute left-0 mt-3 w-52 bg-black/80 rounded-lg shadow-md p-2 z-10">
                     {filterOptions.map((d) => (
                         <li key={d} className="py-1">
                             <label className="flex items-center gap-2 cursor-pointer">
@@ -161,7 +161,7 @@ const FilterButton = ({
                                     type="checkbox"
                                     checked={selectedOptions.includes(d)}
                                     onChange={() => toggleSelection(d)}
-                                    className="checkbox"
+                                    className="checkbox checkbox-error"
                                 />
                                 {d}
                             </label>

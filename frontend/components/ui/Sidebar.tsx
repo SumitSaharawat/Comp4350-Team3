@@ -70,7 +70,7 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
 
     return (
         <div
-            className={`fixed top-0 left-0 pt-12 h-full bg-gray-900 text-white transition-all duration-300 ease-in-out ${
+            className={`fixed top-0 left-0 pt-12 h-full bg-black text-foreground transition-all duration-300 ease-in-out ${
                 isOpen ? "w-64" : "w-16"
             }`}
             onMouseEnter={() => setIsHovered(true)}
@@ -103,10 +103,10 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
                     <li key={item.path} className="relative">
                         <Link
                             href={item.path}
-                            className={`flex items-center gap-3 p-3 rounded-md w-full transition-colors ${
+                            className={`flex items-center gap-3 p-3 w-full transition-colors ${
                                 pathname === item.path
-                                    ? "bg-purple-600 text-white"
-                                    : "hover:bg-gray-700"
+                                    ? "bg-transparent text-customSkyBlue border-l-4 border-customSkyBlue"
+                                    : "hover:bg-gray-900"
                             }`}
                         >
                             {item.icon}

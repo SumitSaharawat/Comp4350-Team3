@@ -66,7 +66,7 @@ export const editGoalController = async (req: Request, res: Response) => {
     if (updatedGoal) {
       res.status(200).json({message: "Goal updated successfully", goal: formatGoal(updatedGoal)});
     } else {
-      res.status(404).json({message: "Goal not found"});
+      return res.status(404).json({message: "Goal not found"});
     }
 
     // If goal is complete, create a transaction

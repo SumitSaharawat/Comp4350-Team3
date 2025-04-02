@@ -3,7 +3,7 @@ import {IGoal} from "../db/goalsDB";
 import {addGoal, deleteGoal, editGoal, getAllGoals} from "../db/goalsService";
 import {controlLog} from "./controlLog";
 
-import { addTransaction } from "../db/transactionService"; 
+import {addTransaction} from "../db/transactionService";
 
 // format the goal data in a neater way
 const formatGoal = (goal: IGoal) => ({
@@ -73,14 +73,13 @@ export const editGoalController = async (req: Request, res: Response) => {
     if (updatedGoal.currAmount === updatedGoal.goalAmount) {
       await addTransaction(
         updatedGoal.user.toString(), // Associate with user
-        updatedGoal.name,   // Name of the goal
-        new Date().toISOString(),         // Transaction date
+        updatedGoal.name, // Name of the goal
+        new Date().toISOString(), // Transaction date
         updatedGoal.goalAmount, // Amount spent
-        "CAD",              // Default currency (or get from user)
-        "Spending",         // Transaction type
+        "CAD", // Default currency (or get from user)
+        "Spending", // Transaction type
       );
     }
-
   } catch (err) {
     console.error("Error updating goal:", err.message || err);
     return res.status(500).json({error: err.message || "Error updating goal"});

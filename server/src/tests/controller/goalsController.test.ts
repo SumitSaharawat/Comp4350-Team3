@@ -3,12 +3,17 @@ import request from "supertest";
 import express from "express";
 import {addGoal, getAllGoals, editGoal, deleteGoal} from "../../db/goalsService";
 import {addGoalController, getAllGoalsController, editGoalController, deleteGoalController} from "../../controller/goalsController";
+import { addTransaction } from "../../db/transactionService";
 
 jest.mock("../../db/goalsService", () => ({
   addGoal: jest.fn(),
   getAllGoals: jest.fn(),
   editGoal: jest.fn(),
   deleteGoal: jest.fn(),
+}));
+
+jest.mock("../../db/transactionService", () => ({
+  addTransaction: jest.fn(),
 }));
 
 beforeEach(() => {
@@ -89,6 +94,47 @@ describe("Goal Controller", () => {
 
       expect(response.status).toBe(500);
       expect(response.body.error).toBe("Database error");
+    });
+
+    it("should create a transaction when goal is complete", async () => {
+      const goalData = {
+        userId: "user123",
+        name: "Save for car",
+        time: "2025-12-31T12:00:00Z",
+        currAmount: "1000",
+        goalAmount: "1000",
+        category: "Finance",
+      };
+  
+      const goal = {
+        ...goalData,
+        _id: "goal123",
+        user: "user123",
+        currAmount: 1000,
+        goalAmount: 1000,
+      };
+
+      //Test setting assisted by AI
+      (addGoal as jest.Mock).mockResolvedValue(goal);
+  
+      const addTransactionMock = addTransaction as jest.Mock;
+      addTransactionMock.mockClear();
+  
+      const response = await request(app)
+        .post("/api/goal")
+        .send(goalData);
+  
+      expect(response.status).toBe(201);
+  
+      expect(addTransactionMock).toHaveBeenCalledTimes(1);
+      expect(addTransactionMock).toHaveBeenCalledWith(
+        "user123", 
+        "Save for car", 
+        expect.any(String), 
+        1000, 
+        "CAD", 
+        "Spending"
+      );
     });
   });
 
@@ -183,6 +229,46 @@ describe("Goal Controller", () => {
       expect(response.status).toBe(500);
       expect(response.body.error).toBe("Database error");
     });
+
+    it("should create a transaction when goal is complete", async () => {
+      const completedGoal = {
+        _id: "goal123",
+        user: "user123",
+        name: "Save Money",
+        time: "2025-03-01T12:00:00Z",
+        currAmount: 500,
+        goalAmount: 500,
+        category: "Finance",
+      };
+      
+      //Test setting assisted by AI
+      (editGoal as jest.Mock).mockResolvedValue(completedGoal);
+      
+      const addTransactionMock = addTransaction as jest.Mock;
+      addTransactionMock.mockClear();
+    
+      const response = await request(app).put("/api/goal/goal123").send({
+        name: "Save Money",
+        time: "2025-03-01T12:00:00Z",
+        currAmount: 500,
+        goalAmount: 500,
+        category: "Finance",
+      });
+    
+      expect(response.status).toBe(200);
+      expect(response.body.message).toBe("Goal updated successfully");
+      
+      expect(addTransactionMock).toHaveBeenCalledTimes(1);
+      expect(addTransactionMock).toHaveBeenCalledWith(
+        "user123",
+        "Save Money",
+        expect.any(String),
+        500,
+        "CAD",
+        "Spending"
+      );
+    });
+    
   });
 
   describe("deleteGoalController", () => {

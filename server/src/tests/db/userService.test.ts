@@ -45,7 +45,7 @@ describe("User Service Tests", () => {
   });
 
   test("should not add a user without balance", async () => {
-    await expect(addUser("noBalanceUser", "password", undefined as any))
+    await expect(addUser("noBalanceUser", "password", undefined))
       .rejects.toThrow("Balance must be a positive number");
   });
 

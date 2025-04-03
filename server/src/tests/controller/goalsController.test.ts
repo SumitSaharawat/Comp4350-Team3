@@ -3,7 +3,7 @@ import request from "supertest";
 import express from "express";
 import {addGoal, getAllGoals, editGoal, deleteGoal} from "../../db/goalsService";
 import {addGoalController, getAllGoalsController, editGoalController, deleteGoalController} from "../../controller/goalsController";
-import { addTransaction } from "../../db/transactionService";
+import {addTransaction} from "../../db/transactionService";
 
 jest.mock("../../db/goalsService", () => ({
   addGoal: jest.fn(),
@@ -105,7 +105,7 @@ describe("Goal Controller", () => {
         goalAmount: "1000",
         category: "Finance",
       };
-  
+
       const goal = {
         ...goalData,
         _id: "goal123",
@@ -114,26 +114,26 @@ describe("Goal Controller", () => {
         goalAmount: 1000,
       };
 
-      //Test setting assisted by AI
+      // Test setting assisted by AI
       (addGoal as jest.Mock).mockResolvedValue(goal);
-  
+
       const addTransactionMock = addTransaction as jest.Mock;
       addTransactionMock.mockClear();
-  
+
       const response = await request(app)
         .post("/api/goal")
         .send(goalData);
-  
+
       expect(response.status).toBe(201);
-  
+
       expect(addTransactionMock).toHaveBeenCalledTimes(1);
       expect(addTransactionMock).toHaveBeenCalledWith(
-        "user123", 
-        "Save for car", 
-        expect.any(String), 
-        1000, 
-        "CAD", 
-        "Spending"
+        "user123",
+        "Save for car",
+        expect.any(String),
+        1000,
+        "CAD",
+        "Spending",
       );
     });
   });
@@ -240,13 +240,13 @@ describe("Goal Controller", () => {
         goalAmount: 500,
         category: "Finance",
       };
-      
-      //Test setting assisted by AI
+
+      // Test setting assisted by AI
       (editGoal as jest.Mock).mockResolvedValue(completedGoal);
-      
+
       const addTransactionMock = addTransaction as jest.Mock;
       addTransactionMock.mockClear();
-    
+
       const response = await request(app).put("/api/goal/goal123").send({
         name: "Save Money",
         time: "2025-03-01T12:00:00Z",
@@ -254,10 +254,10 @@ describe("Goal Controller", () => {
         goalAmount: 500,
         category: "Finance",
       });
-    
+
       expect(response.status).toBe(200);
       expect(response.body.message).toBe("Goal updated successfully");
-      
+
       expect(addTransactionMock).toHaveBeenCalledTimes(1);
       expect(addTransactionMock).toHaveBeenCalledWith(
         "user123",
@@ -265,10 +265,9 @@ describe("Goal Controller", () => {
         expect.any(String),
         500,
         "CAD",
-        "Spending"
+        "Spending",
       );
     });
-    
   });
 
   describe("deleteGoalController", () => {

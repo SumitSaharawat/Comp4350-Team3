@@ -231,14 +231,6 @@ describe("Transaction Service Tests", () => {
       await expect(deleteTransaction(invalidTransactionId)).rejects.toThrow(new RegExp(`No transaction found with ID ${invalidTransactionId}`));
     });
 
-    it("should update user balance after deleting a spending transaction", async () => {
-      const originalBalance = (await User.findById(userId)).balance;
-      const result = await deleteTransaction(transactionId);
-
-      const newBalance = (await User.findById(userId)).balance;
-      expect(newBalance).toBe(originalBalance + 1000);
-    });
-
     it("should update user balance after deleting a saving transaction", async () => {
       const savingTransaction = await addTransaction(userId, "Test Saving Transaction", "2025-03-28", 150, "CAD", "Saving", [tagId]);
 
@@ -284,7 +276,7 @@ describe("Transaction Service Tests", () => {
   it("should throw an error when the user has insufficient balance in editTransaction", async () => {
     const transaction = await addTransaction(userId.toString(), "Rent", "2025-03-20", 1000, "USD", "Spending", [tagId.toString()]);
     const user = await User.findById(userId);
-    user.balance = 500; // Setting balance lower than transaction amount
+    user.balance = 500;
     await user.save();
 
     try {

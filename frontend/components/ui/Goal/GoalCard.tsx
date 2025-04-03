@@ -78,7 +78,7 @@ export default function GoalCard({ goal, refreshGoals }: GoalCardProps) {
                     <MoreHorizontal className="text-gray-500 hover:text-black" />
                 </button>
 
-                {showMenu && (
+                {goal.currAmount < goal.goalAmount && showMenu && (
                     <div
                         ref={menuRef}
                         className="absolute right-0 top-8 bg-white border border-gray-200

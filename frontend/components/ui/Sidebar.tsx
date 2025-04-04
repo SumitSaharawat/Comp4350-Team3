@@ -90,7 +90,7 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
                             className="object-cover"
                         />
                     </div>
-                    <span className="text-xl font-semibold">Savi</span>
+                    <span className="text-xl font-semibold italic">Savi</span>
                 </div>
             )}
 

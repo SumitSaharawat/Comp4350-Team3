@@ -193,7 +193,8 @@ export default function GoalEditModal({
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50">
             <div
                 ref={contentRef}
-                className={`bg-white p-4 rounded-lg shadow-md absolute 
+                className={`bg-gradient-to-br from-black to-gray-500
+                             backdrop-blur-xl p-4 rounded-lg shadow-md absolute 
                 max-w-[${window_w}px] 
                 max-h-[${window_h}px] 
                 origin-center`}
@@ -203,7 +204,7 @@ export default function GoalEditModal({
                 }}
             >
                 <div className="p-2 w-full">
-                    <h2 className="text-xl font-bold text-center pt-1">
+                    <h2 className="text-xl font-bold text-center pt-1 mb-2">
                         Edit Goal
                     </h2>
 
@@ -213,7 +214,7 @@ export default function GoalEditModal({
                         placeholder="Goal Name"
                         value={goalData.name}
                         onChange={(e) => handleChange("name", e.target.value)}
-                        className="w-full border border-gray-300 p-2 rounded mb-2"
+                        className="w-full border border-gray-300 bg-transparent p-2 rounded mb-2"
                     />
 
                     {/* Current Amount */}
@@ -227,7 +228,7 @@ export default function GoalEditModal({
                                 e.target.value ? Number(e.target.value) : ""
                             )
                         }
-                        className="w-full border border-gray-300 p-2 rounded mb-2"
+                        className="w-full  bg-transparent border border-gray-300 p-2 rounded mb-2"
                     />
 
                     {/* Goal Amount */}
@@ -241,7 +242,7 @@ export default function GoalEditModal({
                                 e.target.value ? Number(e.target.value) : ""
                             )
                         }
-                        className="w-full border border-gray-300 p-2 rounded mb-2"
+                        className="w-full bg-transparent border border-gray-300 p-2 rounded mb-2"
                     />
 
                     {/* Category Dropdown */}
@@ -250,7 +251,7 @@ export default function GoalEditModal({
                         onChange={(e) =>
                             handleChange("category", e.target.value)
                         }
-                        className="w-full border border-gray-300 p-2 rounded mb-4 bg-white"
+                        className="w-full bg-transparent border border-gray-300 p-2 rounded mb-4"
                     >
                         {categories.map((cur) => (
                             <option key={cur} value={cur}>
@@ -266,7 +267,7 @@ export default function GoalEditModal({
                             handleChange("time", date || new Date())
                         }
                         dateFormat="yyyy-MM-dd"
-                        className="w-full border border-gray-300 p-2 rounded mb-2"
+                        className="w-full bg-transparent border border-gray-300 p-2 rounded mb-2"
                         showPopperArrow={false}
                     />
 
@@ -275,14 +276,14 @@ export default function GoalEditModal({
                         <button
                             onClick={handleClose}
                             disabled={loading}
-                            className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-200"
+                            className="px-4 py-2 rounded-md hover:bg-red-400"
                         >
                             {loading ? "Closing..." : "Cancel"}
                         </button>
                         <button
                             onClick={handleSubmit}
                             disabled={loading}
-                            className={`px-4 py-2 rounded-md text-white ${
+                            className={`px-4 py-2 rounded-md bg-transparent hover:bg-green-700 ${
                                 loading
                                     ? "bg-gray-500 cursor-not-allowed"
                                     : "bg-blue-600 hover:bg-blue-700"

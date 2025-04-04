@@ -184,7 +184,7 @@ export default function ReminderEditModal({
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50">
             <div
                 ref={contentRef}
-                className={`bg-white p-4 rounded-lg shadow-md absolute 
+                className={`bg-black p-4 rounded-lg shadow-md absolute 
                 max-w-[${window_w}px] 
                 max-h-[${window_h}px] 
                 origin-center`}
@@ -194,7 +194,7 @@ export default function ReminderEditModal({
                 }}
             >
                 <div className="p-2 w-full">
-                    <h2 className="text-xl font-bold text-center pt-1">
+                    <h2 className="text-xl font-bold text-center text-customReminderGold pt-1 mb-2">
                         Edit Reminder
                     </h2>
 
@@ -204,7 +204,7 @@ export default function ReminderEditModal({
                         placeholder="Reminder Name"
                         value={reminderData.name}
                         onChange={(e) => handleChange("name", e.target.value)}
-                        className="w-full border border-gray-300 p-2 rounded mb-2"
+                        className="w-full text-customReminderGold bg-transparent border border-gray-300 p-2 rounded mb-2"
                     />
 
                     {/* Reminder Text */}
@@ -218,7 +218,7 @@ export default function ReminderEditModal({
                                 e.target.value === "" ? "" : e.target.value
                             )
                         }
-                        className="w-full border border-gray-300 p-2 rounded mb-2"
+                        className="w-full text-customReminderGold bg-transparent border border-gray-300 p-2 rounded mb-2"
                     />
 
                     {/* Date Picker */}
@@ -230,7 +230,7 @@ export default function ReminderEditModal({
                         showTimeSelect
                         dateFormat="yyyy-MM-dd hh:mm"
                         timeFormat="HH:mm"
-                        className="w-full border border-gray-300 p-2 rounded mb-2"
+                        className="w-full text-customReminderGold bg-transparent border border-gray-300 p-2 rounded mb-2"
                         showPopperArrow={false}
                     />
 
@@ -239,7 +239,7 @@ export default function ReminderEditModal({
                         <button
                             onClick={handleClose}
                             disabled={loading}
-                            className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-200"
+                            className="px-4 py-2 rounded-md hover:bg-red-400"
                         >
                             {loading ? "Closing..." : "Cancel"}
                         </button>
@@ -249,7 +249,7 @@ export default function ReminderEditModal({
                             className={`px-4 py-2 rounded-md text-white ${
                                 loading
                                     ? "bg-gray-500 cursor-not-allowed"
-                                    : "bg-blue-600 hover:bg-blue-700"
+                                    : "bg-transparent hover:bg-green-600"
                             }`}
                         >
                             {loading ? "Saving..." : "Save"}

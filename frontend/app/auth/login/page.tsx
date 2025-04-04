@@ -45,24 +45,33 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="relative w-screen h-screen bg-gradient-to-r from-gray-50 to-gray-400 flex items-center justify-center">
+        <div className="relative w-screen h-screen flex items-center justify-center"
+             style={{
+                 backgroundImage: `linear-gradient(to right, black 30%, #21222d 100%)`,
+             }}
+        >
             {/* Floating Block */}
-            <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl grid grid-cols-2">
+            <div
+                className="rounded-lg shadow-xl w-full max-w-3xl grid grid-cols-2"
+                style={{
+                    backgroundImage: `linear-gradient(to right, black 40%, #21222d 100%)`,
+                }}
+            >
                 {/* Left Panel: Image */}
-                <div className="rounded-l-lg overflow-hidden flex items-center justify-center bg-gray-100">
+                <div
+                    className="relative w-[390px] h-[400px] rounded-l-lg overflow-hidden flex items-center justify-center">
                     <Image
-                        src="/Signup.png"
+                        src="/black_sky.jpg"
                         alt="login Illustration"
+                        fill
                         className="object-contain"
-                        width={350}
-                        height={350}
                     />
                 </div>
 
                 {/* Right Panel: Form */}
                 <div className="p-8 flex flex-col justify-center space-y-8">
-                    <h1 className="text-4xl font-bold text-black text-left">
-                        Log in
+                    <h1 className="text-4xl font-bold text-foreground text-left">
+                        Log In
                     </h1>
 
                     {/* Form */}
@@ -72,13 +81,14 @@ export default function LoginPage() {
                             placeholder="Name"
                             value={username}
                             onChange={(e) => setUserName(e.target.value)}
-                            className="w-full px-4 py-2 border-b border-gray-300 bg-transparent focus:outline-none focus:border-purple-500"
+                            className="w-full px-4 py-2 border-b border-gray-300 bg-transparent focus:outline-none focus:border-customSkyBlue"
                         />
                         <AuthInput
                             type="password"
                             placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            className="w-full px-4 py-2 border-b border-gray-300 bg-transparent focus:outline-none focus:border-customSkyBlue"
                         />
                     </div>
 
@@ -92,7 +102,7 @@ export default function LoginPage() {
                             {"Don't have an account? "}
                             <Link
                                 href="/auth/signup"
-                                className="text-gray-900 hover:underline"
+                                className="text-yellow-700 hover:underline"
                             >
                                 Sign Up
                             </Link>
@@ -102,7 +112,7 @@ export default function LoginPage() {
                         <p className="text-sm text-gray-500 text-center">
                             <Link
                                 href="/auth/reset-password"
-                                className="text-gray-700 hover:underline"
+                                className=" hover:underline"
                             >
                                 Forgot password?
                             </Link>

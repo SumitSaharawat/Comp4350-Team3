@@ -123,18 +123,18 @@ export default function NewReminderForm({
 
     return (
         <div
-            className="fixed right-4 top-4 bg-white p-4 rounded-lg shadow-lg
+            className="fixed right-4 top-4 bg-black p-4 rounded-lg shadow-lg
         border border-gray-300 w-96 z-50 pop-in-animation"
         >
             <button
                 onClick={toggle}
-                className="absolute -right-2 -top-2 text-gray-600 hover:text-black bg-white
-                rounded-full p-1 shadow-sm border border-gray-200 hover:border-gray-300 z-10"
+                className="absolute right-2 top-2 text-customReminderGold hover:text-yellow-200
+                rounded-full p-1 shadow-sm z-10"
             >
                 <X size={20} />
             </button>
 
-            <h2 className="text-xl font-bold mb-4 text-center pt-1">
+            <h2 className="text-xl font-bold mb-4 text-center pt-1 text-customReminderGold">
                 Create New Reminder
             </h2>
 
@@ -144,7 +144,7 @@ export default function NewReminderForm({
                 placeholder="Reminder Name"
                 value={reminderData.name}
                 onChange={(e) => handleChange("name", e.target.value)}
-                className="w-full border border-gray-300 p-2 rounded mb-2"
+                className="w-full bg-transparent border border-gray-300 p-2 rounded mb-2 text-customReminderGold"
             />
 
             {/* Reminder Text */}
@@ -158,7 +158,7 @@ export default function NewReminderForm({
                         e.target.value === "" ? null : e.target.value
                     )
                 }
-                className="w-full border border-gray-300 p-2 rounded mb-2"
+                className="w-full bg-transparent border border-gray-300 p-2 rounded mb-2 text-customReminderGold"
             />
 
             {/* Date Picker */}
@@ -170,7 +170,7 @@ export default function NewReminderForm({
                 showTimeSelect
                 dateFormat="yyyy-MM-dd hh:mm"
                 timeFormat="HH:mm"
-                className="w-full border border-gray-300 p-2 rounded mb-2"
+                className="w-full bg-transparent border border-gray-300 p-2 rounded mb-2 text-customReminderGold"
                 showPopperArrow={false}
             />
 
@@ -187,21 +187,21 @@ export default function NewReminderForm({
                 </p>
             )}
 
-            {/* Buttons */}
+            {/* Bottom Buttons */}
             <div className="flex justify-end mt-4 gap-2">
                 <button
                     onClick={toggle}
-                    className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-200"
+                    className="px-4 py-2 rounded-md hover:bg-red-400"
                 >
                     Cancel
                 </button>
                 <button
                     onClick={handleSubmit}
                     disabled={loading}
-                    className={`px-4 py-2 rounded-md text-white ${
+                    className={`px-4 py-2 rounded-md text-white  ${
                         loading
                             ? "bg-gray-500 cursor-not-allowed"
-                            : "bg-black hover:bg-gray-800"
+                            : "bg-transparent hover:bg-green-600"
                     }`}
                 >
                     {loading ? "Creating..." : "Create"}

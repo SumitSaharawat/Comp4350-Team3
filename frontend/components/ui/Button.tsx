@@ -138,7 +138,7 @@ const FilterButton = ({
     return (
         <div className="relative ml-10">
             <button
-                className="flex items-center gap-1 text-black font-bold focus:outline-none"
+                className="flex items-center gap-1 text-foreground font-bold focus:outline-none"
                 onClick={() => setIsOpen(!isOpen)}
             >
                 {filterName}{" "}
@@ -153,7 +153,7 @@ const FilterButton = ({
 
             {/* Dropdown menu */}
             {isOpen && (
-                <ul className="absolute left-0 mt-3 w-52 bg-white rounded-lg shadow-md p-2 z-10">
+                <ul className="absolute left-0 mt-3 w-52 bg-black/80 rounded-lg shadow-md p-2 z-10">
                     {filterOptions.map((d) => (
                         <li key={d} className="py-1">
                             <label className="flex items-center gap-2 cursor-pointer">
@@ -161,7 +161,7 @@ const FilterButton = ({
                                     type="checkbox"
                                     checked={selectedOptions.includes(d)}
                                     onChange={() => toggleSelection(d)}
-                                    className="checkbox"
+                                    className="checkbox checkbox-error"
                                 />
                                 {d}
                             </label>
@@ -204,14 +204,18 @@ const DropDownButton = ({
     );
 };
 
-// dislay two check marks when the component is marked chechekd, and one check mark otherwise
 const CheckButton = ({ checked, onClickFunc }: CheckButtonProps) => {
     return (
-        <button className="btn btn-sm btn-square" onClick={onClickFunc}>
+        <button
+            className={`btn btn-sm btn-square border rounded-sm transition-all duration-150 
+        ${checked ? "bg-transparent text-yellow-400 border-yellow-400" : "bg-transparent text-gray-400 border-gray-300"}
+        hover:ring-2 hover:ring-yellow-300`}
+            onClick={onClickFunc}
+        >
             {checked ? (
-                <CheckCheck className="w-8 h-8 text-gray-600 border border-gray-200 shadow" />
+                <CheckCheck className="w-5 h-5" />
             ) : (
-                <Check className="w-8 h-8 text-gray-600 border border-gray-200 shadow" />
+                <Check className="w-5 h-5" />
             )}
         </button>
     );
@@ -223,8 +227,11 @@ const NotificationButton = ({
     empty,
 }: notificationButtonProps) => {
     return (
-        <button className="btn btn-sm btn-square" onClick={onClickFunc}>
-            {empty ? <Bell /> : <BellDot />}
+        <button
+            className="w-8 h-8 flex items-center justify-center bg-transparent hover:text-gray-500 rounded transition"
+            onClick={onClickFunc}
+        >
+            {empty ? <Bell/> : <BellDot/>}
         </button>
     );
 };

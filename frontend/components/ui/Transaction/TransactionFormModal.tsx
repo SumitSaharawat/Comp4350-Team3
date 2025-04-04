@@ -190,11 +190,12 @@ export default function TransactionFormModal({
                 isOpen ? "opacity-100 visible" : "opacity-0 invisible"
             }`}
         >
-            <div className="relative bg-white p-6 rounded-lg shadow-xl w-96">
+            <div className="relative bg-gradient-to-br from-customSecondDark to-gray-500
+                             backdrop-blur-xl p-6 rounded-lg shadow-xl w-96">
                 {/* Close Button (X) */}
                 <button
                     onClick={toggle}
-                    className="absolute top-2 right-2 text-gray-600 hover:text-black"
+                    className="absolute top-2 right-2 text-foreground hover:text-black"
                 >
                     <X size={20} />
                 </button>
@@ -210,7 +211,7 @@ export default function TransactionFormModal({
                     placeholder="Transaction Name"
                     value={transacData.name}
                     onChange={(e) => handleChange("name", e.target.value)}
-                    className="w-full border border-gray-300 p-2 rounded mb-2"
+                    className="w-full bg-transparent/30 border border-gray-300 p-2 rounded mb-2"
                 />
 
                 {/* Amount Input */}
@@ -226,14 +227,14 @@ export default function TransactionFormModal({
                                 : Number(e.target.value)
                         )
                     }
-                    className="w-full border border-gray-300 p-2 rounded mb-2"
+                    className="w-full bg-transparent/30 border border-gray-300 p-2 rounded mb-2"
                 />
 
                 {/* Type Dropdown */}
                 <select
                     value={transacData.type}
                     onChange={(e) => handleChange("type", e.target.value)}
-                    className="w-full border border-gray-300 p-2 rounded mb-4 bg-white"
+                    className="w-full bg-transparent/30 border border-gray-300 p-2 rounded mb-4"
                 >
                     {types.map((cur) => (
                         <option key={cur} value={cur}>
@@ -249,7 +250,7 @@ export default function TransactionFormModal({
                         handleChange("time", date || new Date())
                     }
                     dateFormat="yyyy-MM-dd"
-                    className="w-full border border-gray-300 p-2 rounded mb-2"
+                    className="w-full bg-transparent/30 border border-gray-300 p-2 rounded mb-2"
                     showPopperArrow={false}
                 />
 
@@ -262,13 +263,13 @@ export default function TransactionFormModal({
                             return (
                                 <div
                                     key={tag.id}
-                                    className={`flex items-center gap-1 p-1 rounded ${isTagSelected ? "bg-blue-100" : ""}`}
+                                    className={`flex items-center gap-1 p-1 rounded ${isTagSelected ? "bg-white/15" : ""}`}
                                 >
                                     <input
                                         type="checkbox"
                                         checked={isTagSelected}
                                         onChange={() => handleTagSelection(tag)}
-                                        className="mr-1 cursor-pointer"
+                                        className="mr-1 cursor-pointer checkbox checkbox-accent "
                                     />
                                     <span
                                         className="px-2 py-1 text-sm rounded-full cursor-pointer"
@@ -284,13 +285,16 @@ export default function TransactionFormModal({
                 </div>
 
                 {/* Save Button */}
-                <button
-                    onClick={handleSubmit}
-                    disabled={loading}
-                    className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    {loading ? "Processing..." : "Save"}
-                </button>
+                <div className="flex justify-center mt-4">
+                    <button
+                        onClick={handleSubmit}
+                        disabled={loading}
+                        className="w-3/5 bg-foreground text-black p-2 rounded-2xl hover:bg-gray-400
+                        disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {loading ? "Processing..." : "Save"}
+                    </button>
+                </div>
 
                 {/* Message Display */}
                 {message && (

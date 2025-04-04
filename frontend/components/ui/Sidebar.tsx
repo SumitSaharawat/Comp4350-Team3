@@ -7,6 +7,7 @@
  */
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import UserCard from "@/components/ui/UserCard";
 import {
     LayoutDashboard,
     Receipt,
@@ -70,30 +71,31 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
 
     return (
         <div
-            className={`fixed top-0 left-0 pt-12 h-full bg-black text-foreground transition-all duration-300 ease-in-out ${
-                isOpen ? "w-64" : "w-16"
+            className={`fixed top-0 left-0 pt-10 h-full bg-black text-foreground transition-all duration-300 ease-in-out ${
+                isOpen ? "w-64" : "w-16"    
             }`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
             {/* Display Username */}
             {isOpen && (
-                <div className="flex items-center justify-center mb-10 text-3xl font-bold italic text-white">
-                    {username}
+                <div className="pb-4 px-2">
+                    <UserCard username={username}/>
                 </div>
             )}
+
 
             {/* Sidebar Toggle Button */}
             <button
                 onClick={toggleSidebar}
-                className="absolute top-10 -right-3 transform -translate-y-1/2 bg-white text-black
-                p-1 rounded-lg border border-gray-300 shadow-md hover:bg-gray-300 transition-all flex
+                className="absolute top-8 -right-3 transform -translate-y-1/2 bg-transparent text-foreground
+                p-1 rounded-lg shadow-md hover:bg-gray-300 transition-all flex
                 items-center justify-center w-8 h-8"
             >
                 {isOpen ? (
-                    <ChevronLeft className="w-6 h-6" />
+                    <ChevronLeft className="w-6 h-6"/>
                 ) : (
-                    <ChevronRight className="w-6 h-6" />
+                    <ChevronRight className="w-6 h-6"/>
                 )}
             </button>
 
@@ -119,7 +121,8 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
 
                         {/* Tooltip when sidebar is collapsed */}
                         {!isOpen && !isHovered && (
-                            <div className="absolute left-14 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white px-2 py-1 rounded-md text-xs shadow-md opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                            <div
+                                className="absolute left-14 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white px-2 py-1 rounded-md text-xs shadow-md opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                                 {item.name}
                             </div>
                         )}
@@ -133,7 +136,7 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
                     onClick={logout}
                     className="flex items-center gap-3 p-3 rounded-md text-gray-300 transition-colors hover:bg-gray-800 hover:text-white w-full"
                 >
-                    <LogOut className="w-6 h-6" />
+                    <LogOut className="w-6 h-6"/>
                     {isOpen && (
                         <span className="transition-all duration-200">
                             Sign Out

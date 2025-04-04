@@ -198,10 +198,10 @@ export default function NewReminderForm({
                 <button
                     onClick={handleSubmit}
                     disabled={loading}
-                    className={`px-4 py-2 rounded-md text-white hover:bg-green-400 ${
+                    className={`px-4 py-2 rounded-md text-white  ${
                         loading
                             ? "bg-gray-500 cursor-not-allowed"
-                            : "bg-black hover:bg-gray-800"
+                            : "bg-transparent hover:bg-green-600"
                     }`}
                 >
                     {loading ? "Creating..." : "Create"}

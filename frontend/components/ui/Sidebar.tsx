@@ -21,6 +21,7 @@ import {
 import { useAuth } from "@/app/contexts/AuthContext";
 import {useEffect, useState} from "react";
 import Image from "next/image";
+import {isPair} from "yaml";
 
 interface SidebarProps {
     isOpen: boolean;
@@ -105,7 +106,7 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
             <button
                 onClick={toggleSidebar}
                 className="absolute top-8 -right-3 transform -translate-y-1/2 bg-transparent text-foreground
-                p-1 rounded-lg shadow-md hover:bg-gray-300 transition-all flex
+                p-1 rounded-lg shadow-md hover:text-gray-700 transition-all flex
                 items-center justify-center w-8 h-8"
             >
                 {isOpen ? (
@@ -114,6 +115,18 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
                     <ChevronRight className="w-6 h-6"/>
                 )}
             </button>
+
+            {!isOpen && (
+                <div className="w-8 h-8 ml-3 rounded-full overflow-hidden flex-shrink-0 bg-gray-100">
+                    <Image
+                        src="/user_icon.png"
+                        alt="User Avatar"
+                        width={35}
+                        height={35}
+                        className="object-cover"
+                    />
+                </div>
+            )}
 
             {/* Menu List */}
             <ul className="mt-6 space-y-4">
@@ -134,14 +147,6 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
                                 </span>
                             )}
                         </Link>
-
-                        {/* Tooltip when sidebar is collapsed */}
-                        {!isOpen && !isHovered && (
-                            <div
-                                className="absolute left-14 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white px-2 py-1 rounded-md text-xs shadow-md opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                                {item.name}
-                            </div>
-                        )}
                     </li>
                 ))}
             </ul>

@@ -1,6 +1,4 @@
-
 import Image from "next/image";
-import {JSX} from "react";
 
 interface UserCardProps {
     username: string
@@ -11,7 +9,7 @@ export default function UserCard({
 
 } : UserCardProps){
     return (
-        <div className="flex items-center gap-3 p-2 bg-transparent rounded-2xl shadow-md shadow-gray-500 border border-gray-400">
+        <div className="flex items-center gap-3 mt-8 p-2 bg-transparent rounded-2xl shadow-md shadow-gray-500 border border-gray-400">
             {/* Avatar */}
             <div className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0 bg-gray-100">
                 <Image

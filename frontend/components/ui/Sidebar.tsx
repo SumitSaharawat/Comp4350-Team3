@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/app/contexts/AuthContext";
 import {useEffect, useState} from "react";
+import Image from "next/image";
 
 interface SidebarProps {
     isOpen: boolean;
@@ -71,15 +72,30 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
 
     return (
         <div
-            className={`fixed top-0 left-0 pt-10 h-full bg-black text-foreground transition-all duration-300 ease-in-out ${
-                isOpen ? "w-64" : "w-16"    
+            className={`fixed top-0 left-0 pt-4 h-full bg-black text-foreground transition-all duration-300 ease-in-out ${
+                isOpen ? "w-64" : "w-16"
             }`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
+            {isOpen && (
+                <div className="flex items-center gap-2 mb-6 ml-5">
+                    <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
+                        <Image
+                            src="/product_icon.jpeg"
+                            alt="Product Icon"
+                            width={36}
+                            height={36}
+                            className="object-cover"
+                        />
+                    </div>
+                    <span className="text-xl font-semibold">Savi</span>
+                </div>
+            )}
+
             {/* Display Username */}
             {isOpen && (
-                <div className="pb-4 px-2">
+                <div className="pb-4 px-2 border-t">
                     <UserCard username={username}/>
                 </div>
             )}

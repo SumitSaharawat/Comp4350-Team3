@@ -70,24 +70,31 @@ export default function SignupPage() {
     };
 
     return (
-        <div className="relative w-screen h-screen bg-gradient-to-r from-gray-50 to-gray-400 flex items-center justify-center">
+        <div className="relative w-screen h-screen bg-gradient-to-r from-gray-50 to-gray-400 flex items-center justify-center"
+             style={{
+                 backgroundImage: `linear-gradient(to right, black 30%, #21222d 100%)`,
+             }}
+        >
             {/* Floating Block */}
-            <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl grid grid-cols-2">
+            <div className="rounded-lg shadow-xl w-full max-w-3xl grid grid-cols-2"
+                 style={{
+                     backgroundImage: `linear-gradient(to right, black 30%, #21222d 100%)`,
+                 }}
+            >
                 {/* Left Panel: Image */}
-                <div className="rounded-l-lg overflow-hidden flex items-center justify-center bg-gray-100">
+                <div className="relative w-[400px] h-[450px] rounded-l-lg overflow-hidden flex items-center justify-center">
                     <Image
-                        src="/Signup.png"
+                        src="/signup_image.jpeg"
                         alt="Signup Illustration"
+                        fill
                         className="object-contain"
-                        width={350}
-                        height={350}
                     />
                 </div>
 
                 {/* Right Panel: Form */}
                 <div className="p-8 flex flex-col justify-center space-y-8">
-                    <h1 className="text-4xl font-bold text-black text-left">
-                        Create an account
+                    <h1 className="text-4xl font-bold text-left">
+                        Sign Up
                     </h1>
 
                     {/* Form */}
@@ -97,29 +104,33 @@ export default function SignupPage() {
                             placeholder="Name"
                             value={username}
                             onChange={(e) => setUserName(e.target.value)}
+                            className="focus:outline-none focus:border-customSkyBlue"
                         />
                         <AuthInput
                             type="password"
                             placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            className="focus:outline-none focus:border-customSkyBlue"
                         />
                         <AuthInput
                             type="password"
                             placeholder="Confirm Password"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
+                            className="focus:outline-none focus:border-customSkyBlue"
                         />
                         <AuthInput
                             type="balance"
                             placeholder="Starting Balance"
                             value={balance}
                             onChange={(e) => setBalance(e.target.value)}
+                            className="focus:outline-none focus:border-customSkyBlue"
                         />
                     </div>
 
                     {/* Terms Checkbox */}
-                    <div className="flex items-center text-black">
+                    <div className="flex items-center">
                         <input
                             type="checkbox"
                             checked={agreed}
@@ -128,7 +139,7 @@ export default function SignupPage() {
                         />
                         <label className="ml-2 text-sm">
                             I agree to the{" "}
-                            <a href="/terms" className="hover:underline">
+                            <a href="" className="hover:underline">
                                 Terms & Conditions
                             </a>
                         </label>
@@ -136,7 +147,7 @@ export default function SignupPage() {
 
                     {/* Submit Button */}
                     <AuthButton onClick={handleSignup} loading={loading}>
-                        Create account
+                        Create Account
                     </AuthButton>
 
                     {/* Already have an account */}
@@ -144,7 +155,7 @@ export default function SignupPage() {
                         Already have an account?{" "}
                         <Link
                             href="/auth/login"
-                            className="text-gray-900 hover:underline"
+                            className="text-green-600 hover:underline"
                         >
                             Log in
                         </Link>

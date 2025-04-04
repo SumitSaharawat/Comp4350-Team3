@@ -190,7 +190,7 @@ export default function TransactionFormModal({
                 isOpen ? "opacity-100 visible" : "opacity-0 invisible"
             }`}
         >
-            <div className="relative bg-gradient-to-br from-customSecondDark to-customPink/70
+            <div className="relative bg-gradient-to-br from-customSecondDark to-gray-500
                              backdrop-blur-xl p-6 rounded-lg shadow-xl w-96">
                 {/* Close Button (X) */}
                 <button
@@ -234,7 +234,7 @@ export default function TransactionFormModal({
                 <select
                     value={transacData.type}
                     onChange={(e) => handleChange("type", e.target.value)}
-                    className="w-full bg-transparent/30 border border-gray-300 p-2 rounded mb-4 bg-white"
+                    className="w-full bg-transparent/30 border border-gray-300 p-2 rounded mb-4"
                 >
                     {types.map((cur) => (
                         <option key={cur} value={cur}>
@@ -269,7 +269,7 @@ export default function TransactionFormModal({
                                         type="checkbox"
                                         checked={isTagSelected}
                                         onChange={() => handleTagSelection(tag)}
-                                        className="mr-1 cursor-pointer checkbox checkbox-error"
+                                        className="mr-1 cursor-pointer checkbox checkbox-accent "
                                     />
                                     <span
                                         className="px-2 py-1 text-sm rounded-full cursor-pointer"
@@ -289,7 +289,7 @@ export default function TransactionFormModal({
                     <button
                         onClick={handleSubmit}
                         disabled={loading}
-                        className="w-3/5 bg-foreground text-black p-2 rounded-2xl hover:bg-pink-600
+                        className="w-3/5 bg-foreground text-black p-2 rounded-2xl hover:bg-gray-400
                         disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {loading ? "Processing..." : "Save"}

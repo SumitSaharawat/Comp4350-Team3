@@ -166,7 +166,7 @@ export default function ReminderCard({
                                 )}
                             </span>
                         </div>
-                        <div className="text-sm">
+                        <div className="text-sm italic">
                             <div className="flex justify-between mt-2">
                                 <span className="font-light font-serif">
                                     Note: {reminder.text}
@@ -180,7 +180,7 @@ export default function ReminderCard({
     } else {
         // otherwise, only display the name and its time from now
         return (
-            <div className="bg-white p-3 rounded-md shadow-sm relative border border-gray-200 w-48">
+            <div className="bg-customReminderGray p-3 rounded-md shadow-sm relative border border-gray-400 w-48 mt-2">
                 {/* Reminder Name */}
                 <div className="flex justify-between items-center mb-2">
                     <div className="flex items-center gap-1.5">
@@ -188,7 +188,7 @@ export default function ReminderCard({
                             checked={viewed}
                             onClickFunc={flipViewed}
                         />
-                        <h2 className="text-base font-semibold italic">
+                        <h2 className="text-customReminderGold font-semibold italic">
                             {reminder.name}
                         </h2>
                     </div>
@@ -200,7 +200,7 @@ export default function ReminderCard({
                 {/* Reminder Details */}
                 <div className="text-sm text-gray-500">
                     <div className="flex justify-between">
-                        <span className="font-mono text-black">
+                        <span className="font-mono text-customReminderGold">
                             {formatTimeDifference(new Date(reminder.time))}
                         </span>
                     </div>

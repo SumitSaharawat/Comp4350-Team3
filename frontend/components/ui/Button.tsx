@@ -227,8 +227,11 @@ const NotificationButton = ({
     empty,
 }: notificationButtonProps) => {
     return (
-        <button className="btn btn-sm btn-square" onClick={onClickFunc}>
-            {empty ? <Bell /> : <BellDot />}
+        <button
+            className="w-8 h-8 flex items-center justify-center bg-transparent hover:text-gray-500 rounded transition"
+            onClick={onClickFunc}
+        >
+            {empty ? <Bell/> : <BellDot/>}
         </button>
     );
 };

@@ -64,7 +64,7 @@ export default function NotificationList() {
                 empty={data.length <= 0}
             />
             {open && data.length > 0 ? (
-                <div className="absolute top-12 right-0 bg-white border border-gray-200 rounded-lg shadow-lg w-64 p-4">
+                <div className="absolute top-12 right-0 bg-black border border-gray-500 rounded-lg shadow-lg w-60 p-4 pt-2">
                     {
                         <MiniReminderList
                             reminders={data}

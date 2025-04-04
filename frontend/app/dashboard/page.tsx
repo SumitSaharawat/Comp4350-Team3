@@ -5,10 +5,12 @@
  *
  * Display the basic data of current user
  */
-import { useState, useEffect } from "react";
-import Sidebar from "@/components/ui/Sidebar";
+import React, { useState, useEffect } from "react";
+import Layout from "@/components/ui/Layout";
 import { useTransactions } from "../contexts/TransactionsContext";
 import { useAuth } from "../contexts/AuthContext";
+import DashboardHeader from "@/components/ui/Dashboard/DashboardHeader";
+import {BarChart2} from "lucide-react"
 
 // used for calculating the time difference
 const SEC_PER_DAY = 86400;
@@ -16,6 +18,7 @@ const SEC_PER_DAY = 86400;
 export default function DashboardPage() {
     const { transactions, getTransactions } = useTransactions();
     const { user, getUser } = useAuth();
+    const [sidebarOpen, setSidebarOpen] = useState(true);
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [spendings, setSpendings] = useState(0);
@@ -82,45 +85,131 @@ export default function DashboardPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [transactions]);
 
+    function Price({ amount }: { amount?: number }) {
+        if (typeof amount !== "number") {
+            return <span className="text-2xl font-bold text-gray-400">--</span>;
+        }
+        return (
+            <span className="ml-3 mt-1 text-4xl font-bold">
+                {amount.toFixed(2)}
+                <span className="text-xs align-super ml-0.5">$</span>
+            </span>
+        );
+    }
+
     return (
-        <div className="flex h-screen">
-            {/* Sidebar */}
-            <div
-                className={`bg-gray-900 transition-all duration-300 ${
-                    isSidebarOpen ? "w-64" : "w-16"
-                }`}
-            >
-                <Sidebar
-                    isOpen={isSidebarOpen}
-                    toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-                />
-            </div>
+        // <div className="flex h-screen">
+        //     {/* Sidebar */}
+        //     <div
+        //         className={`bg-gray-900 transition-all duration-300 ${
+        //             isSidebarOpen ? "w-64" : "w-16"
+        //         }`}
+        //     >
+        //         <Sidebar
+        //             isOpen={isSidebarOpen}
+        //             toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+        //         />
+        //     </div>
+        //
+        //     {/* Main content */}
+        //     <div className="flex-grow h-screen flex justify-center items-center">
+        //         <div className="stats stats-vertical lg:stats-horizontal shadow">
+        //             <div className="stat w-64">
+        //                 <div className="stat-title">
+        //                     Spendings of the past month
+        //                 </div>
+        //                 <div className="stat-value">{spendings}</div>
+        //                 <div className="stat-desc">{timePeriod}</div>
+        //             </div>
+        //
+        //             <div className="stat w-64">
+        //                 <div className="stat-title">
+        //                     Savings of the past month
+        //                 </div>
+        //                 <div className="stat-value">{savings}</div>
+        //                 <div className="stat-desc">{timePeriod}</div>
+        //             </div>
+        //
+        //             <div className="stat w-64">
+        //                 <div className="stat-title">Current Balance</div>
+        //                 <div className="stat-value">{user?.balance}</div>
+        //             </div>
+        //         </div>
+        //     </div>
+        // </div>
+        <Layout title="Dashboard">
+            <div className="min-h-screen flex">
+                <div className="flex-1 flex flex-col space-y-4 p-6">
+                    <DashboardHeader username={user?.username}/>
 
-            {/* Main content */}
-            <div className="flex-grow h-screen flex justify-center items-center">
-                <div className="stats stats-vertical lg:stats-horizontal shadow">
-                    <div className="stat w-64">
-                        <div className="stat-title">
-                            Spendings of the past month
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {/* Savings */}
+                        <div className="bg-black/50 border p-4 rounded-xl shadow flex flex-col gap-2 hover:bg-blue-600 transition">
+                            <div className="flex items-center gap-2">
+                                <BarChart2 className="w-10 h-6 text-green-400"/>
+                                <p className="text-l text-green-400">Saving</p>
+                            </div>
+                            <Price amount={savings}/>
                         </div>
-                        <div className="stat-value">{spendings}</div>
-                        <div className="stat-desc">{timePeriod}</div>
+
+                        {/* My Balance */}
+                        <div
+                            className="bg-black/50 border p-4 rounded-xl shadow flex flex-col gap-2 hover:bg-blue-600 transition">
+                            <div className="flex items-center gap-2">
+                                <BarChart2 className="w-10 h-6 text-foreground"/>
+                                <p className="text-l text-foreground">My Balance</p>
+                            </div>
+                            <Price amount={user?.balance}/>
+                        </div>
+
+                        {/* Spending */}
+                        <div
+                            className="bg-black/50 border p-4 rounded-xl shadow flex flex-col gap-2 hover:bg-blue-600 transition">
+                            <div className="flex items-center gap-2">
+                                <BarChart2 className="w-10 h-6 text-red-400"/>
+                                <p className="text-l text-red-400">Spending</p>
+                            </div>
+                            <Price amount={spendings}/>
+                        </div>
                     </div>
 
-                    <div className="stat w-64">
-                        <div className="stat-title">
-                            Savings of the past month
+                    {/* === Charts / Invoices Section === */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="bg-gray-800 p-4 rounded-xl h-64 shadow">
+                            {/* Replace this with a chart component */}
+                            <p className="text-gray-400 mb-2">Income vs Expenses</p>
+                            <div className="flex justify-center items-center h-full text-gray-500">
+                                [Graph Placeholder]
+                            </div>
                         </div>
-                        <div className="stat-value">{savings}</div>
-                        <div className="stat-desc">{timePeriod}</div>
+
+                        <div className="bg-gray-800 p-4 rounded-xl h-64 shadow">
+                            {/* Replace this with invoice list */}
+                            <p className="text-gray-400 mb-2">Invoices</p>
+                            <div className="flex justify-center items-center h-full text-gray-500">
+                                [Invoices Placeholder]
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="stat w-64">
-                        <div className="stat-title">Current Balance</div>
-                        <div className="stat-value">{user?.balance}</div>
+                    {/* === Transaction & Savings Section === */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="bg-gray-800 p-4 rounded-xl h-64 shadow">
+                            <p className="text-gray-400 mb-2">Transaction History</p>
+                            <div className="flex justify-center items-center h-full text-gray-500">
+                                [Transaction List]
+                            </div>
+                        </div>
+
+                        <div className="bg-gray-800 p-4 rounded-xl h-64 shadow">
+                            <p className="text-gray-400 mb-2">Savings</p>
+                            <div className="flex justify-center items-center h-full text-gray-500">
+                                [Savings Chart]
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </Layout>
     );
 }

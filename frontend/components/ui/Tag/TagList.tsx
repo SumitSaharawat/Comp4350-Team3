@@ -52,31 +52,31 @@ export default function TagList({ tags, refreshList }: TagListProps) {
 
 
     return (
-        <div className="w-full h-full overflow-y-auto border border-gray-300 rounded-lg shadow-sm">
+        <div className="w-full h-full overflow-y-auto border border-gray-500 rounded-lg shadow-sm">
             <table className="w-full border-collapse">
                 {/* Table Header */}
-                <thead className="sticky top-0 bg-gray-100 text-black">
+                <thead className="sticky top-0 bg-customSecondDark">
                 <tr className="h-12">
-                    <th className="border-b border-gray-400 px-2 py-2 font-bold text-left">
+                    <th className="border-b border-gray-500 px-2 py-2 font-bold text-left">
                         {tags.length} Labels
                     </th>
-                    <th className="border-b border-gray-400 px-4 py-2 font-bold text-left">
+                    <th className="border-b border-gray-500 px-4 py-2 font-bold text-left">
                         Message
                     </th>
-                    <th className="border-b border-gray-400 px-4 py-2 font-bold text-center">
+                    <th className="border-b border-gray-500 px-4 py-2 font-bold text-center">
                         Actions
                     </th>
                 </tr>
                 </thead>
 
                 {/* Table Body */}
-                <tbody className="text-black">
+                <tbody>
                 {tags.length > 0 ? (
                     tags.map((tag) => (
                         <React.Fragment key={tag.id}>
                             {/* Tag Row */}
-                            <tr className="hover:bg-gray-200 h-16">
-                                <td className="border-b border-gray-400 px-2 py-4 text-left">
+                            <tr className="hover:bg-gray-800 h-16">
+                                <td className="border-b border-gray-500 px-2 py-4 text-left">
                                         <span
                                             className="px-3 py-1 text-white rounded-full text-sm font-medium inline-block"
                                             style={{ backgroundColor: tag.color }}
@@ -84,10 +84,10 @@ export default function TagList({ tags, refreshList }: TagListProps) {
                                             {tag.name}
                                         </span>
                                 </td>
-                                <td className="border-b border-gray-400 text-gray-500 px-4 py-2 text-left">
+                                <td className="border-b border-gray-500 text-gray-500 px-4 py-2 text-left">
                                     {tag.message}
                                 </td>
-                                <td className="border-b border-gray-400 px-4 py-2 text-center">
+                                <td className="border-b border-gray-500 px-4 py-2 text-center">
                                     <button
                                         onClick={() => handleEdit(tag)}
                                         className="text-blue-600 hover:text-blue-800 mx-1"
@@ -106,7 +106,7 @@ export default function TagList({ tags, refreshList }: TagListProps) {
                             {/* Expanded Row for Editing */}
                             {expandedRow === tag.id && (
                                 <tr>
-                                    <td colSpan={3} className="border-b border-gray-400 p-4 bg-gray-50">
+                                    <td colSpan={3} className="border-b border-gray-500 p-4">
                                         <div className="flex items-center gap-4">
                                             {/* Name Input */}
                                             <input
@@ -114,7 +114,7 @@ export default function TagList({ tags, refreshList }: TagListProps) {
                                                 value={editData.name}
                                                 onChange={(e) =>
                                                     setEditData({...editData, name: e.target.value})}
-                                                className="w-72 h-10 mr-4 border border-gray-300 p-2 rounded-md"
+                                                className="w-72 h-10 mr-4 border border-gray-500 bg-transparent/30 p-2 rounded-md"
                                                 placeholder="Label name"
                                             />
 
@@ -124,7 +124,7 @@ export default function TagList({ tags, refreshList }: TagListProps) {
                                                 value={editData.message}
                                                 onChange={(e) =>
                                                     setEditData({...editData, message: e.target.value})}
-                                                className="w-80 h-10 mr-4 border border-gray-300 p-2 rounded-md"
+                                                className="w-80 h-10 mr-4 border border-gray-500 bg-transparent/30 p-2 rounded-md"
                                                 placeholder="Description (optional)"
                                             />
 
@@ -142,7 +142,7 @@ export default function TagList({ tags, refreshList }: TagListProps) {
                                                     value={editData.color}
                                                     onChange={(e) =>
                                                         setEditData({...editData, color: e.target.value})}
-                                                    className="w-24 h-10 border border-gray-300 p-2 rounded-md text-center"
+                                                    className="w-24 h-10 border border-gray-500 bg-transparent/30 p-2 rounded-md text-center"
                                                 />
                                             </div>
 
@@ -150,8 +150,8 @@ export default function TagList({ tags, refreshList }: TagListProps) {
                                             <div className="flex items-center gap-2 ml-auto">
                                                 <button
                                                     onClick={handleCancel}
-                                                    className="px-2 py-2 w-20 h-10 border border-gray-300 rounded-md
-                                                    hover:bg-gray-200 flex items-center gap-1"
+                                                    className="px-2 py-2 w-20 h-10 border rounded-md
+                                                    hover:bg-gray-700 flex items-center gap-1"
                                                 >
                                                     Cancel
                                                 </button>

@@ -87,9 +87,9 @@ export default function ReminderCard({
         return (
             <div
                 ref={cardRef}
-                className="bg-white p-4 rounded-lg shadow-md relative border border-gray-200"
+                className="bg-customReminderGray p-4 rounded-lg shadow-md relative border border-gray-200"
             >
-                <div className="bg-white p-4 rounded-lg shadow-md relative border border-gray-200">
+                <div className="bg-customReminderBlack p-4 rounded-lg shadow-md relative border border-gray-200">
                     {/* Reminder Name */}
                     <div className="flex justify-between items-center mb-3">
                         <div className="flex items-center gap-2">
@@ -97,21 +97,21 @@ export default function ReminderCard({
                                 checked={viewed}
                                 onClickFunc={flipViewed}
                             />
-                            <h2 className="text-lg font-semibold italic">
+                            <h2 className="text-lg text-customReminderGold font-semibold italic">
                                 {reminder.name}
                             </h2>
                         </div>
                         <button
                             ref={buttonRef}
                             onClick={() => setShowMenu(!showMenu)}
-                            className="cursor-pointer text-gray-500 hover:text-black"
+                            className="cursor-pointer text-gray-400 hover:text-gray-700"
                         >
-                            <MoreHorizontal className="cursor-pointer text-gray-500 hover:text-black" />
+                            <MoreHorizontal/>
                         </button>
                         {showMenu && (
                             <div
                                 ref={menuRef}
-                                className="absolute right-0 top-8 bg-white border border-gray-200
+                                className="absolute bg-black/50 right-0 top-8 border border-gray-200
                         rounded-lg shadow-lg w-32 z-50 mt-2"
                             >
                                 <button
@@ -119,7 +119,7 @@ export default function ReminderCard({
                                         handleEdit();
                                         setShowMenu(false);
                                     }}
-                                    className="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-2"
+                                    className="w-full px-4 py-2 text-left hover:bg-gray-500/70 flex items-center gap-2"
                                 >
                                     <Edit size={16} />
                                     Edit
@@ -129,7 +129,7 @@ export default function ReminderCard({
                                         handleDelete();
                                         setShowMenu(false);
                                     }}
-                                    className="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-2 text-red-600"
+                                    className="w-full px-4 py-2 text-left hover:bg-gray-500/70 flex items-center gap-2 text-red-600"
                                 >
                                     <Trash2 size={16} />
                                     Delete
@@ -148,12 +148,12 @@ export default function ReminderCard({
                     </div>
 
                     {/* Divider Line */}
-                    <div className="border-t border-gray-300 my-6"></div>
+                    <div className="border-t border-gray-600 my-6"></div>
 
                     {/* Reminder Details */}
-                    <div className="text-base mt-7 text-gray-500">
-                        <div className="flex justify-between">
-                            <span className="font-normal font-mono text-black">
+                    <div className="text-base mt-7">
+                        <div className="flex justify-between text-customReminderGold">
+                            <span className="font-normal font-mono">
                                 {new Date(reminder.time).toLocaleTimeString(
                                     "en-US",
                                     {

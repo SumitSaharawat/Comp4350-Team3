@@ -23,7 +23,10 @@ export default {
         customSkyBlue:"#96a7ff",
         customSecondDark:"#21222d",
         customDarkPink: "#a54358",
-        customPinkTwo: "#a61e4d"
+        customPinkTwo: "#a61e4d",
+        customReminderGold: "#ffdb89",
+        customReminderBlack: "#030303",
+        customReminderGray: "#2c2c2e",
       },
       spacing: {
         128: "32rem",

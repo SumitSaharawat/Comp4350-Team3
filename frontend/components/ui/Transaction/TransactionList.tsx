@@ -36,11 +36,8 @@ export default function TransactionList({
             <table className="w-full border-collapse table-fixed">
                 <thead className="sticky top-0 bg-customSecondDark text-foreground">
                 <tr>
-                    <th className="border-b border-gray-400 px-2 py-2 font-bold text-left">
+                    <th className="border-b border-gray-400 pl-4 pr-2 py-2 font-bold text-left">
                         Name
-                    </th>
-                    <th className="border-b border-gray-400 px-3 py-2 font-bold text-left">
-                        Date
                     </th>
                     <th className="border-b border-gray-400 px-3 py-2 font-bold text-left">
                         Amount
@@ -49,40 +46,43 @@ export default function TransactionList({
                         Type
                     </th>
                     <th className="border-b border-gray-400 px-3 py-2 font-bold text-left">
-                        Currency
+                        Date
                     </th>
                     <th className="border-b border-gray-400 py-2 font-bold text-center">
                         Tags
                     </th>
-                    <th className="border-b border-gray-400 pr-2 pl-4 py-2 font-bold text-center">
+                    <th className="border-b border-gray-400 pl-8 py-2 font-bold text-center">
                         Actions
                     </th>
                 </tr>
                 </thead>
 
-                <tbody className="text-foreground ">
+                <tbody className="text-foreground">
                 {transactions.length > 0 ? (
                     transactions.map((tx) => (
                         <React.Fragment key={tx.id}>
                             {/* Transaction Row */}
-                            <tr className="hover:bg-gray-700 h-12">
-                                <td className="border-b border-gray-400 px-2 py-2 text-left">
+                            <tr className="hover:bg-gray-800 h-12">
+                                <td className="border-b border-gray-400 pl-4 pr-2 py-2 text-left">
                                     {tx.name || ""}
-                                </td>
-                                <td className="border-b border-gray-400 px-3 py-2 text-left">
-                                    {new Date(tx.date).toLocaleDateString()}
                                 </td>
                                 <td className="border-b border-gray-400 px-3 py-2 text-left">
                                     {tx.amount.toFixed(2)}
                                 </td>
                                 <td className="border-b border-gray-400 px-3 py-2 text-left">
-                                    {tx.type}
+                                    <span
+                                        className={`font-semibold px-2 py-1 rounded-full text-sm
+                                                    ${tx.type === "Saving" ? "text-green-700 bg-green-200" :
+                                            tx.type === "Spending" ? "text-red-600 bg-red-100" : "text-gray-700 bg-gray-100"}`}
+                                    >
+                                        {tx.type}
+                                    </span>
                                 </td>
                                 <td className="border-b border-gray-400 px-3 py-2 text-left">
-                                    {tx.currency}
+                                    {new Date(tx.date).toLocaleDateString()}
                                 </td>
-                                <td className="border-b border-gray-400 py-2 text-left">
-                                    <div className="flex items-center gap-2 flex-wrap">
+                                <td className="border-b border-gray-400 py-2">
+                                    <div className="flex items-center gap-2 flex-wrap ml-5">
                                         {tx.tags.map((tag: { id: string; name: string; color: string }) => (
                                             <div key={tag.id} className="flex items-center gap-1">
                                                <span
@@ -96,10 +96,10 @@ export default function TransactionList({
                                     </div>
                                 </td>
                                 {/* Toggle Actions Button */}
-                                <td className="border-b border-gray-400 pr-2 pl-4 py-2 text-center">
+                                <td className="border-b border-gray-400 pr-2 pl-8 py-2 text-center">
                                     <button
                                         onClick={() => toggleRow(tx.id)}
-                                        className="text-gray-600 hover:text-black"
+                                        className="text-gray-500 hover:text-black"
                                     >
                                         <MoreHorizontal size={20}/>
                                     </button>
@@ -109,8 +109,8 @@ export default function TransactionList({
                             {/* Hidden Action Row (Appears on Toggle) */}
                             {expandedRow === tx.id && (
                                 <tr>
-                                    <td
-                                        colSpan={7}
+                                <td
+                                        colSpan={6}
                                         className="border-b border-gray-400 p-2 text-center"
                                     >
                                         <div className="flex justify-center gap-4">

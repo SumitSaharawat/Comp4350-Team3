@@ -204,14 +204,18 @@ const DropDownButton = ({
     );
 };
 
-// dislay two check marks when the component is marked chechekd, and one check mark otherwise
 const CheckButton = ({ checked, onClickFunc }: CheckButtonProps) => {
     return (
-        <button className="btn btn-sm btn-square" onClick={onClickFunc}>
+        <button
+            className={`btn btn-sm btn-square border rounded-sm transition-all duration-150 
+        ${checked ? "bg-transparent text-yellow-400 border-yellow-400" : "bg-transparent text-gray-400 border-gray-300"}
+        hover:ring-2 hover:ring-yellow-300`}
+            onClick={onClickFunc}
+        >
             {checked ? (
-                <CheckCheck className="w-8 h-8 text-gray-600 border border-gray-200 shadow" />
+                <CheckCheck className="w-5 h-5" />
             ) : (
-                <Check className="w-8 h-8 text-gray-600 border border-gray-200 shadow" />
+                <Check className="w-5 h-5" />
             )}
         </button>
     );

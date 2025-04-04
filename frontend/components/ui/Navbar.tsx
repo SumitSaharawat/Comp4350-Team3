@@ -18,7 +18,7 @@ export default function Navbar({
     return (
         <>
             {/**The navigation bar */}
-            <div className="navbar bg-black pl-5 justify-between border-b border-gray-200">
+            <div className="navbar bg-black pl-5 justify-between border-b border-gray-600">
                 {/**title as the first piece in the nav bar*/}
                 <div className="flex items-center gap-2">
                     {/**Title */}

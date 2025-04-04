@@ -115,13 +115,15 @@ export default function NewGoalForm({
 
     return (
         <div
-            className="fixed right-4 top-4 bg-white p-4 rounded-lg shadow-lg
+            className="fixed right-4 top-4 p-4 rounded-lg shadow-lg
         border border-gray-300 w-96 z-50 pop-in-animation"
+            style={{
+                backgroundImage: `linear-gradient(to top right, black 60%, gray 100%)`,
+            }}
         >
             <button
                 onClick={toggle}
-                className="absolute -right-2 -top-2 text-gray-600 hover:text-black bg-white
-                rounded-full p-1 shadow-sm border border-gray-200 hover:border-gray-300 z-10"
+                className="absolute right-2 top-2 text-black bg-transparent hover:text-gray-400 p-1 shadow-sm z-10"
             >
                 <X size={20} />
             </button>
@@ -136,7 +138,7 @@ export default function NewGoalForm({
                 placeholder="Goal Name"
                 value={goalData.name}
                 onChange={(e) => handleChange("name", e.target.value)}
-                className="w-full border border-gray-300 p-2 rounded mb-2"
+                className="w-full border border-gray-300 p-2 rounded mb-2 bg-transparent"
             />
 
             {/* Current Amount */}
@@ -150,7 +152,7 @@ export default function NewGoalForm({
                         e.target.value === "" ? null : Number(e.target.value)
                     )
                 }
-                className="w-full border border-gray-300 p-2 rounded mb-2"
+                className="w-full border border-gray-300 p-2 rounded mb-2 bg-transparent"
             />
 
             {/* Goal Amount */}
@@ -164,14 +166,14 @@ export default function NewGoalForm({
                         e.target.value === "" ? null : Number(e.target.value)
                     )
                 }
-                className="w-full border border-gray-300 p-2 rounded mb-2"
+                className="w-full border border-gray-300 p-2 rounded mb-2 bg-transparent"
             />
 
             {/* Category Dropdown */}
             <select
                 value={goalData.category}
                 onChange={(e) => handleChange("category", e.target.value)}
-                className="w-full border border-gray-300 p-2 rounded mb-4 bg-white"
+                className="w-full border border-gray-300 p-2 rounded mb-4 bg-transparent"
             >
                 {categories.map((cur) => (
                     <option key={cur} value={cur}>
@@ -187,7 +189,7 @@ export default function NewGoalForm({
                     handleChange("time", date || new Date())
                 }
                 dateFormat="yyyy-MM-dd"
-                className="w-full border border-gray-300 p-2 rounded mb-2"
+                className="w-full border border-gray-300 p-2 rounded mb-2 bg-transparent"
                 showPopperArrow={false}
             />
 
@@ -208,14 +210,14 @@ export default function NewGoalForm({
             <div className="flex justify-end mt-4 gap-2">
                 <button
                     onClick={toggle}
-                    className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-200"
+                    className="px-4 py-2 rounded-md hover:bg-red-400"
                 >
                     Cancel
                 </button>
                 <button
                     onClick={handleSubmit}
                     disabled={loading}
-                    className={`px-4 py-2 rounded-md text-white ${
+                    className={`px-4 py-2 rounded-md text-white hover:bg-green-700 ${
                         loading
                             ? "bg-gray-500 cursor-not-allowed"
                             : "bg-black hover:bg-gray-800"

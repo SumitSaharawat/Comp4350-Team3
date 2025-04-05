@@ -10,7 +10,8 @@ import Layout from "@/components/ui/Layout";
 import { useTransactions } from "../contexts/TransactionsContext";
 import { useAuth } from "../contexts/AuthContext";
 import DashboardHeader from "@/components/ui/Dashboard/DashboardHeader";
-import {BarChart2} from "lucide-react"
+import {BarChart2, DollarSign} from "lucide-react"
+import SavingSpendingChart from "@/components/ui/Dashboard/SavingSpendingChart";
 
 // used for calculating the time difference
 const SEC_PER_DAY = 86400;
@@ -19,7 +20,6 @@ export default function DashboardPage() {
     const { transactions, getTransactions } = useTransactions();
     const { user, getUser } = useAuth();
     const [sidebarOpen, setSidebarOpen] = useState(true);
-
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [spendings, setSpendings] = useState(0);
     const [savings, setSavings] = useState(0);
@@ -90,9 +90,9 @@ export default function DashboardPage() {
             return <span className="text-2xl font-bold text-gray-400">--</span>;
         }
         return (
-            <span className="ml-3 mt-1 text-4xl font-bold">
+            <span className="ml-3 mt-1 text-4xl font-bold inline-flex items-start">
                 {amount.toFixed(2)}
-                <span className="text-xs align-super ml-0.5">$</span>
+                <DollarSign className="w-5 h-5 text-gray-300 ml-1 align-super" />
             </span>
         );
     }
@@ -174,16 +174,14 @@ export default function DashboardPage() {
                     </div>
 
                     {/* === Charts / Invoices Section === */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="bg-gray-800 p-4 rounded-xl h-64 shadow">
-                            {/* Replace this with a chart component */}
-                            <p className="text-gray-400 mb-2">Income vs Expenses</p>
-                            <div className="flex justify-center items-center h-full text-gray-500">
-                                [Graph Placeholder]
+                    <div className="grid grid-cols-1 md:grid-cols-[2fr,1fr] gap-4">
+                        <div className="bg-black p-4 rounded-xl h-80 shadow">
+                            <div className="h-full">
+                                <SavingSpendingChart/>
                             </div>
                         </div>
 
-                        <div className="bg-gray-800 p-4 rounded-xl h-64 shadow">
+                        <div className="bg-gray-800 p-4 rounded-xl h-80 shadow">
                             {/* Replace this with invoice list */}
                             <p className="text-gray-400 mb-2">Invoices</p>
                             <div className="flex justify-center items-center h-full text-gray-500">

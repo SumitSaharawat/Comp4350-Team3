@@ -13,16 +13,24 @@ import {
     deleteTransactionFromServer,
 } from "@/app/api/transac";
 
+export interface ChartDataPoint {
+    label: string;
+    saving: number;
+    spending: number;
+}
+
 interface TransactionsContextType {
     transactions: Transaction[];
     getTransactions: (userId: string) => Promise<boolean>;
     deleteTransaction: (transactionId: string) => Promise<boolean>;
+    prepareDiagramData: (transactions: Transaction[]) => ChartDataPoint[];
 }
 
 const TransactionsContext = createContext<TransactionsContextType>({
     transactions: [],
     getTransactions: async () => false,
     deleteTransaction: async () => false,
+    prepareDiagramData: () =>[],
 });
 
 export function TransactionsProvider({
@@ -58,12 +66,40 @@ export function TransactionsProvider({
         }
     };
 
+    function prepareChartData(transactions: Transaction[]) {
+        const grouped: Record<string, { saving: number; spending: number }> = {};
+
+        transactions.forEach((tx) => {
+            const dateKey = new Date(tx.date).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+            }); // format like "Apr 10"
+
+            if (!grouped[dateKey]) {
+                grouped[dateKey] = { saving: 0, spending: 0 };
+            }
+
+            if (tx.type.toLowerCase() === "saving") {
+                grouped[dateKey].saving += tx.amount;
+            } else {
+                grouped[dateKey].spending += tx.amount;
+            }
+        });
+
+        return Object.entries(grouped).map(([label, values]) => ({
+            label,
+            saving: values.saving,
+            spending: -values.spending,
+        }));
+    }
+
     return (
         <TransactionsContext.Provider
             value={{
                 transactions,
                 getTransactions: handleGetTransactions,
                 deleteTransaction: handleDeleteTransaction,
+                prepareDiagramData: prepareChartData,
             }}
         >
             {children}

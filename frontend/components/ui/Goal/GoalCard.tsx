@@ -161,7 +161,7 @@ export default function GoalCard({ goal, refreshGoals }: GoalCardProps) {
             <div className="text-sm mt-5 text-gray-500">
                 <div className="flex justify-between">
                     <span>Target</span>
-                    <span className="font-medium">
+                    <span className="font-medium text-gray-300">
                         {new Date(goal.time).toLocaleDateString("en-US", {
                             day: "numeric",
                             month: "short",
@@ -171,7 +171,7 @@ export default function GoalCard({ goal, refreshGoals }: GoalCardProps) {
                 </div>
                 <div className="flex justify-between mt-2">
                     <span>Remaining</span>
-                    <span className="font-medium">
+                    <span className="font-medium text-gray-300">
                         CAD{" "}
                         {(goal.goalAmount - goal.currAmount).toLocaleString()}
                     </span>

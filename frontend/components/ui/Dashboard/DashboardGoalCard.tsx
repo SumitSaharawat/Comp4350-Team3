@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { format } from 'date-fns';
+import { useRouter } from "next/navigation";
+import { format } from "date-fns";
 import {useGoals} from "@/app/contexts/GoalContext";
 import {useEffect} from "react";
 import {useAuth} from "@/app/contexts/AuthContext";
@@ -15,6 +15,7 @@ export default function DashboardGoalCard() {
     useEffect(() => {
         const userId = user?.id || localStorage.getItem("userid");
         if (userId) getGoals(userId);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const upcomingGoals = goals

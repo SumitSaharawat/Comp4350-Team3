@@ -80,6 +80,7 @@ export default function TransactionFormModal({
             cleanTransacData();
             setHeadLine("Add Transaction");
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mode, existingTransaction]);
 
 

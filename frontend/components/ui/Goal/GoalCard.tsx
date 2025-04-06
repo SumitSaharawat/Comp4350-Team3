@@ -30,7 +30,7 @@ export default function GoalCard({ goal, refreshGoals }: GoalCardProps) {
     const bgColor = `hsl(0, 0%, ${lightness}%)`;
 
     const getProgressColor = (progress: number) => {
-        if (progress == 100) return "bg-green-600";
+        if (progress === 100) return "bg-green-600";
         if (progress >= 66) return "bg-blue-600";
         if (progress >= 33) return "bg-yellow-500";
         return "bg-red-600";

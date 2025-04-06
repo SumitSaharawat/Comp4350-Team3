@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { format } from 'date-fns';
+import { useRouter } from "next/navigation";
+import { format } from "date-fns";
 import {useReminders} from "@/app/contexts/ReminderContext";
 import {useEffect} from "react";
 import {useAuth} from "@/app/contexts/AuthContext";
@@ -14,6 +14,7 @@ export default function DashboardReminderCard() {
     useEffect(() => {
         const userId = user?.id || localStorage.getItem("userid");
         if (userId) getReminders(userId);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // pick up latest 3

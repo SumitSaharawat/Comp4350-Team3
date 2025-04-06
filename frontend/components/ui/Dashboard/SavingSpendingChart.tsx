@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
     ResponsiveContainer,
@@ -7,10 +7,10 @@ import {
     XAxis,
     YAxis,
     Tooltip,
-} from 'recharts';
+} from "recharts";
 import {ChartDataPoint, useTransactions} from "@/app/contexts/TransactionsContext";
 import {useAuth} from "@/app/contexts/AuthContext";
-import {useEffect, useState} from 'react';
+import {useEffect, useState} from "react";
 
 export default function SavingSpendingChart() {
     const [data, setData] = useState<ChartDataPoint[]>([]);
@@ -19,12 +19,14 @@ export default function SavingSpendingChart() {
 
     useEffect(() => {
         getTransactions(user?.id || localStorage.getItem("userid")!);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
         if (transactions.length > 0) {
             setData(prepareDiagramData(transactions));
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [transactions]);
 
     return (
@@ -50,10 +52,10 @@ export default function SavingSpendingChart() {
                     <YAxis
                         stroke="#ccc"
                         tickFormatter={(value) =>
-                            new Intl.NumberFormat('en-US', {
-                                style: 'currency',
-                                currency: 'USD',
-                                notation: 'compact',
+                            new Intl.NumberFormat("en-US", {
+                                style: "currency",
+                                currency: "USD",
+                                notation: "compact",
                                 maximumFractionDigits: 1,
                             }).format(value)
                         }
@@ -63,7 +65,7 @@ export default function SavingSpendingChart() {
                             backgroundColor: '#1f2937',
                             borderColor: '#374151',
                             borderRadius: 8,
-                            color: 'white',
+                            color: "white",
                         }}
                     />
                     <Bar dataKey="saving" fill="#10B981" radius={[4, 4, 0, 0]} />

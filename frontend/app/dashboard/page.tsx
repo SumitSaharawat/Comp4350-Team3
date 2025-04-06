@@ -10,7 +10,7 @@ import Layout from "@/components/ui/Layout";
 import { useTransactions } from "../contexts/TransactionsContext";
 import { useAuth } from "../contexts/AuthContext";
 import DashboardHeader from "@/components/ui/Dashboard/DashboardHeader";
-import {BarChart2, DollarSign} from "lucide-react"
+import {BarChart2, DollarSign} from "lucide-react";
 import SavingSpendingChart from "@/components/ui/Dashboard/SavingSpendingChart";
 import TransactionListCard from "@/components/ui/Dashboard/TransactionListCard";
 import DashboardReminderCard from "@/components/ui/Dashboard/DashboardReminderCard";
@@ -24,21 +24,8 @@ export default function DashboardPage() {
     const { user, getUser } = useAuth();
     const [spendings, setSpendings] = useState(0);
     const [savings, setSavings] = useState(0);
-    const [timePeriod, setTimePeriod] = useState("");
     const [dataFetched, setDataFetched] = useState(false);
 
-    // return the start and end date in month, day format for the past 30 days
-    const calculateTimePeriod = (startDate: Date) => {
-        const prev = new Date(new Date().setDate(startDate.getDate() - 30));
-
-        return `${startDate.toLocaleString("en-US", {
-            day: "numeric",
-            month: "short",
-        })} - ${prev.toLocaleString("en-US", {
-            day: "numeric",
-            month: "short",
-        })}`;
-    };
 
     // calculate the total spending of the user in the past 30 days from transactions
     const calculateSpending = (startDate: Date) => {
@@ -82,7 +69,6 @@ export default function DashboardPage() {
         // recalculate all the data when there are changes in the transactions
         setSpendings(calculateSpending(new Date()));
         setSavings(calculateSavings(new Date()));
-        setTimePeriod(calculateTimePeriod(new Date()));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [transactions]);
 

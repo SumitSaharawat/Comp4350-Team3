@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
 import {useTransactions} from "@/app/contexts/TransactionsContext";
 import {useAuth} from "@/app/contexts/AuthContext";
-import {useEffect, useState} from 'react';
+import {useEffect, useState} from "react";
 import {Transaction} from "@/app/api/transac";
 import {useRouter} from "next/navigation";
 
@@ -14,6 +14,7 @@ export default function TransactionListCard() {
 
     useEffect(() => {
         getTransactions(user?.id || localStorage.getItem("userid")!);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -29,7 +30,7 @@ export default function TransactionListCard() {
                 <h2 className="text-white font-semibold text-lg">Transaction</h2>
                 <button
                     className="text-blue-400 text-sm hover:underline"
-                    onClick={() => router.push('/transactions')}
+                    onClick={() => router.push("/transactions")}
                 >See More</button>
 
             </div>
@@ -52,13 +53,15 @@ export default function TransactionListCard() {
                         <div className="text-right">
                             <p
                                 className={`font-semibold ${
-                                    tx.type === 'Saving' ? 'text-green-400' : 'text-red-400'
+                                    tx.type === "Saving" ? "text-green-400" : "text-red-400"
                                 }`}
                             >
                                 ${tx.amount.toFixed(2)}
                             </p>
-                        <p className="text-sm text-gray-400">{tx.date}</p>
-                    </div>
+                            <p className="text-sm text-gray-400">
+                                {new Date(tx.date).toLocaleDateString()}
+                            </p>
+                        </div>
                     </div>
                 ))}
             </div>

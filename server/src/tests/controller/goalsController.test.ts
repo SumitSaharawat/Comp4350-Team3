@@ -16,6 +16,15 @@ jest.mock("../../db/transactionService", () => ({
   addTransaction: jest.fn(),
 }));
 
+jest.mock("../../db/userService", () => ({
+  findUserById: jest.fn().mockImplementation((userId) => ({
+    _id: userId,
+    username: "testuser",
+    balance: 1000,
+    save: jest.fn().mockResolvedValue(true)
+  }))
+}));
+
 beforeEach(() => {
   jest.spyOn(console, "error").mockImplementation(() => {});
 });
@@ -34,6 +43,7 @@ app.delete("/api/goal/:id", deleteGoalController);
 describe("Goal Controller", () => {
   const fakeGoal = {
     _id: "goal123",
+    user: "user123",
     name: "Save Money",
     time: "2025-02-17T12:00:00Z",
     currAmount: 50,

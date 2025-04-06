@@ -26,23 +26,15 @@ export default function GoalCard({ goal, refreshGoals }: GoalCardProps) {
     const [isEditing, setIsEditing] = useState(false);
     const cardRef = useRef<HTMLDivElement>(null);
     const currentProgress = (goal.currAmount / goal.goalAmount) * 100;
+    const lightness = 40 - 30 * (currentProgress / 100); // 0% → 40%，100% → 10%
+    const bgColor = `hsl(0, 0%, ${lightness}%)`;
 
     const getProgressColor = (progress: number) => {
-        if (progress >= 75) return "bg-green-600";
-        if (progress >= 50) return "bg-blue-600";
-        if (progress >= 25) return "bg-yellow-500";
+        if (progress === 100) return "bg-green-600";
+        if (progress >= 66) return "bg-blue-600";
+        if (progress >= 33) return "bg-yellow-500";
         return "bg-red-600";
     };
-
-    const progressColors: Record<string, string> = {
-        "bg-red-600": "#EF4444",
-        "bg-yellow-500": "#FBBF24",
-        "bg-blue-600": "#3B82F6",
-        "bg-green-600": "#10B981",
-    };
-
-    const progressClass = getProgressColor(currentProgress);
-    const endColor = progressColors[progressClass] || "#f9769d";
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -82,7 +74,7 @@ export default function GoalCard({ goal, refreshGoals }: GoalCardProps) {
             ref={cardRef}
             className="p-4 rounded-lg shadow-md relative border border-gray-200 backdrop-blur-md"
             style={{
-                backgroundImage: `linear-gradient(to top right, black 70%, ${endColor} 100%)`,
+                background: `linear-gradient(to right, black, ${bgColor})`,
             }}
         >
             <div className="flex justify-between items-center mb-3">
@@ -169,7 +161,7 @@ export default function GoalCard({ goal, refreshGoals }: GoalCardProps) {
             <div className="text-sm mt-5 text-gray-500">
                 <div className="flex justify-between">
                     <span>Target</span>
-                    <span className="font-medium">
+                    <span className="font-medium text-gray-300">
                         {new Date(goal.time).toLocaleDateString("en-US", {
                             day: "numeric",
                             month: "short",
@@ -179,7 +171,7 @@ export default function GoalCard({ goal, refreshGoals }: GoalCardProps) {
                 </div>
                 <div className="flex justify-between mt-2">
                     <span>Remaining</span>
-                    <span className="font-medium">
+                    <span className="font-medium text-gray-300">
                         CAD{" "}
                         {(goal.goalAmount - goal.currAmount).toLocaleString()}
                     </span>

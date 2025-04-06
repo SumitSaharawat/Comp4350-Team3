@@ -58,8 +58,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             localStorage.setItem("userid", result.user.id);
             setUser(result.user);
             setTimeout(() => {
-                // Give 1 sec to holding
-                window.location.href = "/transactions";
+                // Give 0.5 sec to holding
+                window.location.href = "/dashboard";
             }, 500);
 
             return result;

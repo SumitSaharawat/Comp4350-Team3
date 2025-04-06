@@ -21,7 +21,6 @@ import {
 import { useAuth } from "@/app/contexts/AuthContext";
 import {useEffect, useState} from "react";
 import Image from "next/image";
-import {isPair} from "yaml";
 
 interface SidebarProps {
     isOpen: boolean;
@@ -31,7 +30,6 @@ interface SidebarProps {
 export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
     const pathname = usePathname();
     const { logout } = useAuth();
-    const [isHovered, setIsHovered] = useState(false);
     const [username, setUsername] = useState<string>("User");
 
     useEffect(() => {
@@ -76,8 +74,7 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
             className={`fixed top-0 left-0 pt-4 h-full bg-black text-foreground transition-all duration-300 ease-in-out ${
                 isOpen ? "w-64" : "w-16"
             }`}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+
         >
             {isOpen && (
                 <div className="flex items-center gap-2 mb-6 ml-5">

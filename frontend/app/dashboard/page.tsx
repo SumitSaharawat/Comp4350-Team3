@@ -22,8 +22,6 @@ const SEC_PER_DAY = 86400;
 export default function DashboardPage() {
     const { transactions, getTransactions } = useTransactions();
     const { user, getUser } = useAuth();
-    const [sidebarOpen, setSidebarOpen] = useState(true);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [spendings, setSpendings] = useState(0);
     const [savings, setSavings] = useState(0);
     const [timePeriod, setTimePeriod] = useState("");
@@ -101,45 +99,6 @@ export default function DashboardPage() {
     }
 
     return (
-        // <div className="flex h-screen">
-        //     {/* Sidebar */}
-        //     <div
-        //         className={`bg-gray-900 transition-all duration-300 ${
-        //             isSidebarOpen ? "w-64" : "w-16"
-        //         }`}
-        //     >
-        //         <Sidebar
-        //             isOpen={isSidebarOpen}
-        //             toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-        //         />
-        //     </div>
-        //
-        //     {/* Main content */}
-        //     <div className="flex-grow h-screen flex justify-center items-center">
-        //         <div className="stats stats-vertical lg:stats-horizontal shadow">
-        //             <div className="stat w-64">
-        //                 <div className="stat-title">
-        //                     Spendings of the past month
-        //                 </div>
-        //                 <div className="stat-value">{spendings}</div>
-        //                 <div className="stat-desc">{timePeriod}</div>
-        //             </div>
-        //
-        //             <div className="stat w-64">
-        //                 <div className="stat-title">
-        //                     Savings of the past month
-        //                 </div>
-        //                 <div className="stat-value">{savings}</div>
-        //                 <div className="stat-desc">{timePeriod}</div>
-        //             </div>
-        //
-        //             <div className="stat w-64">
-        //                 <div className="stat-title">Current Balance</div>
-        //                 <div className="stat-value">{user?.balance}</div>
-        //             </div>
-        //         </div>
-        //     </div>
-        // </div>
         <Layout title="Dashboard">
             <div className="min-h-screen flex">
                 <div className="flex-1 flex flex-col space-y-4 p-6">
@@ -147,7 +106,9 @@ export default function DashboardPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {/* Savings */}
-                        <div className="bg-black/50 border p-4 rounded-xl shadow flex flex-col gap-2 hover:bg-blue-600 transition">
+                        <div className="bg-black border p-4 rounded-xl shadow flex flex-col gap-2
+                                        hover:border-blue-500 hover:border-2 transition">
+
                             <div className="flex items-center gap-2">
                                 <BarChart2 className="w-10 h-6 text-green-400"/>
                                 <p className="text-l text-green-400">Saving</p>
@@ -157,7 +118,9 @@ export default function DashboardPage() {
 
                         {/* My Balance */}
                         <div
-                            className="bg-black/50 border p-4 rounded-xl shadow flex flex-col gap-2 hover:bg-blue-600 transition">
+                            className="bg-black border p-4 rounded-xl shadow flex flex-col gap-2
+                                         hover:border-blue-500 hover:border-2 transition">
+
                             <div className="flex items-center gap-2">
                                 <BarChart2 className="w-10 h-6 text-foreground"/>
                                 <p className="text-l text-foreground">My Balance</p>
@@ -167,7 +130,9 @@ export default function DashboardPage() {
 
                         {/* Spending */}
                         <div
-                            className="bg-black/50 border p-4 rounded-xl shadow flex flex-col gap-2 hover:bg-blue-600 transition">
+                            className="bg-black border p-4 rounded-xl shadow flex flex-col gap-2
+                                        hover:border-blue-500 hover:border-2 transition">
+
                             <div className="flex items-center gap-2">
                                 <BarChart2 className="w-10 h-6 text-red-400"/>
                                 <p className="text-l text-red-400">Spending</p>

@@ -38,7 +38,7 @@ export default function Layout({
             {/* Main content */}
             <div className="flex-1 transition-all duration-300">
                 <Navbar title={title} middleComponent={middleComponent} />
-                <main className="p-4 pt-6">{children}</main>
+                <main className="p-4 pt-6 bg-customSecondDark min-h-screen">{children}</main>
             </div>
 
             {/**Notification List */}

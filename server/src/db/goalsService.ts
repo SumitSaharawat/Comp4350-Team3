@@ -122,3 +122,11 @@ export const deleteGoal = async (id: string) => {
     throw err;
   }
 };
+
+
+export const findGoalById = async (id: string): Promise<IGoal | null> => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new Error("Invalid goal ID format");
+  }
+  return await Goal.findById(id);
+};

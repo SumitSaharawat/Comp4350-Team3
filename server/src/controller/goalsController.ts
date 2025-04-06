@@ -4,6 +4,7 @@ import {addGoal, deleteGoal, editGoal, getAllGoals} from "../db/goalsService";
 import {controlLog} from "./controlLog";
 
 import {addTransaction} from "../db/transactionService";
+import { findUserById } from "../db/userService";
 
 // format the goal data in a neater way
 const formatGoal = (goal: IGoal) => ({
@@ -37,7 +38,17 @@ export const addGoalController = async (req: Request, res: Response) => {
     const goal = await addGoal(userId, name, time, currAmount, goalAmount, category);
 
     // If goal is complete, create a transaction
+    if(goal.goalAmount < goal.currAmount) {
+      throw new Error("goal amount can't be less than currAmount");
+    }
     if (goal.currAmount === goal.goalAmount) {
+
+      const user = await findUserById(goal.user.toString());
+      
+      if(user.balance < goal.goalAmount) {
+        throw new Error("Insufficient funds to complete goal");
+      }
+      
       await addTransaction(
         goal.user.toString(), // Associate with user
         goal.name, // Name of the goal
@@ -75,14 +86,23 @@ export const editGoalController = async (req: Request, res: Response) => {
 
   try {
     const updatedGoal = await editGoal(id, name, time, currAmount, goalAmount, category);
-    if (updatedGoal) {
-      res.status(200).json({message: "Goal updated successfully", goal: formatGoal(updatedGoal)});
-    } else {
+    if (!updatedGoal) {
       return res.status(404).json({message: "Goal not found"});
     }
 
     // If goal is complete, create a transaction
     if (updatedGoal.currAmount === updatedGoal.goalAmount) {
+
+      const user = await findUserById(updatedGoal.user.toString());
+      if(!user) {
+        throw new Error("User not found");
+      }
+      console.log(user.balance);
+      console.log(updatedGoal.goalAmount)
+      if(user.balance < updatedGoal.goalAmount) {
+        throw new Error("Insufficient funds to complete goal");
+      }
+''
       await addTransaction(
         updatedGoal.user.toString(), // Associate with user
         updatedGoal.name, // Name of the goal
@@ -92,6 +112,12 @@ export const editGoalController = async (req: Request, res: Response) => {
         "Spending", // Transaction type
       );
     }
+
+    res.status(200).json({
+      message: "Goal updated successfully", 
+      goal: formatGoal(updatedGoal)
+    });
+
   } catch (err) {
     console.error("Error updating goal:", err.message || err);
     return res.status(500).json({error: err.message || "Error updating goal"});

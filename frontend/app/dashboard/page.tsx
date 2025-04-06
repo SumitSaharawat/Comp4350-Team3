@@ -12,6 +12,9 @@ import { useAuth } from "../contexts/AuthContext";
 import DashboardHeader from "@/components/ui/Dashboard/DashboardHeader";
 import {BarChart2, DollarSign} from "lucide-react"
 import SavingSpendingChart from "@/components/ui/Dashboard/SavingSpendingChart";
+import TransactionListCard from "@/components/ui/Dashboard/TransactionListCard";
+import DashboardReminderCard from "@/components/ui/Dashboard/DashboardReminderCard";
+import DashboardGoalCard from "@/components/ui/Dashboard/DashboardGoalCard";
 
 // used for calculating the time difference
 const SEC_PER_DAY = 86400;
@@ -181,30 +184,23 @@ export default function DashboardPage() {
                             </div>
                         </div>
 
-                        <div className="bg-gray-800 p-4 rounded-xl h-80 shadow">
-                            {/* Replace this with invoice list */}
-                            <p className="text-gray-400 mb-2">Invoices</p>
-                            <div className="flex justify-center items-center h-full text-gray-500">
-                                [Invoices Placeholder]
-                            </div>
+                        <div className="bg-black p-4 rounded-xl h-80 shadow">
+                            <TransactionListCard/>
                         </div>
                     </div>
 
                     {/* === Transaction & Savings Section === */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="bg-gray-800 p-4 rounded-xl h-64 shadow">
-                            <p className="text-gray-400 mb-2">Transaction History</p>
-                            <div className="flex justify-center items-center h-full text-gray-500">
-                                [Transaction List]
-                            </div>
+                        {/* Reminder card - 1 col */}
+                        <div className="col-span-1">
+                            <DashboardReminderCard />
                         </div>
 
-                        <div className="bg-gray-800 p-4 rounded-xl h-64 shadow">
-                            <p className="text-gray-400 mb-2">Savings</p>
-                            <div className="flex justify-center items-center h-full text-gray-500">
-                                [Savings Chart]
-                            </div>
+                        {/* Goal card - 1 col*/}
+                        <div className="col-span-1">
+                            <DashboardGoalCard/>
                         </div>
+
                     </div>
                 </div>
             </div>

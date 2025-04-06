@@ -109,10 +109,10 @@ export default function LoginPage() {
                         </p>
 
                         {/* Forgot Password */}
-                        <p className="text-sm text-gray-500 text-center">
+                        <p className="text-sm text-green-800 text-center">
                             <Link
                                 href="/auth/reset-password"
-                                className=" hover:underline"
+                                className="hover:underline"
                             >
                                 Forgot password?
                             </Link>
@@ -125,7 +125,7 @@ export default function LoginPage() {
                             className={`text-sm text-center ${
                                 message.type === "error"
                                     ? "text-red-600"
-                                    : "text-green-600"
+                                    : "text-green-400"
                             }`}
                         >
                             {message.text}

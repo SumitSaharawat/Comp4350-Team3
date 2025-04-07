@@ -37,18 +37,8 @@ export const addGoalController = async (req: Request, res: Response) => {
   try {
     const goal = await addGoal(userId, name, time, currAmount, goalAmount, category);
 
-    // If goal is complete, create a transaction
-    if(goal.goalAmount < goal.currAmount) {
-      throw new Error("goal amount can't be less than currAmount");
-    }
+    // have to create transaction when goal is completed
     if (goal.currAmount === goal.goalAmount) {
-
-      const user = await findUserById(goal.user.toString());
-      
-      if(user.balance < goal.goalAmount) {
-        throw new Error("Insufficient funds to complete goal");
-      }
-      
       await addTransaction(
         goal.user.toString(), // Associate with user
         goal.name, // Name of the goal

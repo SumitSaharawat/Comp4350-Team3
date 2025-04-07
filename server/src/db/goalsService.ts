@@ -12,6 +12,11 @@ export const addGoal = async (userId: string, name: string, time: string, currAm
       throw new Error("User does not exist");
     }
 
+    // not valid goal amount is larger than current balance when goal is completed
+    if(currAmount === goalAmount && userExists.balance < goalAmount) {
+      throw new Error("Insufficient funds to complete goal");
+    }
+
     // check if the category is valid
     if (category) {
       const validCategories = ["Saving", "Investment", "Debt Payment", "Other"];

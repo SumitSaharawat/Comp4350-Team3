@@ -55,7 +55,7 @@ export const addGoalController = async (req: Request, res: Response) => {
         new Date().toISOString(), // Transaction date
         goal.goalAmount, // Amount spent
         "CAD", // Default currency (or get from user)
-        "Spending", // Transaction type
+        "Saving", // Transaction type
       );
     }
     res.status(201).json({message: "Goal added successfully", goal: formatGoal(goal)});
@@ -109,7 +109,7 @@ export const editGoalController = async (req: Request, res: Response) => {
         new Date().toISOString(), // Transaction date
         updatedGoal.goalAmount, // Amount spent
         "CAD", // Default currency (or get from user)
-        "Spending", // Transaction type
+        "Saving", // Transaction type
       );
     }
 

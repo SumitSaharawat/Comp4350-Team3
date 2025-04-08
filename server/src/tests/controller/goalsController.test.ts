@@ -143,7 +143,7 @@ describe("Goal Controller", () => {
         expect.any(String),
         1000,
         "CAD",
-        "Spending",
+        "Saving",
       );
     });
   });
@@ -275,7 +275,7 @@ describe("Goal Controller", () => {
         expect.any(String),
         500,
         "CAD",
-        "Spending",
+        "Saving",
       );
     });
   });

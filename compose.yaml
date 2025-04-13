@@ -4,7 +4,7 @@ services:
     build: ./server
     container_name: server
     env_file:
-      - ./server/.env
+      - ./credentials
     networks:
       - simple-finance
     ports: 

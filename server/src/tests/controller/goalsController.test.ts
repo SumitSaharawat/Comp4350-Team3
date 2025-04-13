@@ -21,8 +21,8 @@ jest.mock("../../db/userService", () => ({
     _id: userId,
     username: "testuser",
     balance: 1000,
-    save: jest.fn().mockResolvedValue(true)
-  }))
+    save: jest.fn().mockResolvedValue(true),
+  })),
 }));
 
 beforeEach(() => {

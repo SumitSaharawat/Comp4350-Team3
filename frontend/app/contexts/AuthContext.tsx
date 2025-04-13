@@ -37,19 +37,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
 
-    // useEffect(() => {
-    //     // check user state
-    //     getUser().then((user) => setUser(user));
-    // }, []);
-
-    // get user info from localStorage (after refreshed page)
-    // useEffect(() => {
-    //     const storedUser = localStorage.getItem("user");
-    //     if (storedUser) {
-    //         setUser(JSON.parse(storedUser));
-    //     }
-    // }, []);
-
     const handleLogin = async (username: string, password: string) => {
         try {
             const result = await login(username, password);

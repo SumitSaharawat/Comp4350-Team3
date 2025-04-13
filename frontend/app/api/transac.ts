@@ -10,6 +10,7 @@ export interface Transaction {
     tags: Tag[],
 }
 
+// API hook for get transaction from server
 export async function getTransactionsFromServer(userId: string): Promise<Transaction[]> {
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${userId}`, {
@@ -25,6 +26,7 @@ export async function getTransactionsFromServer(userId: string): Promise<Transac
     return data || [];
 }
 
+//API hook for add new transaction to server
 export async function addTransactionsToServer(
     userId: string,
     name: string,
@@ -48,6 +50,7 @@ export async function addTransactionsToServer(
     return res.json();
 }
 
+//API hook for edit existing transaction
 export async function editTransactionsOnServer(
     transactionId: string,
     name: string,
@@ -71,6 +74,7 @@ export async function editTransactionsOnServer(
     return res.json();
 }
 
+// API hook for delete transaction from server
 export async function deleteTransactionFromServer(transactionId: string): Promise<{ message: string }> {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${transactionId}`, {
         method: "DELETE",

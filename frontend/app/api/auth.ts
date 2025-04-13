@@ -4,6 +4,7 @@ export interface User {
     balance: number;
 }
 
+//API hook for login request
 export async function login(username: string, password: string): Promise<{ user: User, message: string }> {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/login`, {
         method: "POST",
@@ -18,6 +19,7 @@ export async function login(username: string, password: string): Promise<{ user:
     return res.json();
 }
 
+//API hook for get user
 export async function getUser(): Promise<User | null> {
     const username = localStorage.getItem("username");
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/${username}`, {
@@ -29,6 +31,7 @@ export async function getUser(): Promise<User | null> {
     return res.json();
 }
 
+//API hook for log out request
 export async function logout(): Promise<void> {
     await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/login/logout`, {
         method: "POST",
@@ -36,6 +39,7 @@ export async function logout(): Promise<void> {
     });
 }
 
+//API hook for sign up request
 export async function signup(username: string, password: string, balance: number): Promise<{ message: string }> {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/login/signup`, {
         method: "POST",
@@ -49,6 +53,7 @@ export async function signup(username: string, password: string, balance: number
     return res.json();
 }
 
+//API hook for reset password request
 export async function resetPassword(username: string, newPassword: string): Promise<{ message: string }> {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/login/reset-password`, {
         method: "PUT",

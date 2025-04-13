@@ -7,6 +7,7 @@ export interface Goal {
     category: string
 }
 
+// API hook for get goals from server
 export async function getGoalsFromServer(userId: string): Promise<Goal[]> {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/goal/${userId}`, {
         method: "GET",
@@ -21,6 +22,7 @@ export async function getGoalsFromServer(userId: string): Promise<Goal[]> {
     return data || [];
 }
 
+// API hook for add new goal to server
 export async function addGoalToServer(
     userId: string,
     name: string,
@@ -42,6 +44,7 @@ export async function addGoalToServer(
     return res.json();
 }
 
+// API hook for edit goal to server
 export async function editGoalToServer(
     goalId: string,
     name: string,
@@ -62,6 +65,7 @@ export async function editGoalToServer(
     return res.json();
 }
 
+//API hook for delete specific goal to server
 export async function deleteGoalToServer(goalId: string): Promise<{message: string}> {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/goal/${goalId}`, {
         method: "DELETE",

@@ -1,29 +1,35 @@
 "use client";
 
 /**
- * New Goal Modal window
+ * New Goal Modal Window
  *
- * window to display when the user create a new goal
+ * This component provides a modal form for users to create a new financial goal.
+ * Includes validation, feedback, and form handling logic.
  */
+
 import React, { useState } from "react";
 import { useGoals } from "@/app/contexts/GoalContext";
 import { useAuth } from "@/app/contexts/AuthContext";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { X } from "lucide-react";
+
+// Predefined goal categories
 const categories = ["Saving", "Investment"];
 
 interface NewGoalFormProps {
-    toggle: () => void;
-    refreshGoals: () => void;
+    toggle: () => void;           // Closes the modal
+    refreshGoals: () => void;     // Refetches the goal list after submission
 }
 
 export default function NewGoalForm({
-    toggle,
-    refreshGoals,
-}: NewGoalFormProps) {
+                                        toggle,
+                                        refreshGoals,
+                                    }: NewGoalFormProps) {
     const { addGoal } = useGoals();
     const { user } = useAuth();
+
+    // Form input state
     const [goalData, setGoalData] = useState({
         name: "",
         currAmount: null as number | null,
@@ -32,13 +38,16 @@ export default function NewGoalForm({
         time: new Date(),
     });
 
+    // Loading and message feedback state
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState<{
         text: string;
         type: "error" | "success";
     } | null>(null);
 
-    // set the data for submission
+    /**
+     * Updates goalData when input fields change
+     */
     const handleChange = (
         field: keyof typeof goalData,
         value: string | number | Date | null
@@ -49,9 +58,13 @@ export default function NewGoalForm({
         }));
     };
 
+    /**
+     * Handles form submission and validation
+     */
     const handleSubmit = async () => {
         setMessage(null);
 
+        // Validate required fields
         if (
             !goalData.name ||
             !goalData.time ||
@@ -62,11 +75,13 @@ export default function NewGoalForm({
             return;
         }
 
+        // Validate that saving does not exceed the goal
         if (goalData.currAmount > goalData.goalAmount) {
             setMessage({ text: "Goal is less than saving!", type: "error" });
             return;
         }
 
+        // Get user ID (fallback to localStorage)
         const userId = user?.id || localStorage.getItem("userid");
         if (!userId) {
             setMessage({
@@ -79,12 +94,14 @@ export default function NewGoalForm({
         try {
             setLoading(true);
 
+            // Format date for API
             const formattedDate = goalData.time.toLocaleDateString("en-US", {
                 day: "numeric",
                 month: "short",
                 year: "numeric",
             });
 
+            // Add new goal
             await addGoal(
                 userId,
                 goalData.name,
@@ -93,8 +110,10 @@ export default function NewGoalForm({
                 goalData.goalAmount,
                 goalData.category
             );
+
             setMessage({ text: "Goal added successfully!", type: "success" });
 
+            // Reset and close modal after short delay
             setTimeout(() => {
                 setMessage(null);
                 toggle();
@@ -121,6 +140,7 @@ export default function NewGoalForm({
                 backgroundImage: `linear-gradient(to top right, black 60%, gray 100%)`,
             }}
         >
+            {/* Close button (top-right corner) */}
             <button
                 onClick={toggle}
                 className="absolute right-2 top-2 text-black bg-transparent hover:text-gray-400 p-1 shadow-sm z-10"
@@ -132,7 +152,7 @@ export default function NewGoalForm({
                 Create New Goal
             </h2>
 
-            {/* Goal Name */}
+            {/* Input: Goal Name */}
             <input
                 type="text"
                 placeholder="Goal Name"
@@ -141,7 +161,7 @@ export default function NewGoalForm({
                 className="w-full border border-gray-300 p-2 rounded mb-2 bg-transparent"
             />
 
-            {/* Current Amount */}
+            {/* Input: Current Saved Amount */}
             <input
                 type="number"
                 placeholder="Current Amount"
@@ -155,7 +175,7 @@ export default function NewGoalForm({
                 className="w-full border border-gray-300 p-2 rounded mb-2 bg-transparent"
             />
 
-            {/* Goal Amount */}
+            {/* Input: Goal Amount */}
             <input
                 type="number"
                 placeholder="Goal Amount"
@@ -169,7 +189,7 @@ export default function NewGoalForm({
                 className="w-full border border-gray-300 p-2 rounded mb-2 bg-transparent"
             />
 
-            {/* Category Dropdown */}
+            {/* Dropdown: Category Selector */}
             <select
                 value={goalData.category}
                 onChange={(e) => handleChange("category", e.target.value)}
@@ -182,7 +202,7 @@ export default function NewGoalForm({
                 ))}
             </select>
 
-            {/* Date Picker */}
+            {/* Date Picker: Target Date */}
             <DatePicker
                 selected={goalData.time}
                 onChange={(date: Date | null) =>
@@ -193,7 +213,7 @@ export default function NewGoalForm({
                 showPopperArrow={false}
             />
 
-            {/* Message Display */}
+            {/* Feedback Message */}
             {message && (
                 <p
                     className={`text-sm text-center mt-2 ${
@@ -206,7 +226,7 @@ export default function NewGoalForm({
                 </p>
             )}
 
-            {/* Buttons */}
+            {/* Action Buttons */}
             <div className="flex justify-end mt-4 gap-2">
                 <button
                     onClick={toggle}

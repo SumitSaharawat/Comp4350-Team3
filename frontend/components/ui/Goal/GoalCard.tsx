@@ -37,6 +37,7 @@ export default function GoalCard({ goal, refreshGoals }: GoalCardProps) {
     };
 
     useEffect(() => {
+        // handle the mouse click outside function
         const handleClickOutside = (event: MouseEvent) => {
             if (
                 menuRef.current &&
@@ -53,6 +54,7 @@ export default function GoalCard({ goal, refreshGoals }: GoalCardProps) {
             document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+    // handle delete goal button
     const handleDelete = async () => {
         if (confirm(`Are you sure you want to delete "${goal.name}"?`)) {
             await deleteGoal(goal.id);
@@ -62,6 +64,7 @@ export default function GoalCard({ goal, refreshGoals }: GoalCardProps) {
         }
     };
 
+    // handle edit goal
     const handleEdit = () => {
         if (cardRef.current) {
             setTriggerRect(cardRef.current.getBoundingClientRect());

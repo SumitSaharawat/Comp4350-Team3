@@ -83,13 +83,22 @@ export default function GoalCard({ goal, refreshGoals }: GoalCardProps) {
                     <h2 className="text-lg font-semibold">{goal.name}</h2>
                 </div>
 
-                <button
-                    ref={buttonRef}
-                    onClick={() => setShowMenu(!showMenu)}
-                    className="cursor-pointer text-black hover:text-gray-700"
-                >
-                    <MoreHorizontal/>
-                </button>
+                {currentProgress === 100 ? (
+                    <button
+                        onClick={handleDelete}
+                        className="cursor-pointer text-red-800 hover:text-red-400"
+                    >
+                        <Trash2 />
+                    </button>
+                ) : (
+                    <button
+                        ref={buttonRef}
+                        onClick={() => setShowMenu(!showMenu)}
+                        className="cursor-pointer text-black hover:text-gray-700"
+                    >
+                        <MoreHorizontal />
+                    </button>
+                )}
 
                 {goal.currAmount < goal.goalAmount && showMenu && (
                     <div

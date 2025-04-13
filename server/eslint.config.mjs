@@ -25,6 +25,7 @@ export default [
       "max-len": ["error", {"code": 200}], // Limit line length to 200 characters
       "require-jsdoc": "off", // Disable JSDoc requirement
       "new-cap": 0,
+      "linebreak-style": "off",
     },
   },
   {languageOptions: {globals: globals.browser}},

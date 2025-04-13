@@ -4,7 +4,7 @@ import {addGoal, deleteGoal, editGoal, getAllGoals} from "../db/goalsService";
 import {controlLog} from "./controlLog";
 
 import {addTransaction} from "../db/transactionService";
-import { findUserById } from "../db/userService";
+import {findUserById} from "../db/userService";
 
 // format the goal data in a neater way
 const formatGoal = (goal: IGoal) => ({
@@ -82,17 +82,14 @@ export const editGoalController = async (req: Request, res: Response) => {
 
     // If goal is complete, create a transaction
     if (updatedGoal.currAmount === updatedGoal.goalAmount) {
-
       const user = await findUserById(updatedGoal.user.toString());
-      if(!user) {
+      if (!user) {
         throw new Error("User not found");
       }
-      console.log(user.balance);
-      console.log(updatedGoal.goalAmount)
-      if(user.balance < updatedGoal.goalAmount) {
+      if (user.balance < updatedGoal.goalAmount) {
         throw new Error("Insufficient funds to complete goal");
       }
-''
+
       await addTransaction(
         updatedGoal.user.toString(), // Associate with user
         updatedGoal.name, // Name of the goal
@@ -104,10 +101,9 @@ export const editGoalController = async (req: Request, res: Response) => {
     }
 
     res.status(200).json({
-      message: "Goal updated successfully", 
-      goal: formatGoal(updatedGoal)
+      message: "Goal updated successfully",
+      goal: formatGoal(updatedGoal),
     });
-
   } catch (err) {
     console.error("Error updating goal:", err.message || err);
     return res.status(500).json({error: err.message || "Error updating goal"});

@@ -46,7 +46,6 @@ export const loginController = async (req: Request, res: Response, next) => {
   } catch (err) {
     console.error("Error logging in:", err.message || err); // Log to terminal
     return res.status(500).json({error: err.message || "Error logging in"});
-    // next(err);
   }
 };
 
@@ -66,7 +65,6 @@ export const createAccountController = async (req: Request, res: Response) => {
   } catch (err) {
     console.error("Error creating account:", err.message || err); // Log to terminal
     return res.status(500).json({error: err.message || "Error creating account"});
-    // next(err);
   }
 };
 

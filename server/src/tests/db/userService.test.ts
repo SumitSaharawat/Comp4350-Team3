@@ -1,7 +1,7 @@
-import { MongoMemoryServer } from "mongodb-memory-server";
+import {MongoMemoryServer} from "mongodb-memory-server";
 import mongoose from "mongoose";
 import User from "../../db/userDB";
-import { addUser, getAllUsers, getUsersByUsername, editUser, deleteUser, findUserById } from "../../db/userService";
+import {addUser, getAllUsers, getUsersByUsername, editUser, deleteUser, findUserById} from "../../db/userService";
 
 beforeEach(() => {
   jest.spyOn(console, "error").mockImplementation(() => {});
@@ -11,7 +11,7 @@ afterEach(() => {
   jest.restoreAllMocks();
 });
 
-//Test setting assisted by AI
+// Test setting assisted by AI
 describe("User Service Tests", () => {
   let mongoServer: MongoMemoryServer;
   let existingUserId: string;

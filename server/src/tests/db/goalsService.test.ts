@@ -159,11 +159,11 @@ describe("Goals Service Tests", () => {
       // Create a test goal before each test
       const goal = await addGoal(
         userId,
-        "Test Goal", 
-        "2025-12-31", 
-        100, 
-        500, 
-        "Saving"
+        "Test Goal",
+        "2025-12-31",
+        100,
+        500,
+        "Saving",
       );
       testGoalId = goal._id.toString();
     });

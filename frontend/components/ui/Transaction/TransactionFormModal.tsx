@@ -3,8 +3,11 @@
 /**
  * Transaction Form Modal
  *
- * Used for add/edit a transaction
+ * A modal used for adding or editing a transaction.
+ * - Dynamically adjusts based on mode: "add" or "edit"
+ * - Supports name, amount, date, type, and tag assignment
  */
+
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -15,7 +18,9 @@ import {
     editTransactionsOnServer,
     Transaction,
 } from "@/app/api/transac";
-import {Tag} from "@/app/api/tag";
+import { Tag } from "@/app/api/tag";
+
+// Transaction type options
 const types = ["Saving", "Spending"];
 
 interface TransactionFormModalProps {
@@ -27,13 +32,15 @@ interface TransactionFormModalProps {
 }
 
 export default function TransactionFormModal({
-    isOpen,
-    toggle,
-    refreshTransactions,
-    mode,
-    existingTransaction,
-}: TransactionFormModalProps) {
+                                                 isOpen,
+                                                 toggle,
+                                                 refreshTransactions,
+                                                 mode,
+                                                 existingTransaction,
+                                             }: TransactionFormModalProps) {
     const { tags, getTags } = useTags();
+
+    // State to hold form data
     const [transacData, setTransacData] = useState({
         name: "",
         amount: null as number | null,
@@ -50,6 +57,9 @@ export default function TransactionFormModal({
 
     const [headLine, setHeadLine] = useState<string>("");
 
+    /**
+     * Reset form to default state
+     */
     const cleanTransacData = () => {
         transacData.name = "";
         transacData.amount = null;
@@ -58,6 +68,9 @@ export default function TransactionFormModal({
         transacData.tags = [];
     };
 
+    /**
+     * Handle form input change
+     */
     const handleChange = (
         field: keyof typeof transacData,
         value: string | number | Date | null
@@ -68,6 +81,9 @@ export default function TransactionFormModal({
         }));
     };
 
+    /**
+     * Populate form if editing, or reset if adding
+     */
     useEffect(() => {
         if (mode === "edit" && existingTransaction) {
             transacData.name = existingTransaction.name;
@@ -83,7 +99,9 @@ export default function TransactionFormModal({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mode, existingTransaction]);
 
-
+    /**
+     * Fetch tags when modal is opened
+     */
     useEffect(() => {
         const fetchTags = async () => {
             const userId = localStorage.getItem("userid");
@@ -97,6 +115,9 @@ export default function TransactionFormModal({
         }
     }, [isOpen, getTags]);
 
+    /**
+     * Add or remove tag from selected tags
+     */
     const handleTagSelection = (tag: Tag) => {
         setTransacData((prev) => {
             const isTagSelected = prev.tags.some((t) => t.id === tag.id);
@@ -109,14 +130,14 @@ export default function TransactionFormModal({
         });
     };
 
+    /**
+     * Handle form submit for add/edit
+     */
     const handleSubmit = async () => {
         setMessage(null);
 
-        if (
-            !transacData.name ||
-            !transacData.amount ||
-            !transacData.type
-        ) {
+        // Basic validation
+        if (!transacData.name || !transacData.amount || !transacData.type) {
             setMessage({ text: "All fields are required.", type: "error" });
             return;
         }
@@ -132,6 +153,7 @@ export default function TransactionFormModal({
 
         try {
             setLoading(true);
+
             const formattedDate = transacData.time.toLocaleDateString("en-US", {
                 day: "numeric",
                 month: "short",
@@ -166,6 +188,7 @@ export default function TransactionFormModal({
                 });
             }
 
+            // Close modal and refresh
             setTimeout(() => {
                 setMessage(null);
                 toggle();
@@ -192,8 +215,8 @@ export default function TransactionFormModal({
             }`}
         >
             <div className="relative bg-gradient-to-br from-customSecondDark to-gray-500
-                             backdrop-blur-xl p-6 rounded-lg shadow-xl w-96">
-                {/* Close Button (X) */}
+                            backdrop-blur-xl p-6 rounded-lg shadow-xl w-96">
+                {/* Close Button */}
                 <button
                     onClick={toggle}
                     className="absolute top-2 right-2 text-foreground hover:text-black"
@@ -206,7 +229,7 @@ export default function TransactionFormModal({
                     {headLine}
                 </h2>
 
-                {/* Transaction name */}
+                {/* Transaction Name Input */}
                 <input
                     type="text"
                     placeholder="Transaction Name"
@@ -221,12 +244,7 @@ export default function TransactionFormModal({
                     placeholder="Amount"
                     value={transacData.amount ?? ""}
                     onChange={(e) =>
-                        handleChange(
-                            "amount",
-                            e.target.value === ""
-                                ? null
-                                : Number(e.target.value)
-                        )
+                        handleChange("amount", e.target.value === "" ? null : Number(e.target.value))
                     }
                     className="w-full bg-transparent/30 border border-gray-300 p-2 rounded mb-2"
                 />
@@ -247,15 +265,13 @@ export default function TransactionFormModal({
                 {/* Date Picker */}
                 <DatePicker
                     selected={transacData.time}
-                    onChange={(date: Date | null) =>
-                        handleChange("time", date || new Date())
-                    }
+                    onChange={(date: Date | null) => handleChange("time", date || new Date())}
                     dateFormat="yyyy-MM-dd"
                     className="w-full bg-transparent/30 border border-gray-300 p-2 rounded mb-2"
                     showPopperArrow={false}
                 />
 
-                {/* Tags Selection */}
+                {/* Tag Selection */}
                 <div className="mb-4">
                     <label className="font-bold mb-2 block">Tags</label>
                     <div className="flex flex-wrap gap-2 mt-2">
@@ -270,7 +286,7 @@ export default function TransactionFormModal({
                                         type="checkbox"
                                         checked={isTagSelected}
                                         onChange={() => handleTagSelection(tag)}
-                                        className="mr-1 cursor-pointer checkbox checkbox-accent "
+                                        className="mr-1 cursor-pointer checkbox checkbox-accent"
                                     />
                                     <span
                                         className="px-2 py-1 text-sm rounded-full cursor-pointer"
@@ -285,7 +301,7 @@ export default function TransactionFormModal({
                     </div>
                 </div>
 
-                {/* Save Button */}
+                {/* Submit Button */}
                 <div className="flex justify-center mt-4">
                     <button
                         onClick={handleSubmit}
@@ -301,9 +317,7 @@ export default function TransactionFormModal({
                 {message && (
                     <p
                         className={`text-sm text-center mt-2 ${
-                            message.type === "error"
-                                ? "text-red-600"
-                                : "text-green-600"
+                            message.type === "error" ? "text-red-600" : "text-green-600"
                         }`}
                     >
                         {message.text}

@@ -92,7 +92,7 @@ export default function NotificationList() {
                 <div className="absolute top-12 right-0 bg-black border border-gray-500 rounded-lg shadow-lg w-60 p-4 pt-2">
                     <MiniReminderList
                         reminders={data}
-                        refreshReminders={() => {}} // currently unused, placeholder
+                        refreshReminders={() => {}}
                     />
                 </div>
             ) : null}

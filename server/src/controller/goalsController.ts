@@ -86,9 +86,6 @@ export const editGoalController = async (req: Request, res: Response) => {
       if (!user) {
         throw new Error("User not found");
       }
-      if (user.balance < updatedGoal.goalAmount) {
-        throw new Error("Insufficient funds to complete goal");
-      }
 
       await addTransaction(
         updatedGoal.user.toString(), // Associate with user

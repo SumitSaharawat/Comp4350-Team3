@@ -3,21 +3,25 @@
 /**
  * Goal Edit Modal Window
  *
- * The poped up window when user click edit a goal
+ * Displays an animated modal for editing a goal's details.
+ * Opens from the clicked card position and animates to center.
+ * Supports editing goal name, amounts, category, and deadline.
  */
+
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Goal } from "@/app/api/goal";
 import DatePicker from "react-datepicker";
 import { editGoalToServer } from "@/app/api/goal";
+
 const categories = ["Saving", "Investment"];
 
 export default function GoalEditModal({
-    goal,
-    onClose,
-    triggerRect,
-    refreshGoals,
-}: {
+                                          goal,
+                                          onClose,
+                                          triggerRect,
+                                          refreshGoals,
+                                      }: {
     goal: Goal;
     onClose: () => void;
     triggerRect: DOMRect | null;
@@ -25,6 +29,8 @@ export default function GoalEditModal({
 }) {
     const contentRef = useRef<HTMLDivElement>(null);
     const [loading, setLoading] = useState(false);
+
+    // Local editable state for goal fields
     const [goalData, setGoalData] = useState({
         name: goal?.name || "",
         currAmount: goal?.currAmount || 0,
@@ -33,6 +39,7 @@ export default function GoalEditModal({
         time: goal?.time ? new Date(goal.time) : new Date(),
     });
 
+    // Error or success message display
     const [message, setMessage] = useState<{
         text: string;
         type: "error" | "success";
@@ -41,7 +48,9 @@ export default function GoalEditModal({
     const window_w = 400;
     const window_h = 400;
 
-    // function to update the stored data to submit
+    /**
+     * Update goalData state when user changes input fields
+     */
     const handleChange = (
         field: keyof typeof goalData,
         value: string | number | Date
@@ -49,24 +58,27 @@ export default function GoalEditModal({
         setGoalData((prev) => ({ ...prev, [field]: value }));
     };
 
+    /**
+     * Animate modal to "pop" from the trigger button to the center
+     */
     useEffect(() => {
         if (!triggerRect || !contentRef.current) return;
 
         const content = contentRef.current;
         content.style.visibility = "hidden";
 
-        // calculate destination position
+        // Destination position (centered)
         const finalX = (window.innerWidth - window_w) / 2;
         const finalY = (window.innerHeight - window_h) / 2;
 
-        // initial status
+        // Start from trigger position
         content.style.transform = `translate(${triggerRect.left}px, ${triggerRect.top}px) scale(0.5)`;
         content.style.width = `${triggerRect.width}px`;
         content.style.height = `${triggerRect.height}px`;
         content.style.opacity = "0";
         content.style.visibility = "visible";
 
-        // the window should pop up from the button to the specific location
+        // Animate to center
         const animation = content.animate(
             [
                 {
@@ -96,6 +108,9 @@ export default function GoalEditModal({
         };
     }, [triggerRect]);
 
+    /**
+     * Handle form submission to update the goal
+     */
     const handleSubmit = async () => {
         if (!goalData.name || !goalData.currAmount || !goalData.goalAmount) {
             let message = "All fields are required.";
@@ -110,6 +125,7 @@ export default function GoalEditModal({
             setMessage({ text: "You are saving more than the goal amount", type: "error" });
             return;
         }
+
         setMessage(null);
         setLoading(true);
 
@@ -131,6 +147,7 @@ export default function GoalEditModal({
 
             setMessage({ text: "Goal saved successfully!", type: "success" });
 
+            // Close modal after success delay
             setTimeout(() => {
                 setLoading(false);
                 refreshGoals();
@@ -148,6 +165,9 @@ export default function GoalEditModal({
         }
     };
 
+    /**
+     * Animate the closing of modal (reverse pop-out)
+     */
     const handleClose = () => {
         if (!contentRef.current || !triggerRect) {
             onClose();
@@ -189,6 +209,7 @@ export default function GoalEditModal({
         };
     };
 
+    // Render modal using React portal to body
     return createPortal(
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50">
             <div
@@ -208,7 +229,7 @@ export default function GoalEditModal({
                         Edit Goal
                     </h2>
 
-                    {/* Goal Name */}
+                    {/* Input: Goal Name */}
                     <input
                         type="text"
                         placeholder="Goal Name"
@@ -217,7 +238,7 @@ export default function GoalEditModal({
                         className="w-full border border-gray-300 bg-transparent p-2 rounded mb-2"
                     />
 
-                    {/* Current Amount */}
+                    {/* Input: Current Saved Amount */}
                     <input
                         type="number"
                         placeholder="Current Amount"
@@ -231,7 +252,7 @@ export default function GoalEditModal({
                         className="w-full  bg-transparent border border-gray-300 p-2 rounded mb-2"
                     />
 
-                    {/* Goal Amount */}
+                    {/* Input: Goal Amount */}
                     <input
                         type="number"
                         placeholder="Goal Amount"
@@ -245,7 +266,7 @@ export default function GoalEditModal({
                         className="w-full bg-transparent border border-gray-300 p-2 rounded mb-2"
                     />
 
-                    {/* Category Dropdown */}
+                    {/* Dropdown: Category */}
                     <select
                         value={goalData.category}
                         onChange={(e) =>
@@ -260,7 +281,7 @@ export default function GoalEditModal({
                         ))}
                     </select>
 
-                    {/* Date Picker */}
+                    {/* Date Picker: Goal Deadline */}
                     <DatePicker
                         selected={goalData.time}
                         onChange={(date: Date | null) =>
@@ -271,7 +292,7 @@ export default function GoalEditModal({
                         showPopperArrow={false}
                     />
 
-                    {/* Buttons */}
+                    {/* Action Buttons */}
                     <div className="flex justify-end mt-4 gap-2">
                         <button
                             onClick={handleClose}
@@ -293,7 +314,7 @@ export default function GoalEditModal({
                         </button>
                     </div>
 
-                    {/* Message Display */}
+                    {/* Feedback Message */}
                     {message && (
                         <p
                             className={`text-sm text-center mt-1 ${

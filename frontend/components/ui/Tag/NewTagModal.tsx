@@ -1,40 +1,55 @@
 "use client";
 
+/**
+ * NewTagModal
+ *
+ * Modal component for creating a new custom tag/label.
+ * Allows user to input tag name, optional description, and choose or generate a color.
+ */
+
 import { useState } from "react";
 import { RefreshCw } from "lucide-react";
-import {addTagToServer} from "@/app/api/tag";
-import {useAuth} from "@/app/contexts/AuthContext";
+import { addTagToServer } from "@/app/api/tag";
+import { useAuth } from "@/app/contexts/AuthContext";
 
 interface NewTagModalProps {
-    toggle: () => void;
-    refreshList: () => void;
+    toggle: () => void;       // Function to close the modal
+    refreshList: () => void;  // Function to refresh tag list after submission
 }
 
-export default function NewTagModal({toggle, refreshList}: NewTagModalProps) {
+export default function NewTagModal({ toggle, refreshList }: NewTagModalProps) {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
-    const [color, setColor] = useState("#434858");
+    const [color, setColor] = useState("#434858"); // Default initial color
     const { user } = useAuth();
 
-
-    // random generate color
+    /**
+     * Generates a random hex color and updates the state
+     */
     const generateRandomColor = () => {
         const randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
         setColor(randomColor);
     };
 
+    /**
+     * Submits the new tag to the server
+     * - Validates input
+     * - Uses AuthContext to get the user ID
+     * - Closes modal after submit
+     */
     const handleSubmit = async () => {
         if (!name.trim()) return;
+
         const userId = user?.id || localStorage.getItem("userid");
         if (!userId) {
             console.log("User ID not found. Please log in again.");
             return;
         }
-        try{
+
+        try {
             await addTagToServer(userId, name, color, description);
             refreshList();
-        }
-        catch (error) {
+        } catch (error) {
             console.error(error);
         } finally {
             toggle();
@@ -43,17 +58,18 @@ export default function NewTagModal({toggle, refreshList}: NewTagModalProps) {
 
     return (
         <div className="bg-customSecondDark p-4 mb-5 rounded-md border border-gray-500 shadow-sm">
+            {/* Preview of the tag */}
             <div className="flex items-center gap-2 mb-5">
                 <span
                     className="px-3 py-1 text-white rounded-full text-sm font-medium inline-block"
-                    style={{backgroundColor: color}}
+                    style={{ backgroundColor: color }}
                 >
                     {name.trim() === "" ? "Label preview" : name.trim()}
                 </span>
             </div>
 
             <div className="flex items-center gap-4">
-                {/* Label Name */}
+                {/* Input: Label Name */}
                 <div className="flex flex-col justify-center mr-4">
                     <label className="block font-semibold mb-1">Label name</label>
                     <input
@@ -65,7 +81,7 @@ export default function NewTagModal({toggle, refreshList}: NewTagModalProps) {
                     />
                 </div>
 
-                {/* Description */}
+                {/* Input: Optional Description */}
                 <div className="flex flex-col justify-center mr-4">
                     <label className="block font-semibold mb-1">Description</label>
                     <input
@@ -77,14 +93,14 @@ export default function NewTagModal({toggle, refreshList}: NewTagModalProps) {
                     />
                 </div>
 
-                {/* Color Picker */}
+                {/* Color Picker: Random Generator + Input */}
                 <div className="flex items-center gap-2 mt-7">
                     <button
                         onClick={generateRandomColor}
                         className="h-10 w-10 flex items-center justify-center rounded text-white"
-                        style={{backgroundColor: color}}
+                        style={{ backgroundColor: color }}
                     >
-                        <RefreshCw size={16}/>
+                        <RefreshCw size={16} />
                     </button>
                     <input
                         type="text"
@@ -94,7 +110,7 @@ export default function NewTagModal({toggle, refreshList}: NewTagModalProps) {
                     />
                 </div>
 
-                {/* Action Buttons */}
+                {/* Action Buttons: Cancel / Submit */}
                 <div className="flex items-center gap-2 mt-5 ml-auto">
                     <button
                         onClick={toggle}

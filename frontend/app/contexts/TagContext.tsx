@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Tag Context
+ */
+
 import { Tag, getTagsFromServer, deleteGoalToServer } from "@/app/api/tag";
 import React, { createContext, useContext, useState } from "react";
 

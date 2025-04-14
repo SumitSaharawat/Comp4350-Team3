@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Tag page
+ */
+
 import Layout from "@/components/ui/Layout";
 import { useTags } from "@/app/contexts/TagContext";
 import { useEffect, useState } from "react";

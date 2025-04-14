@@ -1,9 +1,11 @@
 "use client";
+
 /**
  * Transaction List
  *
- * Contains a list of transactions
+ * Displays a table of transactions with expandable rows for edit/delete actions.
  */
+
 import React, { useState } from "react";
 import { MoreHorizontal, Trash2, Edit2 } from "lucide-react";
 import { Transaction } from "@/app/api/transac";

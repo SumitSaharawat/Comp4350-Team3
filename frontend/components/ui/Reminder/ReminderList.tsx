@@ -3,21 +3,31 @@
 /**
  * Reminder List
  *
- * Used by reminder page and notificaiton
+ * Shared UI component for rendering reminders in both full and compact formats:
+ * - `ReminderList` is used on the full Reminders page (with editing and deletion)
+ * - `MiniReminderList` is used in dropdown notifications (read-only, compact)
  */
+
 import React from "react";
 import ReminderCard from "./ReminderCard";
 import { Reminder } from "@/app/api/reminder";
 
+// Props for both list types
 interface ReminderListProps {
     reminders: Reminder[];
     refreshReminders: () => void;
 }
 
+/**
+ * Full-size Reminder Grid
+ * - 1 column on small, 2 on medium, 3 on large screens
+ * - Displays ReminderCards in non-mini mode
+ * - Includes full edit/delete/check interactions
+ */
 export function ReminderList({
-    reminders,
-    refreshReminders,
-}: ReminderListProps) {
+                                 reminders,
+                                 refreshReminders,
+                             }: ReminderListProps) {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {reminders.length > 0 ? (
@@ -38,6 +48,12 @@ export function ReminderList({
     );
 }
 
+/**
+ * Compact Reminder List (for notifications dropdown)
+ * - Uses mini version of ReminderCard
+ * - No refresh or mutation logic
+ * - Styled in a simple stacked layout
+ */
 export function MiniReminderList({ reminders }: ReminderListProps) {
     return (
         <>
@@ -48,8 +64,7 @@ export function MiniReminderList({ reminders }: ReminderListProps) {
                             key={reminder.id}
                             reminder={reminder}
                             mini={true}
-                            // eslint-disable-next-line @typescript-eslint/no-empty-function
-                            refreshReminders={() => {}}
+                            refreshReminders={() => {}} // Intentionally disabled
                         />
                     ))}
                 </div>

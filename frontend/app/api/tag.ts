@@ -5,8 +5,8 @@ export interface Tag {
     message: string,
 }
 
+//API hook for get Tags from server
 export async function getTagsFromServer(userId: string): Promise<Tag[]> {
-
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tag/${userId}`, {
         method: "GET",
         credentials: "include"
@@ -20,6 +20,7 @@ export async function getTagsFromServer(userId: string): Promise<Tag[]> {
     return data || [];
 }
 
+// API hook for add new tag to server
 export async function addTagToServer(
     userId:string,
     name: string,
@@ -39,6 +40,7 @@ export async function addTagToServer(
     return res.json();
 }
 
+//API hook for edit existing tag to server
 export async function editTagToServer(
     tagId: string,
     name: string,
@@ -57,6 +59,7 @@ export async function editTagToServer(
     return res.json();
 }
 
+// API hook for delete specific goal
 export async function deleteGoalToServer(tagId: string): Promise<{message: string}> {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tag/${tagId}`, {
         method: "DELETE",

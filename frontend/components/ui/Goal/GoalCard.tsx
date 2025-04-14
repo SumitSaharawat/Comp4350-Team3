@@ -37,6 +37,7 @@ export default function GoalCard({ goal, refreshGoals }: GoalCardProps) {
     };
 
     useEffect(() => {
+        // handle the mouse click outside function
         const handleClickOutside = (event: MouseEvent) => {
             if (
                 menuRef.current &&
@@ -53,6 +54,7 @@ export default function GoalCard({ goal, refreshGoals }: GoalCardProps) {
             document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+    // handle delete goal button
     const handleDelete = async () => {
         if (confirm(`Are you sure you want to delete "${goal.name}"?`)) {
             await deleteGoal(goal.id);
@@ -62,6 +64,7 @@ export default function GoalCard({ goal, refreshGoals }: GoalCardProps) {
         }
     };
 
+    // handle edit goal
     const handleEdit = () => {
         if (cardRef.current) {
             setTriggerRect(cardRef.current.getBoundingClientRect());
@@ -83,13 +86,22 @@ export default function GoalCard({ goal, refreshGoals }: GoalCardProps) {
                     <h2 className="text-lg font-semibold">{goal.name}</h2>
                 </div>
 
-                <button
-                    ref={buttonRef}
-                    onClick={() => setShowMenu(!showMenu)}
-                    className="cursor-pointer text-black hover:text-gray-700"
-                >
-                    <MoreHorizontal/>
-                </button>
+                {currentProgress === 100 ? (
+                    <button
+                        onClick={handleDelete}
+                        className="cursor-pointer text-red-800 hover:text-red-400"
+                    >
+                        <Trash2 />
+                    </button>
+                ) : (
+                    <button
+                        ref={buttonRef}
+                        onClick={() => setShowMenu(!showMenu)}
+                        className="cursor-pointer text-black hover:text-gray-700"
+                    >
+                        <MoreHorizontal />
+                    </button>
+                )}
 
                 {goal.currAmount < goal.goalAmount && showMenu && (
                     <div

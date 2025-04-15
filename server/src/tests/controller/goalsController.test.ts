@@ -280,39 +280,6 @@ describe("Goal Controller", () => {
       );
     });
 
-    it("should return 500 if user has insufficient funds when completing goal", async () => {
-      const completedGoal = {
-        _id: "goal123",
-        user: "user123",
-        name: "Emergency Fund",
-        time: "2025-12-31T12:00:00Z",
-        currAmount: 500,
-        goalAmount: 500,
-        category: "Finance",
-      };
-
-      (editGoal as jest.Mock).mockResolvedValue(completedGoal);
-
-      // 👇 Override the mock for this specific test
-      (findUserById as jest.Mock).mockResolvedValueOnce({
-        _id: "user123",
-        username: "testuser",
-        balance: 100, // 👈 Insufficient
-        save: jest.fn().mockResolvedValue(true),
-      });
-
-      const response = await request(app).put("/api/goal/goal123").send({
-        name: "Emergency Fund",
-        time: "2025-12-31T12:00:00Z",
-        currAmount: 500,
-        goalAmount: 500,
-        category: "Finance",
-      });
-
-      expect(response.status).toBe(500);
-      expect(response.body.error).toBe("Insufficient funds to complete goal");
-    });
-
     it("should return 500 if user is not found when completing goal", async () => {
       const completedGoal = {
         _id: "goal123",

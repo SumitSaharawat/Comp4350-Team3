@@ -131,6 +131,16 @@ describe("Goals Service Tests", () => {
       expect(updatedGoal?.currAmount).toBe(300);
       expect(updatedGoal?.goalAmount).toBe(800);
     });
+    
+    test("should update a goal's time", async () => {
+      const goal = await addGoal(userId, "Time Update Goal", "2025-12-31", 200, 1000, "Saving");
+    
+      const newDate = "2026-06-15";
+      const updatedGoal = await editGoal(goal._id.toString(), undefined, newDate);
+    
+      expect(updatedGoal).not.toBeNull();
+      expect(updatedGoal?.time.toISOString().startsWith("2026-06-15")).toBe(true);
+    });
   });
 
   // Delete Goal tests

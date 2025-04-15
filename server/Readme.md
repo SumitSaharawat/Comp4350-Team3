@@ -71,13 +71,15 @@ Send requests to `http://localhost:3000` if the port is not defined in the envir
 - **Linting:** `npm run lint`
 
 ## 📚 Useful Commands
-| Command         | Description |
-|-----------------|-------------|
-| `npm run build` | Build for project |
-| `npm run start` | Start production server |
-| `npm run dev` | Start development server(custom environment variables) |
-| `npm run debug` | Start debugging server(detailed logs) |
-| `npm run lint`  | Run ESLint |
+| Command                        | Description                                           |
+|--------------------------------|-------------------------------------------------------|
+| `npm run build`                | Build for project                                     |
+| `npm run start`                | Start production server                               |
+| `npm run dev`                  | Start development server(custom environment variables) |
+| `npm run debug`                | Start debugging server(detailed logs)                 |
+| `npm run lint`                 | Run ESLint                                            |
+| `npm run clean & npm run test` | Running all test(include unit test and integrate test) |
+| `npm run test -- --coverage`   | Run test coverage                                     |
 
 
 ## 🛠 Tech Stack
@@ -89,6 +91,6 @@ Send requests to `http://localhost:3000` if the port is not defined in the envir
 2. Create a new branch (`git checkout -b firstname-issuenumber-issuename`)
 3. Commit your changes (`git commit -m 'Add new feature'`)
 4. Push to your branch (`git push origin feature-branch`)
-5. Create a pull request with a reviewee
+5. Create a pull request with a reviewer
 
 

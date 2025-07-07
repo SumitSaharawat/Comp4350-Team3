@@ -1,7 +1,7 @@
 # Comp4350-Team3
 
 ## Short Description
-* The “Savi” will be used by teenagers and adults in order to keep track of their financial spending, providing unique customized insights and displaying them in visually interesting and simple to understand ways.
+The “Savi” will be used by teenagers and adults in order to keep track of their financial spending, providing unique customized insights and displaying them in visually interesting and simple to understand ways.
 
 ## Project Proposal
 Managing personal finances can often be tedious and feel overwhelming. The goal of Savi is to simplify this process by empowering users to make informed financial decisions. Individuals who find keeping track of their finances taxing would benefit from using our application. Our application provides a simpler, straightforward way of presenting financial data, making it easier to understand and gain valuable insights.

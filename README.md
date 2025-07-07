@@ -10,9 +10,6 @@ Managing personal finances can often be tedious and feel overwhelming. The goal 
 
 Our success criteria for Savi is to achieve 1000 registered users within the first 3 months of launch. The application is designed to ensure users can record a transaction in under 10 seconds, providing a seamless and efficient experience. Additionally, it will support concurrent usage by at least 20 users handling up to 200 requests per minute, ensuring robust performance under high demand.
 
-## Meeting Minutes
-* Our [meeting minutes](https://github.com/Dean6622/Comp4350-Team3/wiki/Meeting_Minutes)
-
 ## Architectural Diagrams
 ![image](https://github.com/user-attachments/assets/d6d75a67-2ab8-4bc4-b962-f11492b542f4)
 

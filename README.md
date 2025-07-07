@@ -4,7 +4,11 @@
 * The “Savi” will be used by teenagers and adults in order to keep track of their financial spending, providing unique customized insights and displaying them in visually interesting and simple to understand ways.
 
 ## Project Proposal
-* Our [Project Proposal](https://github.com/Dean6622/Comp4350-Team3/wiki/Project-Proposal)
+* Managing personal finances can often be tedious and feel overwhelming. The goal of Savi is to simplify this process by empowering users to make informed financial decisions. Individuals who find keeping track of their finances taxing would benefit from using our application. Our application provides a simpler, straightforward way of presenting financial data, making it easier to understand and gain valuable insights.
+
+"Savi" will be a web application that aids users in keeping track of their financial data. It enables users to record transactions and retrieve them easily when needed. There will be many ways to search specific transactions or groups of transactions such as filtering on a specific category “food”. This reduces unnecessary scrolling, allowing users to find specific transactions more efficiently. In addition, users can generate a variety of charts to visualize their financial data, enabling better insights and smarter financial decisions. The application also allows users to establish financial goals and monitor their progress over time. Finally, users can set reminders for upcoming bills so that they don’t miss future payments.
+
+Our success criteria for Savi is to achieve 1000 registered users within the first 3 months of launch. The application is designed to ensure users can record a transaction in under 10 seconds, providing a seamless and efficient experience. Additionally, it will support concurrent usage by at least 20 users handling up to 200 requests per minute, ensuring robust performance under high demand.
 
 ## Documentation
 * All documents can find at [Wiki Page](https://github.com/Dean6622/Comp4350-Team3/wiki)

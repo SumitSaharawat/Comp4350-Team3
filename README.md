@@ -1,4 +1,4 @@
-# Comp4350-Team3
+# Personal Finance Management
 
 ## Short Description
 The “Savi” will be used by teenagers and adults in order to keep track of their financial spending, providing unique customized insights and displaying them in visually interesting and simple to understand ways.

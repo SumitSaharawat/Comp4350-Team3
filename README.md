@@ -14,13 +14,13 @@ Our success criteria for Savi is to achieve 1000 registered users within the fir
 ![image](https://github.com/user-attachments/assets/d6d75a67-2ab8-4bc4-b962-f11492b542f4)
 
 ## Contributors
-| Name | Username   | Role                          |
-|-----|------------|-------------------------------|
-| Haozhi Wang | Echo-zzz   | Full Stack Developer (Leader) |
-| Xiang Shi | Dean6622   | Front-end Developer           |
-| Eric Chu  | ciire      | Back-end Developer            |
-| Han Sun | hans-um    | Q & A Testing                 |
-| Sumit Saharawat | SumitSaharawat | Q & A Testing                 |
+| Name | Role                          |
+|-----|-------------------------------|
+| Haozhi Wang | Full Stack Developer (Leader) |
+| Xiang Shi  | Front-end Developer           |
+| Eric Chu | Back-end Developer            |
+| Han Sun | Q & A Testing                 |
+| Sumit Saharawat | Q & A Testing                 |
 ------
 
 ## Prerequisites

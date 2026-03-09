@@ -20,7 +20,7 @@ Our success criteria for Savi is to achieve 1000 registered users within the fir
 | Xiang Shi  | Front-end Developer           |
 | Eric Chu | Back-end Developer            |
 | Han Sun | Q & A Testing                 |
-| Sumit Saharawat | Q & A Testing                 |
+| Sumit Saharawat | Full Stack Developer               |
 ------
 
 ## Prerequisites
